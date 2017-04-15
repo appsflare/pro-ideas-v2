@@ -1,9 +1,9 @@
-{
+﻿{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:52472/",
+      "applicationUrl": "http://localhost:57453/",
       "sslPort": 0
     }
   },
@@ -18,10 +18,10 @@
     "ProIdeas.UI": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:50000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "http://localhost:57454"
     }
   }
 }

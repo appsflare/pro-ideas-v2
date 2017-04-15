@@ -24,5 +24,7 @@ namespace ProIdeas.Domain.Repositories
         IEnumerable<T> All<T>(int page, int pageSize) where T : class, IEntity, new();
 
         IEnumerable<T> Add<T>(params T[] items) where T : class, IEntity, new();
+
+        IEnumerable<T> Update<T>(params T[] items) where T : class, IEntity, new();
     }
 }

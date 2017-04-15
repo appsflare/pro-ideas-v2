@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  proideas.ui:
+    image: proideas.ui
+    build:
+      context: ./ProIdeas.UI
+      dockerfile: Dockerfile

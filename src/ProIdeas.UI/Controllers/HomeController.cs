@@ -3,52 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.Extensions.Logging;
 
 namespace ProIdeas.UI.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(ILogger<HomeController> logger)
+        public IActionResult Index()
         {
-            log = logger;
+            return View();
         }
 
-        private ILogger log;
-
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        //public IActionResult About()
-        //{
-        //    ViewData["Message"] = "Your application description page.";
-
-        //    return View();
-        //}
-
-        //public IActionResult Contact()
-        //{
-        //    ViewData["Message"] = "Your contact page.";
-
-        //    return View();
-        //}
-
-        public IActionResult Error(int statusCode)
+        public IActionResult About()
         {
-            if (statusCode == 404)
-            {
-                var statusFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-                if (statusFeature != null)
-                {
-                    log.LogWarning("handled 404 for url: {OriginalPath}", statusFeature.OriginalPath);
-                }
+            ViewData["Message"] = "Your application description page.";
 
-            }
-            return View(statusCode);
+            return View();
         }
 
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "Your contact page.";
+
+            return View();
+        }
+
+        public IActionResult Error()
+        {
+            return View();
+        }
     }
 }

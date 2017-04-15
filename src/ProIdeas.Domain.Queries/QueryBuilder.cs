@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace ProIdeas.Domain.Queries
 {
-    public class QueryBuilder<TEntity> where TEntity : IEntity
+    public sealed class QueryBuilder<TEntity> where TEntity : IEntity
     {
 
         private Expression<Func<TEntity, bool>> _filter;

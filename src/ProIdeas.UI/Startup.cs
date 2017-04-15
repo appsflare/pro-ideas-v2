@@ -1,18 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
-using cloudscribe.FileManager.Web;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Http;
+using ProIdeas.UI.Models;
+using ProIdeas.UI.Services;
 using ProIdeas.Data.Mappings;
+using ProIdeas.DTO;
+using AspNet.Identity.Repository;
+using ProIdeas.Domain.Repositories;
+using ProIdeas.Domain.Repositories.RethinkDb;
+using ProIdeas.Services;
+using ProIdeas.Services.Contracts;
+using ProIdeas.Logic.Contracts;
+using ProIdeas.Logic;
+using ProIdeas.Domain.Core.Events;
+using ProIdeas.Infra.Commands.Idea;
+using ProIdeas.Domain.Core.Bus;
+using ProIdeas.Infra.Bus;
+using ProIdeas.Infra.EventSourcing;
 
 namespace ProIdeas.UI
 {
@@ -22,17 +28,16 @@ namespace ProIdeas.UI
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
-            builder.AddJsonFile("app-tenants-users.json");
-            builder.AddJsonFile("app-content-project-settings.json");
-            // this file name is ignored by gitignore
-            // so you can create it and use on your local dev machine
-            // remember last config source added wins if it has the same settings
-            builder.AddJsonFile("appsettings.dev.json", optional: true, reloadOnChange: true);
+            if (env.IsDevelopment())
+            {
+                // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
+                builder.AddUserSecrets<Startup>();
+            }
+
             builder.AddEnvironmentVariables();
-
             Configuration = builder.Build();
         }
 
@@ -41,83 +46,53 @@ namespace ProIdeas.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-
-            services.AddLocalization(options => options.ResourcesPath = "GlobalResources");
-
-            ConfigureAuthPolicy(services);
-
-
             var mappingProvider = new MappingProvider();
 
             services.AddSingleton(mappingProvider.CreateMapper());
 
+            services.AddMultitenancy<TenantSettingsDto, CachingTenantResolver>();
 
-            services.Configure<cloudscribe.Web.SimpleAuth.Models.SimpleAuthSettings>(Configuration.GetSection("SimpleAuthSettings"));
-            services.Configure<MultiTenancyOptions>(Configuration.GetSection("MultiTenancy"));
-
-            services.AddMultitenancy<TenantSettings, CachingSiteResolver>();
-            services.AddScoped<cloudscribe.Web.SimpleAuth.Models.IUserLookupProvider, SiteUserLookupProvider>();
-            services.AddScoped<cloudscribe.Web.SimpleAuth.Models.IAuthSettingsResolver, SiteAuthSettingsResolver>();
-            services.AddCloudscribeSimpleAuth();
-
-
-
-
-            services.AddCloudscribeNavigation(Configuration.GetSection("NavigationOptions"));
-
-
-            services.AddCloudscribeFileManager(Configuration);
-
-
-            // Add MVC services to the services container.
-            services.Configure<MvcOptions>(options =>
+            services.AddSingleton(new ConnectionOptions
             {
-                // options.InputFormatters.Add(new Xm)
-                options.CacheProfiles.Add("SiteMapCacheProfile",
-                     new CacheProfile
-                     {
-                         Duration = 30
-                     });
-
-                options.CacheProfiles.Add("RssCacheProfile",
-                     new CacheProfile
-                     {
-                         Duration = 100
-                     });
-
+                DBName = "ideas",
+                HostNames = new[] { "localhost" },
+                Port = 28015
             });
 
-            services.AddRouting(options =>
-            {
-                options.LowercaseUrls = true;
-            });
+            services.AddScoped<ITenantLogic, TenantLogic>();
+            services.AddScoped<IIdeaLogic, IdeaLogic>();
+            services.AddScoped<IEventStore, DefaultEventStore>();
 
-            services.AddMvc()
-                .AddRazorOptions(options =>
-                {
-                    // if you download the cloudscribe.Web.Navigation Views and put them in your views folder
-                    // then you don't need this line and can customize the views
-                    options.AddEmbeddedViewsForNavigation();
+            services.AddScoped<IBus, InMemoryBus>();
 
 
-                    options.AddEmbeddedViewsForSimpleAuth();
+            services.AddScoped<ITenantStore, LocalJsonTenantStore>();
+            services.AddScoped<IHandler<CreateIdeaCommand>, IdeaLogic>();
+            services.AddScoped<IHandler<UpdateIdeaCommand>, IdeaLogic>();
+            services.AddScoped<IHandler<DeleteIdeaCommand>, IdeaLogic>();
 
+            services.AddScoped<ITenantService, TenantService>();
 
+            services.AddScoped<IRethinkDbConnectionProvider, DefaultRethinkDbConnectionProvider>();
 
-                    options.AddBootstrap3EmbeddedViewsForFileManager();
+            services.AddScoped<IRepository, RethinkDbRepository>();
 
-                    options.ViewLocationExpanders.Add(new SiteViewLocationExpander());
-                });
+            // Add framework services.           
+
+            services.AddIdentity<ApplicationUser, RepositoryIdentityRole>()
+                .AddRoleStore<RepositoryRoleStore<RepositoryIdentityRole>>()
+                .AddUserStore<RepositoryUserStore<ApplicationUser>>()
+                .AddDefaultTokenProviders();
+
+            services.AddMvc();
+
+            // Add application services.
+            services.AddTransient<IEmailSender, AuthMessageSender>();
+            services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(
-            IApplicationBuilder app,
-            IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
-            IOptions<cloudscribe.Web.SimpleAuth.Models.SimpleAuthSettings> authSettingsAccessor
-            )
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -125,6 +100,7 @@ namespace ProIdeas.UI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
             else
@@ -134,84 +110,21 @@ namespace ProIdeas.UI
 
             app.UseStaticFiles();
 
-            // custom 404 and error page - this preserves the status code (ie 404)
-            app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
+            //app.UsePerTenant<TenantSettingsDto>((context, appBuilder) =>
+            //{
+            app.UseIdentity();
+            //});
 
-            app.UseMultitenancy<TenantSettings>();
 
-            app.UsePerTenant<TenantSettings>((ctx, builder) =>
-            {
-                var authCookieOptions = new CookieAuthenticationOptions()
-                {
-                    AuthenticationScheme = ctx.Tenant.AuthenticationScheme,
-                    LoginPath = new PathString("/login"),
-                    AccessDeniedPath = new PathString("/"),
-                    AutomaticAuthenticate = true,
-                    AutomaticChallenge = true,
-                    CookieName = ctx.Tenant.AuthenticationScheme
-                };
-                builder.UseCookieAuthentication(authCookieOptions);
 
-            });
+            // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
             {
-
-                routes.AddCloudscribeFileManagerRoutes();
-
-
                 routes.MapRoute(
-                    name: "def",
-                    template: "{controller}/{action}"
-                    );
-
-                //routes.MapRoute(
-                //    name: "default",
-                //    template: "{controller=Home}/{action=Index}/{id?}");
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
-        }
-
-        private void ConfigureAuthPolicy(IServiceCollection services)
-        {
-            //https://docs.asp.net/en/latest/security/authorization/policies.html
-
-            services.AddAuthorization(options =>
-            {
-                // this policy currently means any user with a blogId claim can edit
-                // would require somthing more for multi tenant blogs
-                options.AddPolicy(
-                    "BlogEditPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireClaim("blogId");
-                    }
-                 );
-
-                options.AddPolicy(
-                   "PageEditPolicy",
-                   authBuilder =>
-                   {
-                       authBuilder.RequireRole("Admins");
-                   });
-
-                options.AddPolicy(
-                    "FileManagerPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("Admins");
-                    });
-
-                options.AddPolicy(
-                    "FileManagerDeletePolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("Admins");
-                    });
-
-                // add other policies here 
-
-            });
-
         }
     }
 }

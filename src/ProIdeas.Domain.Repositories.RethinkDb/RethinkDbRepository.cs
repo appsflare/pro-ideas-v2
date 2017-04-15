@@ -12,18 +12,13 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
     public class RethinkDbRepository : IRepository
     {
         private readonly IConnection _connection;
-
-
-
         private readonly ConnectionOptions _connectionOptions;
 
 
         public RethinkDbRepository(IRethinkDbConnectionProvider connectionProvider, ConnectionOptions connectionOptions)
         {
             _connectionOptions = connectionOptions;
-            _connection = connectionProvider.GetConnection(_connectionOptions);
-
-
+            _connection = connectionProvider.GetConnection(_connectionOptions);          
         }
 
         private static string GetTableName<T>()
@@ -86,7 +81,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
         public T First<T>(Expression<Func<T, bool>> expression) where T : class, IEntity, new()
         {
-            return AllQueryable<T>().First(expression);
+            return AllQueryable<T>().FirstOrDefault(expression);
         }
 
        public IEnumerable<T> Query<T>(IQuery<T> query) where T : class, IEntity, new()
@@ -116,6 +111,13 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
 
             return queryable.ToList();
+        }
+
+        public IEnumerable<T> Update<T>(params T[] items) where T : class, IEntity, new()
+        {
+            var result = GetTable<T>().Update(items).RunResult<List<T>>(_connection);
+
+            return result;
         }
     }
 }

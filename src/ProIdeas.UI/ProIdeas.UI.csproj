@@ -2,63 +2,55 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>ProIdeas.UI</AssemblyName>
-    <OutputType>Exe</OutputType>
-    <PackageId>ProIdeas.UI</PackageId>
-    <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Update="wwwroot\**\*;Views\**\*;nodb_storage\**\*;Themes\**\*;Areas\**\Views;navigation.xml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
-    <Content Remove="nodb_storage\**\*" CopyToPublishDirectory="Never" />
-    <Content Include="nodb_storage\**\*" CopyToPublishDirectory="Never" />
-  </ItemGroup>
+  <PropertyGroup>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
+  </PropertyGroup>
 
+  <PropertyGroup>
+    <UserSecretsId>aspnet-ProIdeas.UI-ba5e34a0-3918-49f2-a57c-784771b50503</UserSecretsId>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
     <PackageReference Include="SaasKit.Multitenancy" Version="1.1.4" />
-    <PackageReference Include="cloudscribe.Web.Navigation" Version="1.1.0-rc20170323" />
-    <PackageReference Include="cloudscribe.Web.Pagination" Version="1.1.3" />
-    <PackageReference Include="cloudscribe.Web.SimpleAuth" Version="1.1.0" />
-    <PackageReference Include="cloudscribe.Syndication.Web" Version="1.1.0" />
-    <PackageReference Include="cloudscribe.FileManager.Web" Version="1.0.0-rc20170320" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
   </ItemGroup>
-
-  
-
   <ItemGroup>
-    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.2.301" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
-
-  
-
   <ItemGroup>
-    <Folder Include="Properties\PublishProfiles\" />
-  </ItemGroup>
-
-  
-
-  <ItemGroup>
+    <ProjectReference Include="..\AspNet.Identity.Repository\AspNet.Identity.Repository.csproj" />
     <ProjectReference Include="..\ProIdeas.Data.Mappings\ProIdeas.Data.Mappings.csproj" />
     <ProjectReference Include="..\ProIdeas.DataMappings.Data.Mappings.Contracts\ProIdeas.DataMappings.Data.Mappings.Contracts.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Core\ProIdeas.Domain.Core.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Repositories.RethinkDb\ProIdeas.Domain.Repositories.RethinkDb.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Repositories\ProIdeas.Domain.Repositories.csproj" />
+    <ProjectReference Include="..\ProIdeas.DTO\ProIdeas.DTO.csproj" />
+    <ProjectReference Include="..\ProIdeas.Files.Contracts\ProIdeas.Files.Contracts.csproj" />
+    <ProjectReference Include="..\ProIdeas.Files\ProIdeas.Files.csproj" />
+    <ProjectReference Include="..\ProIdeas.Infra.Bus\ProIdeas.Infra.Bus.csproj" />
+    <ProjectReference Include="..\ProIdeas.Infra.EventSourcing\ProIdeas.Infra.EventSourcing.csproj" />
+    <ProjectReference Include="..\ProIdeas.Logic\ProIdeas.Logic.csproj" />
+    <ProjectReference Include="..\ProIdeas.Serializers.Contracts\ProIdeas.Serializers.Contracts.csproj" />
+    <ProjectReference Include="..\ProIdeas.Serializers\ProIdeas.Serializers.csproj" />
+    <ProjectReference Include="..\ProIdeas.Services\ProIdeas.Services.csproj" />
   </ItemGroup>
 
 </Project>
