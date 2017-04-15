@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProIdeas.DataMappings.Data.Mappings.Contracts\ProIdeas.DataMappings.Data.Mappings.Contracts.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Entities\ProIdeas.Domain.Entities.csproj" />
+    <ProjectReference Include="..\ProIdeas.DTO\ProIdeas.DTO.csproj" />
+  </ItemGroup>
+
+</Project>

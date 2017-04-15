@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProIdeas.DataMappings.Data.Mappings.Contracts\ProIdeas.DataMappings.Data.Mappings.Contracts.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Core\ProIdeas.Domain.Core.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Entities\ProIdeas.Domain.Entities.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Queries\ProIdeas.Domain.Queries.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Repositories\ProIdeas.Domain.Repositories.csproj" />
+    <ProjectReference Include="..\ProIdeas.DTO\ProIdeas.DTO.csproj" />
+    <ProjectReference Include="..\ProIdeas.Files.Contracts\ProIdeas.Files.Contracts.csproj" />
+    <ProjectReference Include="..\ProIdeas.Infra.Commands\ProIdeas.Infra.Commands.csproj" />
+    <ProjectReference Include="..\ProIdeas.Infra.Events\ProIdeas.Infra.Events.csproj" />
+    <ProjectReference Include="..\ProIdeas.Serializers.Contracts\ProIdeas.Serializers.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
