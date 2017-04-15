@@ -12,5 +12,8 @@
     "gulp-sass": "3.1.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap-sass": "^3.3.7"
+  }
 }

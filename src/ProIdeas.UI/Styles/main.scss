@@ -1,5 +1,15 @@
-﻿$base: #CC0000;
+@import 'materialkit/assets/sass/material-kit.scss';
 
-body {
-    background-color: $base;
+.logo img{
+    height: 42px;
+    margin-top: -6px;
+}
+
+.app-page{
+    padding-top: 50px;
+
+    .main{
+        min-height: 90vh;        
+        height: auto;
+    }
 }
