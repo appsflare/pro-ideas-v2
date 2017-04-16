@@ -8,8 +8,10 @@ var gulp = require("gulp"),
     rollup = require('rollup-stream'),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer'),
-    rename = require('gulp-rename'),    
-    es = require('event-stream');
+    rename = require('gulp-rename'),
+    es = require('event-stream'),
+    bowerResolve = require('rollup-plugin-bower-resolve'),
+    commonjs = require('rollup-plugin-commonjs');
 
 // other content removed
 
@@ -40,21 +42,43 @@ gulp.task('build-pages', function (done) {
 
 
     glob('./Scripts/pages/**/*.js', function (err, files) {
-        if (err) done(err);
-
-        console.log(files);
+        if (err) done(err);        
 
         var tasks = files.map(function (entry) {
 
             return rollup({
                 entry: entry,
                 sourceMap: true,
-                format: 'amd',                
+                format: 'amd',
                 plugins: [
+
+                    bowerResolve({
+                        // Use "module" field for ES6 module if possible, default is `true`.
+                        // See: https://github.com/rollup/rollup/wiki/pkg.module
+                        module: true,
+
+                        // Use "jsnext:main" field for ES6 module if possible, default is `true`.
+                        // This field should not be used, use `module` entry instead, but it is `true`
+                        // by default because of legacy packages.
+                        // See: https://github.com/rollup/rollup/wiki/jsnext:main
+                        jsnext: true,
+
+                        // if there's something your bundle requires that you DON'T
+                        // want to include, add it to 'skip'
+                        skip: ['jquery','bootstrap'],  // Default: []
+
+                        // Override path to main file (relative to the module directory).
+                        override: {
+                            //lodash: 'dist/lodash.js'                            
+                        }
+                    }),
+                    commonjs(),
                     babel({
                         exclude: 'node_modules/**',
                         presets: ['es2015-rollup'],
-                    })                    
+                    }),
+
+
                 ]
             })
                 // point to the entry file.

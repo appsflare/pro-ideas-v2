@@ -1,4 +1,6 @@
 ﻿import ApiClient from '../../modules/api';
+import knockout from 'knockout';
+
 
 
 var client = new ApiClient();
