@@ -1,39 +1,46 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProIdeas.Services.Contracts;
+using ProIdeas.DTO;
 
 namespace ProIdeas.UI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/IdeaApi")]
+    [Route("api/ideas")]
     public class IdeaApiController : Controller
     {
+
+        private readonly IIdeaService _ideaService;
+        public IdeaApiController(IIdeaService ideaService)
+        {
+            _ideaService = ideaService;
+        }
+
         // GET: api/IdeaApi
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<IdeaDto> Get(int pageSize = 10, int page = 1)
         {
-            return new string[] { "value1", "value2" };
+            return _ideaService.GetIdeas(pageSize, page);
         }
 
         // GET: api/IdeaApi/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public IdeaDto Get(string id)
         {
-            return "value";
+            return _ideaService.GetIdea(id);
         }
         
         // POST: api/IdeaApi
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody]IdeaDto idea)
         {
+            
+
         }
         
         // PUT: api/IdeaApi/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]IdeaDto idea)
         {
         }
         

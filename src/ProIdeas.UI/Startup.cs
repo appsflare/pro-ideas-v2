@@ -20,6 +20,8 @@ using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Bus;
 using ProIdeas.Infra.EventSourcing;
 using ProIdeas.Domain.Entities;
+using ProIdeas.Serializers.Contracts;
+using ProIdeas.Serializers;
 
 namespace ProIdeas.UI
 {
@@ -51,6 +53,7 @@ namespace ProIdeas.UI
 
             services.AddSingleton(mappingProvider.CreateMapper());
 
+            services.AddSingleton<IJsonSerializer, JsonSerializer>();
             services.AddMultitenancy<TenantSettingsDto, CachingTenantResolver>();
 
             services.AddSingleton(new ConnectionOptions

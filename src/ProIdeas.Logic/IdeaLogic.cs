@@ -45,7 +45,7 @@ namespace ProIdeas.Logic
         {
 
             var query = new QueryBuilder<Idea>()
-                .WithCondition(i => i.Title.Contains(keyword) || i.Description.Contains(keyword) || i.FundingRequirement.Contains(keyword))
+                //.WithCondition(i => i.Title.Contains(keyword) || i.Description.Contains(keyword) || i.FundingRequirement.Contains(keyword))
                 .OrderBy(i => i.OrderBy(j => j.Title))
                 .Skip(Math.Max(page, 0) * pageSize)
                 .Take(pageSize)
