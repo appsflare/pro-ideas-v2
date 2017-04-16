@@ -21,21 +21,6 @@
     <Content Include="wwwroot\fonts\bootstrap\glyphicons-halflings-regular.ttf" />
     <Content Include="wwwroot\fonts\bootstrap\glyphicons-halflings-regular.woff" />
     <Content Include="wwwroot\fonts\bootstrap\glyphicons-halflings-regular.woff2" />
-    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.eot">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.svg">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.ttf">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.woff">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.woff2">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
     <Content Include="wwwroot\logos\idea-icon-blue.svg" />
     <Content Include="wwwroot\logos\idea-icon-white.svg" />
     <Content Include="wwwroot\logos\ideaboard-logo-blue-nocap.png" />

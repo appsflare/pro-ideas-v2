@@ -72,6 +72,7 @@ namespace ProIdeas.UI
             services.AddScoped<IHandler<DeleteIdeaCommand>, IdeaLogic>();
 
             services.AddScoped<ITenantService, TenantService>();
+            services.AddScoped<IIdeaService, IdeaService>();
 
             services.AddScoped<IRethinkDbConnectionProvider, DefaultRethinkDbConnectionProvider>();
 
