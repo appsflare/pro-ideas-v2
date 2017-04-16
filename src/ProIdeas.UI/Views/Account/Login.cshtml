@@ -30,15 +30,19 @@
                 <p class="description text-center">Or Be Classical</p>
 
 
-                <div class="alert alert-danger">
-                    <div class="alert-icon">
-                        <i class="material-icons">error_outline</i>
-                    </div>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span><i class="material-icons">clear</i></span>
-                    </button>
 
-                </div>
+                @if (ViewBag.ErrorMessage != null)
+                {
+                    <div class="alert alert-danger">
+                        <div class="alert-icon">
+                            <i class="material-icons">error_outline</i>
+                        </div>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span><i class="material-icons">clear</i></span>
+                        </button>
+                        <div>@ViewBag.ErrorMessage</div>
+                    </div>
+                }
 
                 <div class="content">
                     <div class="input-group">
@@ -46,12 +50,11 @@
                             <i class="material-icons">email</i>
                         </span>
 
-
-                        <div class="form-group is-empty  has-error has-feedback">
-                            <input class="form-control" name="email" value="" type="email" placeholder="Email..." autocomplete="off" />
+                        <div class="form-group is-empty" asp-validation-for="Email">
+                            <input asp-for="Email" class="form-control" value="" type="email" placeholder="Email..." autocomplete="off" />
                             <span class="material-icons form-control-feedback">clear</span>
                             <span class="material-input" />
-                            <span class="help-block validation-message"></span>
+                            <span asp-validation-for="Email" class="help-block validation-message"></span>
                         </div>
 
                     </div>
@@ -60,11 +63,11 @@
                             <i class="material-icons">lock_outline</i>
                         </span>
 
-                        <div class="form-group is-empty  has-error has-feedback">
-                            <input class="form-control" name="password" value="" type="password" placeholder="Password..." min="8" />
+                        <div class="form-group is-empty">
+                            <input asp-for="Password" class="form-control" value="" type="password" placeholder="Password..." min="8" />
                             <span class="material-icons form-control-feedback">clear</span>
                             <span class="material-input" />
-                            <span class="help-block validation-message"></span>
+                            <span asp-validation-for="Password" class="help-block validation-message"></span>
                         </div>
 
                     </div>

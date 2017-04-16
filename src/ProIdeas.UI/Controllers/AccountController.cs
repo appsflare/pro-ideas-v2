@@ -83,7 +83,9 @@ namespace ProIdeas.UI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    var message = "Invalid login attempt.";
+                    ModelState.AddModelError(string.Empty, message);
+                    ViewBag.ErrorMessage = message;
                     return View(model);
                 }
             }
