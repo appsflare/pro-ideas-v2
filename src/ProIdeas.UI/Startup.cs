@@ -19,6 +19,7 @@ using ProIdeas.Infra.Commands.Idea;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Bus;
 using ProIdeas.Infra.EventSourcing;
+using ProIdeas.Domain.Entities;
 
 namespace ProIdeas.UI
 {
@@ -78,6 +79,8 @@ namespace ProIdeas.UI
 
             services.AddScoped<IRepository, RethinkDbRepository>();
 
+            services.AddSingleton<DatabaseConfigurator>();
+
             // Add framework services.           
 
             services.AddIdentity<ApplicationUser, RepositoryIdentityRole>()
@@ -90,6 +93,20 @@ namespace ProIdeas.UI
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+
+            using (var scope = services.BuildServiceProvider().CreateScope())
+            {
+                scope.ServiceProvider
+                       .GetService<DatabaseConfigurator>()
+                       .EnsureDB()
+                       .EnsureTables(nameof(ApplicationUser),
+                       nameof(Idea),
+                       nameof(IdeaComment),
+                       nameof(IdeaLike),
+                       nameof(Page));
+            }
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
