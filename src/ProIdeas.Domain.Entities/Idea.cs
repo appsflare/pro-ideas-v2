@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProIdeas.Domain.Entities
 {
-    public class Idea : BaseEntity<string>
+    public class Idea : BaseEntity
     {
 
         public string OwnerId { get; set; }

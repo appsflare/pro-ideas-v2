@@ -18,16 +18,16 @@
         IUserEmailStore<TUser>,
         IUserClaimStore<TUser>,
         IQueryableUserStore<TUser>,
-        IUserPhoneNumberStore<TUser>
-        //IUserTwoFactorStore<TUser, string>,
-        //IUserLockoutStore<TUser, string>
+        IUserPhoneNumberStore<TUser>,
+        IUserTwoFactorStore<TUser>,
+        IUserLockoutStore<TUser>
         where TUser : RepositoryIdentityUser, new()
     {
-        
+
         private readonly IRepository _repository;
 
         public RepositoryUserStore(IRepository repository)
-        {            
+        {
             _repository = repository; ;
         }
 
@@ -57,7 +57,7 @@
 
         public virtual Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            return Task.Run(() => _repository.First<TUser>(i => i.Id == userId)); // _Context.Connection.Run(TableUsers.Get(userId)));
+            return Task.Run(() => _repository.GetOne<TUser>(userId)); // _Context.Connection.Run(TableUsers.Get(userId)));
         }
 
         public virtual Task<TUser> FindByNameAsync(string userName, CancellationToken cancellationToken)
@@ -420,6 +420,25 @@
                     .ToList() as IList<TUser>;
 
             }, cancellationToken);
+        }
+
+        async Task<DateTimeOffset?> IUserLockoutStore<TUser>.GetLockoutEndDateAsync(TUser user, CancellationToken cancellationToken)
+        {
+
+            return await Task.Factory.StartNew(() => _repository.GetOne<TUser>(user.Id).LockoutEndDateUtc, cancellationToken);
+        }
+
+        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
+        {
+            return Task.Factory.StartNew(() =>
+           {
+               user.LockoutEndDateUtc = lockoutEnd?.DateTime;
+
+               var dbUser = _repository.GetOne<TUser>(user.Id);
+               dbUser.LockoutEndDateUtc = user.LockoutEndDateUtc;
+               _repository.Update(dbUser);
+
+           }, cancellationToken);
         }
     }
 }

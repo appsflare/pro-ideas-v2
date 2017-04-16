@@ -1,41 +1,142 @@
 ﻿@model RegisterViewModel
 @{
+    Layout = "_LayoutSignUp";
     ViewData["Title"] = "Register";
 }
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="card card-signup">
+            <h2 class="card-title text-center">@ViewData["Title"]</h2>
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    <div class="alert-icon">
+                        <i class="material-icons">error_outline</i>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span><i class="material-icons">clear</i></span>
+                    </button>
+                    <div>@ViewBag.ErrorMessage</div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-md-5 col-md-offset-1">
+                    <div class="info info-horizontal">
+                        <div class="icon icon-rose">
+                            <i class="material-icons">flash_on</i>
+                        </div>
+                        <div class="description">
+                            <h4 class="info-title">Share Your Ideas</h4>
+                            <p class="description">
+                                Have an idea flashing in your head? Get in and share your ideas with everyone.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="info info-horizontal">
+                        <div class="icon icon-primary">
+                            <i class="material-icons">code</i>
+                        </div>
+                        <div class="description">
+                            <h4 class="info-title">Explain What It Is</h4>
+                            <p class="description">
+                                We've developed the website with HTML5 and CSS3. The client has access to the code using GitHub.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="info info-horizontal">
+                        <div class="icon icon-info">
+                            <i class="material-icons">group</i>
+                        </div>
+                        <div class="description">
+                            <h4 class="info-title">Start Collaborating</h4>
+                            <p class="description">Build a team to realize your ideas.</p>
+                        </div>
+                    </div>
+                </div>
 
-<h2>@ViewData["Title"].</h2>
 
-<form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-    <h4>Create a new account.</h4>
-    <hr />
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
+                <div class="col-md-5">
+                    <div class="social text-center">
+                        <button class="btn btn-just-icon btn-round btn-twitter">
+                            <i class="fa fa-twitter"></i>
+                        </button>
+                        <button class="btn btn-just-icon btn-round btn-dribbble">
+                            <i class="fa fa-dribbble"></i>
+                        </button>
+                        <button class="btn btn-just-icon btn-round btn-facebook">
+                            <i class="fa fa-facebook"></i>
+                        </button>
+                        <h4> or be classical </h4>
+                    </div>
+                    <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form">
+                        <div class="content">                           
+
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">face</i>
+                                </span>
+                                <div class="form-group is-empty" asp-validation-for="FullName">
+                                    <input asp-for="FullName" class="form-control" value="" type="text" placeholder="Full Name..." autocomplete="off" />
+                                    <span class="material-icons form-control-feedback">clear</span>
+                                    <span class="material-input" />
+                                    <span asp-validation-for="FullName" class="help-block validation-message"></span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">email</i>
+                                </span>
+                                <div class="form-group is-empty" asp-validation-for="Email">
+                                    <input asp-for="Email" class="form-control" value="" type="email" placeholder="Email..." autocomplete="off" />
+                                    <span class="material-icons form-control-feedback">clear</span>
+                                    <span class="material-input" />
+                                    <span asp-validation-for="Email" class="help-block validation-message"></span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">lock_outline</i>
+                                </span>
+
+                                <div class="form-group is-empty" asp-validation-for="Password">
+                                    <input asp-for="Password" class="form-control" value="" type="password" placeholder="Password..." />
+                                    <span class="material-icons form-control-feedback">clear</span>
+                                    <span class="material-input" />
+                                    <span asp-validation-for="Password" class="help-block validation-message"></span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">lock_outline</i>
+                                </span>
+
+                                <div class="form-group is-empty" asp-validation-for="ConfirmPassword">
+                                    <input asp-for="ConfirmPassword" class="form-control" value="" type="password" placeholder="Confirm Password..." />
+                                    <span class="material-icons form-control-feedback">clear</span>
+                                    <span class="material-input" />
+                                    <span asp-validation-for="ConfirmPassword" class="help-block validation-message"></span>
+                                </div>
+                            </div>
+
+                            @*<div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="optionsCheckboxes" defaultChecked /><span class="checkbox-material"><span class="check" /></span>
+                                        I agree to the <a href="#something">terms and conditions</a>.
+                                    </label>
+                                </div>*@
+                        </div>
+                        <div class="footer text-center">
+                            <button class="btn btn-primary btn-simple btn-wd btn-lg" type="submit">Get In<div class="ripple-container"></div></button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Password" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="ConfirmPassword" class="form-control" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-default">Register</button>
-        </div>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

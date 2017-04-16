@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProIdeas.Domain.Entities
 {
-    public class Page : BaseEntity<string>
+    public class Page : BaseEntity
     {
         public string Name { get; set; }
 

@@ -9,39 +9,22 @@ using ProIdeas.Domain.Entities;
 namespace AspNet.Identity.Repository
 {
 	[DataContract]
-	public class RepositoryIdentityUser : BaseEntity<string>
+	public class RepositoryIdentityUser : BaseEntity
 	{
 		public RepositoryIdentityUser()
-		{
-			Id = Guid.NewGuid().ToString();
+		{			
 			Roles = new List<string>();
 			LoginsWrapper = new List<UserLoginInfoWrapper>();
 			Claims = new List<IdentityUserClaim>();
-		}
-
-		private string id;
-
-		[DataMember(Name = "id")]
-		public string Id
-		{
-			get
-			{
-				return id;
-			}
-
-			set
-			{
-				// TODO: Make private set. But: if that is private set, an Exception in RethinkDB-driver DataContractDatumConverterFactory occurs.
-
-				if (value != null)
-					id = value;
-			}
-		}
+		}		
 
 		[DataMember]
 		public string UserName { get; set; }
 
-		[DataMember]
+        [DataMember]
+        public string FullName { get; set; }
+
+        [DataMember]
 		public virtual string SecurityStamp { get; set; }
 
 		[DataMember]
@@ -117,7 +100,7 @@ namespace AspNet.Identity.Repository
 
 		public virtual bool HasPassword()
 		{
-			return false;
+			return !string.IsNullOrEmpty(PasswordHash);
 		}
 
 		[DataMember]

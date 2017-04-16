@@ -75,7 +75,7 @@
 
         public virtual Task<TRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            return Task.Run(() => _repository.First<TRole>(i => i.Id == roleId)); // _Context.Connection.Run(TableRoles.Filter(r => r.Id == roleId)).FirstOrDefault()); // FindOneByIdAs<TRole>(ObjectId.Parse(roleId)));
+            return Task.Run(() => _repository.GetOne<TRole>(roleId)); // _Context.Connection.Run(TableRoles.Filter(r => r.Id == roleId)).FirstOrDefault()); // FindOneByIdAs<TRole>(ObjectId.Parse(roleId)));
         }
 
         public virtual Task<TRole> FindByNameAsync(string roleName, CancellationToken cancellationToken)

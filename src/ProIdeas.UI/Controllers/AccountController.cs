@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +10,7 @@ using Microsoft.Extensions.Options;
 using ProIdeas.UI.Models;
 using ProIdeas.UI.Models.AccountViewModels;
 using ProIdeas.UI.Services;
+using System;
 
 namespace ProIdeas.UI.Controllers
 {
@@ -114,7 +113,12 @@ namespace ProIdeas.UI.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FullName = model.FullName
+                };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -122,11 +126,22 @@ namespace ProIdeas.UI.Controllers
                     // Send an email with this link
                     //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     //var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                    //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",                    
                     //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+
+                    //await _signInManager.SignInAsync(user, isPersistent: false);
+
                     _logger.LogInformation(3, "User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return await Login(new LoginViewModel
+                    {
+                        Email = model.Email,
+                        Password = model.Password,
+                        RememberMe = false
+                    }, returnUrl);
+
+
+
                 }
                 AddErrors(result);
             }
@@ -461,6 +476,8 @@ namespace ProIdeas.UI.Controllers
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+
+            ViewBag.ErrorMessage = string.Join(Environment.NewLine, result.Errors.Select(i => i.Description).Distinct());
         }
 
         private IActionResult RedirectToLocal(string returnUrl)

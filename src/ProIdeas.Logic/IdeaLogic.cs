@@ -87,7 +87,7 @@ namespace ProIdeas.Logic
             { throw new ArgumentException("invalid command message", nameof(message)); }
 
 
-            var result = _repository.Add(_dataMapper.Map<Idea>(message.Idea)).First();
+            var result = _repository.Add(_dataMapper.Map<Idea>(message.Idea));
 
 
             _bus.RaiseEvent(new IdeaCreatedEvent(_dataMapper.Map<IdeaDto>(result)));
@@ -99,7 +99,7 @@ namespace ProIdeas.Logic
             { throw new ArgumentException("invalid command message", nameof(message)); }
 
 
-            var result = _repository.Add(_dataMapper.Map<Idea>(message.Idea)).First();
+            var result = _repository.Add(_dataMapper.Map<Idea>(message.Idea));
 
 
             _bus.RaiseEvent(new IdeaUpdatedEvent(_dataMapper.Map<IdeaDto>(result)));

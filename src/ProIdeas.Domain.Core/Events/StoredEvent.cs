@@ -6,8 +6,7 @@ namespace ProIdeas.Domain.Core.Events
     public class StoredEvent : Event, IEntity
     {
         public StoredEvent(Event theEvent, string data, string user)
-        {
-            Id = Guid.NewGuid();
+        {            
             AggregateId = theEvent.AggregateId;
             MessageType = theEvent.MessageType;
             Data = data;
@@ -20,7 +19,7 @@ namespace ProIdeas.Domain.Core.Events
         }
         
 
-        public object Id { get; set; }
+        public string Id { get; set; }
 
         public string Data { get; private set; }
 

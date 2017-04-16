@@ -1,16 +1,13 @@
-﻿using System;
-using System.Runtime.Serialization;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Runtime.Serialization;
 using ProIdeas.Domain.Entities;
 
 namespace AspNet.Identity.Repository
 {
 	[DataContract]
-	public class RepositoryIdentityRole : BaseEntity<string>
+	public class RepositoryIdentityRole : BaseEntity
 	{
 		public RepositoryIdentityRole()
-		{
-			Id = Guid.NewGuid().ToString();
+		{			
 		}
 
 		public RepositoryIdentityRole(string roleName)

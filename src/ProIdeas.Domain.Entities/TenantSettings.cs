@@ -3,7 +3,7 @@ using System;
 
 namespace ProIdeas.Domain.Entities
 {
-    public class TenantSettings : BaseEntity<string>
+    public class TenantSettings : BaseEntity
     {
         public string UniqueKey { get; set; }
         public string SiteName { get; set; }

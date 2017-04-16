@@ -12,7 +12,7 @@ namespace ProIdeas.Domain.Entities
         public string Value { get; set; }
     }
 
-    public class User:BaseEntity<string>
+    public class User:BaseEntity
     {
         public string UserName { get; set; }
 

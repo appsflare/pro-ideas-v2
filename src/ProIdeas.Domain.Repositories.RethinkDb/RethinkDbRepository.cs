@@ -18,79 +18,77 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
         public RethinkDbRepository(IRethinkDbConnectionProvider connectionProvider, ConnectionOptions connectionOptions)
         {
             _connectionOptions = connectionOptions;
-            _connection = connectionProvider.GetConnection(_connectionOptions);          
+            _connection = connectionProvider.GetConnection(_connectionOptions);
         }
 
-        private static string GetTableName<T>()
+        private static string GetTableName<TEntity>()
         {
-            return typeof(T).Name;
+            return typeof(TEntity).Name;
         }
 
-        private static Table GetTable<T>()
+        private static Table GetTable<TEntity>()
         {
-            return RethinkDB.R.Table(GetTableName<T>());
+            return RethinkDB.R.Table(GetTableName<TEntity>());
         }
 
 
 
-        public IEnumerable<T> Add<T>(params T[] items) where T : class, IEntity, new()
+        public TEntity Add<TEntity>(TEntity item) where TEntity : class, IEntity, new()
         {
-            var result = GetTable<T>().Insert(items).RunResult<List<T>>(_connection);
-
-            return result;
+            return GetTable<TEntity>().Insert(item).RunAtom<TEntity>(_connection);
         }
 
-        public IEnumerable<T> All<T>() where T : class, IEntity, new()
+        public IEnumerable<TEntity> All<TEntity>() where TEntity : class, IEntity, new()
         {
-            return AllQueryable<T>();
+            return AllQueryable<TEntity>();
         }
 
-        private IQueryable<T> AllQueryable<T>() where T : class, IEntity, new()
+        private IQueryable<TEntity> AllQueryable<TEntity>() where TEntity : class, IEntity, new()
         {
             return RethinkDB.R.Db(_connectionOptions.DBName)
-                                            .Table<T>(typeof(T).Name, _connection);
+                                            .Table<TEntity>(typeof(TEntity).Name, _connection);
         }
 
-        public IEnumerable<T> All<T>(int page, int pageSize) where T : class, IEntity, new()
+        public IEnumerable<TEntity> All<TEntity>(int page, int pageSize) where TEntity : class, IEntity, new()
         {
-            return All<T>().Skip(page * pageSize).Take(pageSize).ToList();
+            return All<TEntity>().Skip(page * pageSize).Take(pageSize).ToList();
         }
 
-        public void Delete<T>(Expression<Func<T, bool>> expression) where T : class, IEntity, new()
+        public void Delete<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class, IEntity, new()
         {
-            var itemsToBeDeleted = AllQueryable<T>().Where(expression).Select(i => i.Id).ToList();
+            var itemsToBeDeleted = AllQueryable<TEntity>().Where(expression).Select(i => i.Id).ToList();
 
-            RethinkDB.R.Table(GetTableName<T>()).GetAll(itemsToBeDeleted).Delete().RunResult(_connection);
+            RethinkDB.R.Table(GetTableName<TEntity>()).GetAll(itemsToBeDeleted).Delete().RunResult(_connection);
 
         }
 
-        public void Delete<T>(T item) where T : class, IEntity, new()
+        public void Delete<TEntity>(TEntity item) where TEntity : class, IEntity, new()
         {
-            RethinkDB.R.Table(GetTableName<T>()).Get(item.Id).Delete().RunResult(_connection);
+            RethinkDB.R.Table(GetTableName<TEntity>()).Get(item.Id).Delete().RunResult(_connection);
         }
 
-        public void DeleteAll<T>() where T : class, IEntity, new()
+        public void DeleteAll<TEntity>() where TEntity : class, IEntity, new()
         {
-            RethinkDB.R.Table(GetTableName<T>()).Delete().RunResult(_connection);
+            RethinkDB.R.Table(GetTableName<TEntity>()).Delete().RunResult(_connection);
         }
 
-        public T Single<T>(Expression<Func<T, bool>> expression) where T : class, IEntity, new()
+        public TEntity Single<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class, IEntity, new()
         {
-            return AllQueryable<T>().SingleOrDefault(expression);
+            return AllQueryable<TEntity>().SingleOrDefault(expression);
         }
 
-        public T First<T>(Expression<Func<T, bool>> expression) where T : class, IEntity, new()
+        public TEntity First<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class, IEntity, new()
         {
-            return AllQueryable<T>().FirstOrDefault(expression);
+            return AllQueryable<TEntity>().FirstOrDefault(expression);
         }
 
-       public IEnumerable<T> Query<T>(IQuery<T> query) where T : class, IEntity, new()
+        public IEnumerable<TEntity> Query<TEntity>(IQuery<TEntity> query) where TEntity : class, IEntity, new()
         {
 
             if (query == null)
             { throw new ArgumentNullException(nameof(query)); }
 
-            var queryable = AllQueryable<T>();
+            var queryable = AllQueryable<TEntity>();
 
             if (query.Filter != null)
             {
@@ -113,11 +111,16 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             return queryable.ToList();
         }
 
-        public IEnumerable<T> Update<T>(params T[] items) where T : class, IEntity, new()
+        public IEnumerable<TEntity> Update<TEntity>(params TEntity[] items) where TEntity : class, IEntity, new()
         {
-            var result = GetTable<T>().Update(items).RunResult<List<T>>(_connection);
+            var result = GetTable<TEntity>().Update(items).RunResult<List<TEntity>>(_connection);
 
             return result;
+        }
+
+        TEntity IRepository.GetOne<TEntity>(string id)
+        {
+            return RethinkDB.R.Table(GetTableName<TEntity>()).Get(id).RunResult<TEntity>(_connection);
         }
     }
 }

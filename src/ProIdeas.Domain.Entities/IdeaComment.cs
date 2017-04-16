@@ -2,7 +2,7 @@
 
 namespace ProIdeas.Domain.Entities
 {
-    public class IdeaComment : BaseEntity<string>
+    public class IdeaComment : BaseEntity
     {
         public string IdeaId { get; set; }
 
