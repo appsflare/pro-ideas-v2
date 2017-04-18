@@ -1,2 +1,3 @@
 # pro-ideas-v2
-Next Idea Dashboard using Asp.NET Core
+Next Generation Idea Dashboard using ASP.NET Core and RethinkDB Edit
+
