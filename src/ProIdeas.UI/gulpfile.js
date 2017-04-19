@@ -11,7 +11,8 @@ var gulp = require("gulp"),
     rename = require('gulp-rename'),
     es = require('event-stream'),
     bowerResolve = require('rollup-plugin-bower-resolve'),
-    commonjs = require('rollup-plugin-commonjs');
+    commonjs = require('rollup-plugin-commonjs'),
+    npmResolve = require('rollup-plugin-node-resolve');
 
 // other content removed
 
@@ -49,7 +50,8 @@ gulp.task('build-pages', function (done) {
             return rollup({
                 entry: entry,
                 sourceMap: true,
-                format: 'amd',
+                format: 'iife',
+                moduleName: entry,
                 plugins: [
 
                     bowerResolve({
@@ -72,6 +74,7 @@ gulp.task('build-pages', function (done) {
                             //lodash: 'dist/lodash.js'                            
                         }
                     }),
+                    npmResolve(),
                     commonjs(),
                     babel({
                         exclude: 'node_modules/**',

@@ -1,4 +1,7 @@
-define(function () { 'use strict';
+this[''] = this[''] || {};
+this['']['/Scripts/pages/ideas/create'] = this['']['/Scripts/pages/ideas/create'] || {};
+(function () {
+'use strict';
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -44,5 +47,5 @@ client.getIdeas().then(function (ideas) {
     console.log();
 });
 
-});
+}());
 //# sourceMappingURL=create.bundle.js.map

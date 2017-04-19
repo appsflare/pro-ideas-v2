@@ -1,4 +1,7 @@
-define(function () { 'use strict';
+this[''] = this[''] || {};
+this['']['/Scripts/pages/ideas/index'] = this['']['/Scripts/pages/ideas/index'] || {};
+(function () {
+'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -1693,5 +1696,5 @@ client.getIdeas().then(function (ideas) {
     console.log();
 });
 
-});
+}());
 //# sourceMappingURL=index.bundle.js.map
