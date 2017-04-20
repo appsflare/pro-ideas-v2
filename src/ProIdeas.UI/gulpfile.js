@@ -12,7 +12,8 @@ var gulp = require("gulp"),
     es = require('event-stream'),
     bowerResolve = require('rollup-plugin-bower-resolve'),
     commonjs = require('rollup-plugin-commonjs'),
-    npmResolve = require('rollup-plugin-node-resolve');
+    npmResolve = require('rollup-plugin-node-resolve'),
+    stringPlugin = require('rollup-plugin-string');
 
 // other content removed
 
@@ -45,7 +46,6 @@ function build(files, done, err) {
             format: 'iife',
             moduleName: entry,
             plugins: [
-
                 bowerResolve({
                     // Use "module" field for ES6 module if possible, default is `true`.
                     // See: https://github.com/rollup/rollup/wiki/pkg.module
@@ -68,6 +68,9 @@ function build(files, done, err) {
                 }),
                 npmResolve(),
                 commonjs(),
+                stringPlugin({
+                    include: '**/*.html'
+                }),
                 babel({
                     exclude: 'node_modules/**',
                     presets: ['es2015-rollup'],
@@ -105,7 +108,7 @@ function build(files, done, err) {
 
 
 gulp.task('build-lib', function (done) {
-    glob('./Scripts/lib/index.js', function (err, files) {        
+    glob('./Scripts/lib/index.js', function (err, files) {
         build(files, done, err);
     });
 });

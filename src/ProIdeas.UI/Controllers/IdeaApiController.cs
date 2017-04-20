@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Services.Contracts;
 using ProIdeas.DTO;
+using System.Threading.Tasks;
 
 namespace ProIdeas.UI.Controllers
 {
@@ -18,32 +19,31 @@ namespace ProIdeas.UI.Controllers
 
         // GET: api/IdeaApi
         [HttpGet]
-        public IEnumerable<IdeaDto> Get(int pageSize = 10, int page = 1)
+        public Task<IEnumerable<IdeaDto>> Get(int pageSize = 10, int page = 1)
         {
-            return _ideaService.GetIdeas(pageSize, page);
+            return _ideaService.GetIdeasAsync(pageSize, page);
         }
 
         // GET: api/IdeaApi/5
         [HttpGet("{id}", Name = "Get")]
-        public IdeaDto Get(string id)
+        public Task<IdeaDto> Get(string id)
         {
-            return _ideaService.GetIdea(id);
+            return _ideaService.GetIdeaAsync(id);
         }
-        
+
         // POST: api/IdeaApi
         [HttpPost]
-        public void Post([FromBody]IdeaDto idea)
+        public Task<IdeaDto> Post([FromBody]IdeaDto idea)
         {
-            
-
+            return _ideaService.CreateAsync(idea);
         }
-        
+
         // PUT: api/IdeaApi/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]IdeaDto idea)
         {
         }
-        
+
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
