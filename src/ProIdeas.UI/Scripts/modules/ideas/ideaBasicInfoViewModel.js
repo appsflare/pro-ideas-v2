@@ -8,8 +8,9 @@ export default class IdeaBasicInfoViewModel {
         this._initForm(idea);
     }
 
-    _initForm({title = '', description = '', isFundingRequired = false, fundingRequirement = ''}) {
+    _initForm({id, title = '', description = '', isFundingRequired = false, fundingRequirement = ''}) {
         this.form = {
+            id,
             title: ko.observable(title),
             description: ko.observable(description),
             isFundingRequired: ko.observable(isFundingRequired),
@@ -35,10 +36,10 @@ export default class IdeaBasicInfoViewModel {
 
         this.isSaving(true);
         const { save } = this.actions;
-        return save()
+        return save(form)
             .then(res => {
                 this.isSaving(false);
-                return res;
+                return Promise.resolve(res);
             }).catch(e => {
                 this.isSaving(false);
             });

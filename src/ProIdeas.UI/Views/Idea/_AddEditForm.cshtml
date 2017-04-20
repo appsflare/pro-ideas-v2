@@ -1,26 +1,12 @@
 @model IdeaInfoViewModel
-@{
-    ViewData["Title"] = "Creat your idea";
-}
-
-@section Styles{
-    <link href="~/css/quill.core.css" rel="stylesheet" />
-    <link href="~/css/quill.snow.css" rel="stylesheet" />
-}
-
-@section Scripts{
-    <script src="~/Scripts/pages/ideas/create.bundle.js"></script>
-}
-
 <div class="container create-idea">
     <div class="row">
         <h4 class="common-page-header">Post your new idea</h4>
         <section>
-            <ul class="nav nav-pills nav-pills-vertical" role="tablist">
-                <li class="active"><a href="#dashboard">Basic Information</a></li>
-                <li class=""><a href="#schedule">Images</a></li>
-                <li class=""><a href="#tasks">Pages</a></li>
-                @*<li class=""><a href="#payments">Review</a></li>*@
+            <ul class="nav nav-pills" role="tablist">
+                <li class="active"><a href="javascript:void()">Basic Information</a></li>
+                <li class=""><a href="/idea/images/@Model.Id">Images</a></li>
+                <li class=""><a href="/idea/pages/@Model.Id">Pages</a></li>                
             </ul>
             <div class="content">
                 <form id="create-idea-form" class="form" data-bind="submit: save">
@@ -50,7 +36,4 @@
             </div>
         </section>
     </div>
-    @await Html.PartialAsync("_AddEditForm", Model);
 </div>
-
-

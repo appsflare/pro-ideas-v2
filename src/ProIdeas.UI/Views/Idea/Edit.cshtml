@@ -1,0 +1,19 @@
+@model IdeaInfoViewModel
+@{
+    ViewData["Title"] = "Creat your idea";
+}
+
+@section Styles{
+    <link href="~/css/quill.core.css" rel="stylesheet" />
+    <link href="~/css/quill.snow.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    <script src="~/Scripts/pages/ideas/edit.bundle.js"></script>
+}
+
+<div class="container create-idea">
+    @await Html.PartialAsync("_AddEditForm", Model);
+</div>
+
+

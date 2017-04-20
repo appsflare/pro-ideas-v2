@@ -1,6 +1,5 @@
 ﻿import ApiClient from '../../modules/api';
 import ko from 'knockout';
-import '../../components/rich-text-editor';
 
 import IdeaBasicInfoViewModel from '../../modules/ideas/ideaBasicInfoViewModel';
 
@@ -12,8 +11,9 @@ $(function () {
     var viewModel = new IdeaBasicInfoViewModel({
         actions: {
             save(idea) {
-                debugger;
-                return client.createIdea(idea);
+                return client.createIdea(idea).then(data => {
+                    document.location.href = `/ideas/images/${data.id}`;
+                });
             }
         }
     });
