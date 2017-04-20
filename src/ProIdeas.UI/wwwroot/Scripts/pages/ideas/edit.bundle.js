@@ -43,11 +43,13 @@ var createClass = function () {
   };
 }();
 
+var defaultHeaders = {
+    'content-type': 'application/json;charset=utf8'
+};
 var utils = {
     get: function get$$1(url) {
         return new Promise(function (resolve, reject) {
-
-            $.post({
+            $.get({
                 url: url,
                 success: resolve,
                 error: reject
@@ -83,9 +85,7 @@ var ApiClient = function () {
         classCallCheck(this, ApiClient);
 
         $.ajaxSetup({
-            headers: {
-                'content-type': 'application/json;charset=utf8'
-            },
+            headers: defaultHeaders,
             dataType: 'json'
         });
     }
@@ -105,7 +105,7 @@ var ApiClient = function () {
         key: 'updateIdea',
         value: function updateIdea(idea) {
 
-            return utils.post('/api/ideas/' + idea.id, idea);
+            return utils.put('/api/ideas/' + idea.id, idea);
         }
     }, {
         key: 'getIdeas',
@@ -1820,19 +1820,9 @@ var IdeaBasicInfoViewModel = function () {
 
 $(function () {
 
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
-
     var client = new ApiClient();
 
-    client.getIdea(getParameterByName('id')).then(function (ideaDetails) {
+    client.getIdea($('#IdeaId').val()).then(function (ideaDetails) {
 
         var viewModel = new IdeaBasicInfoViewModel({
             idea: ideaDetails,

@@ -18,8 +18,8 @@ namespace ProIdeas.UI.Controllers
         }
 
         // GET: api/IdeaApi
-        [HttpGet]
-        public Task<IEnumerable<IdeaDto>> Get(int pageSize = 10, int page = 1)
+        [HttpGet("filter", Name = "Filter")]
+        public Task<IEnumerable<IdeaDto>> Filter(int pageSize = 10, int page = 1)
         {
             return _ideaService.GetIdeasAsync(pageSize, page);
         }
@@ -40,13 +40,14 @@ namespace ProIdeas.UI.Controllers
 
         // PUT: api/IdeaApi/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]IdeaDto idea)
+        public void Put(string id, [FromBody]IdeaDto idea)
         {
+            _ideaService.Update(idea);
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
         }
     }

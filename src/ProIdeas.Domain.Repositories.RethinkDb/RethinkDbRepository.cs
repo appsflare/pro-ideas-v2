@@ -36,7 +36,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
         public TEntity Add<TEntity>(TEntity item) where TEntity : class, IEntity, new()
         {
             var result = GetTable<TEntity>().Insert(item).RunResult(_connection);
-            return result.GeneratedKeys.Any()? GetOne<TEntity>(result.GeneratedKeys.First().ToString()): default(TEntity);
+            return result.GeneratedKeys.Any() ? GetOne<TEntity>(result.GeneratedKeys.First().ToString()) : default(TEntity);
         }
 
         public IEnumerable<TEntity> All<TEntity>() where TEntity : class, IEntity, new()
@@ -112,11 +112,11 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             return queryable.ToList();
         }
 
-        public IEnumerable<TEntity> Update<TEntity>(params TEntity[] items) where TEntity : class, IEntity, new()
+        public TEntity Update<TEntity>(TEntity item) where TEntity : class, IEntity, new()
         {
-            var result = GetTable<TEntity>().Update(items).RunResult<List<TEntity>>(_connection);
 
-            return result;
+            var result = RethinkDB.R.Table(GetTableName<TEntity>()).Get(item.Id).Update(item).RunResult(_connection);
+            return GetOne<TEntity>(item.Id);
         }
 
         public TEntity GetOne<TEntity>(string id) where TEntity : class, IEntity, new()

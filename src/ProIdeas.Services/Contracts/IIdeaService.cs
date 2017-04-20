@@ -10,6 +10,8 @@ namespace ProIdeas.Services.Contracts
 
         Task<IdeaDto> CreateAsync(IdeaDto idea);
 
+        void Update(IdeaDto idea);
+
         Task<IEnumerable<IdeaDto>> GetIdeasAsync(int pageSize, int page);
 
     }

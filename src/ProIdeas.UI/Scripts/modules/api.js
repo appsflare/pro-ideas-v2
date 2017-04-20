@@ -1,8 +1,10 @@
-﻿const utils = {
+﻿const defaultHeaders = {
+    'content-type': 'application/json;charset=utf8'
+};
+const utils = {
     get(url) {
         return new Promise((resolve, reject) => {
-
-            $.post({
+            $.get({
                 url,
                 success: resolve,
                 error: reject
@@ -38,9 +40,7 @@ export default class ApiClient {
 
     constructor() {
         $.ajaxSetup({
-            headers: {
-                'content-type': 'application/json;charset=utf8'
-            },
+            headers: defaultHeaders,
             dataType: 'json'
         });
     }
@@ -56,7 +56,7 @@ export default class ApiClient {
 
     updateIdea(idea) {
 
-        return utils.post(`/api/ideas/${idea.id}`, idea);
+        return utils.put(`/api/ideas/${idea.id}`, idea);
     }
 
     getIdeas() {

@@ -27,6 +27,6 @@ namespace ProIdeas.Domain.Repositories
 
         TEntity Add<TEntity>(TEntity item) where TEntity : class, IEntity, new();
 
-        IEnumerable<TEntity> Update<TEntity>(params TEntity[] items) where TEntity : class, IEntity, new();
+        TEntity Update<TEntity>(TEntity item) where TEntity : class, IEntity, new();
     }
 }

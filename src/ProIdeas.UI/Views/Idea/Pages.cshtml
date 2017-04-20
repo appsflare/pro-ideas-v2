@@ -1,4 +1,4 @@
-
+@model IdeaInfoViewModel
 @{
     ViewData["Title"] = "Creat your idea";
 }
@@ -8,9 +8,9 @@
         <h4 class="common-page-header">Post your new idea</h4>
         <section>
             <ul class="nav nav-pills nav-pills-vertical" role="tablist">
-                <li class="complete"><a href="#dashboard">Basic Information</a></li>
-                <li class="complete"><a href="#schedule">Images</a></li>
-                <li class="active"><a href="#tasks">Pages</a></li>
+                <li class="complete"><a href="/idea/edit/@Model.Id">Basic Information</a></li>
+                <li class="complete"><a href="/idea/images/@Model.Id">Images</a></li>
+                <li class=""><a href="/idea/pages/@Model.Id">Pages</a></li>@*<li class=""><a href="#payments">Review</a></li>*@
                 @*<li class=""><a href="#payments">Review</a></li>*@
             </ul>
             <div class="content">

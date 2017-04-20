@@ -39,61 +39,37 @@ namespace ProIdeas.UI.Controllers
         async public Task<IActionResult> Edit(string id)
         {
             var idea = await _ideaService.GetIdeaAsync(id);
-            return View(idea);
+
+            return View(GetIdeaInfoViewModel(idea));
+        }
+
+        private static IdeaInfoViewModel GetIdeaInfoViewModel(DTO.IdeaDto idea)
+        {
+            return new IdeaInfoViewModel
+            {
+                Id = idea.Id,
+                Title = idea.Title,
+                Description = idea.Description
+            };
         }
 
         // GET: Idea/Images
-        public ActionResult Images(string id)
+        async public Task<IActionResult> Images(string id)
         {
-            //var idea = _ideaService.GetIdea(ideaId);
-            return View();
+            var idea = await _ideaService.GetIdeaAsync(id);
+
+            return View(GetIdeaInfoViewModel(idea));
         }
 
         // GET: Idea/Pages
-        public ActionResult Pages(string ideaId)
+        async public Task<IActionResult> Pages(string id)
         {
-            //var idea = _ideaService.GetIdea(ideaId);
-            return View();
-        }
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
+            var idea = await _ideaService.GetIdeaAsync(id);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            return View(GetIdeaInfoViewModel(idea));
         }
-
-        // GET: Idea/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Idea/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+    
+       
 
         // GET: Idea/Delete/5
         public ActionResult Delete(int id)

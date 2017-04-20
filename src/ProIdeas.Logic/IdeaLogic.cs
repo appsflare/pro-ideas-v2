@@ -31,28 +31,11 @@ namespace ProIdeas.Logic
             _bus = bus;
         }
 
-        public Task<IdeaDto> CreateIdea(IdeaDto idea)
-        {
-            return Task.Factory.StartNew(() =>
-            {
-                var newIdea = _dataMapper.Map<Idea>(idea);
-                newIdea.Status = Status.Draft.ToString();
-                var addedIdea = _repository.Add(newIdea);
-                return _dataMapper.Map<IdeaDto>(addedIdea);
-            });
-        }
+
 
         public Task<IdeaDto> GetIdea(string ideaId)
         {
-            return Task.Factory.StartNew(() =>
-            {
-                var query = new QueryBuilder<Idea>()
-                    .WithCondition(i => i.Id == ideaId)
-                    .Build();
-
-
-                return _dataMapper.Map<IdeaDto>(_repository.Query(query));
-            });
+            return Task.Factory.StartNew(() => _dataMapper.Map<IdeaDto>(_repository.GetOne<Idea>(ideaId)));
         }
 
         public Task<IEnumerable<IdeaDto>> GetIdeas(int pageSize, int page, string keyword)
@@ -109,8 +92,14 @@ namespace ProIdeas.Logic
             { throw new ArgumentException("invalid command message", nameof(message)); }
 
 
-            var result = _repository.Add(_dataMapper.Map<Idea>(message.Idea));
+            var newIdea = _dataMapper.Map<Idea>(message.Idea);
+            newIdea.Status = Status.Draft.ToString();
 
+            var result = _repository.Add(newIdea);
+
+            var createdIdea = _dataMapper.Map<IdeaDto>(result);
+
+            message.Idea.Id = createdIdea.Id;
 
             _bus.RaiseEvent(new IdeaCreatedEvent(_dataMapper.Map<IdeaDto>(result)));
         }
@@ -121,26 +110,32 @@ namespace ProIdeas.Logic
             { throw new ArgumentException("invalid command message", nameof(message)); }
 
 
-            var result = _repository.Add(_dataMapper.Map<Idea>(message.Idea));
+
+            var newIdea = _dataMapper.Map<Idea>(message.Idea);
+
+
+            var result = _repository.Update(newIdea);
+
+
 
 
             _bus.RaiseEvent(new IdeaUpdatedEvent(_dataMapper.Map<IdeaDto>(result)));
         }
 
-        async public void Handle(DeleteIdeaCommand message)
+        public void Handle(DeleteIdeaCommand message)
         {
             if (!message.IsValid())
             { throw new ArgumentException("invalid command message", nameof(message)); }
 
 
-            var idea = await GetIdea(message.IdeaId);
+            var idea = _repository.GetOne<Idea>(message.IdeaId);
 
             if (idea == null)
             { return; }
 
-            _repository.Delete<Idea>(i => i.Id == idea.Id);
+            _repository.Delete(idea);
 
-            _bus.RaiseEvent(new IdeaDeletedEvent(idea));
+            _bus.RaiseEvent(new IdeaDeletedEvent(_dataMapper.Map<IdeaDto>(idea)));
 
         }
     }

@@ -11,9 +11,10 @@ $(function () {
     var viewModel = new IdeaBasicInfoViewModel({
         actions: {
             save(idea) {
-                return client.createIdea(idea).then(data => {
-                    document.location.href = `/ideas/images/${data.id}`;
-                });
+                return client.createIdea(idea)
+                    .then(data => {
+                        document.location.href = `/ideas/images/${data.id}`;
+                    });
             }
         }
     });
