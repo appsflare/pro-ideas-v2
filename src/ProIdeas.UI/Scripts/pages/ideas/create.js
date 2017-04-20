@@ -18,6 +18,6 @@ $(function () {
         }
     });
 
-    ko.applyBindings(viewModel, document.getElementById('create-form'));
+    ko.applyBindings(viewModel, document.getElementById('create-idea-form'));
 
 });
