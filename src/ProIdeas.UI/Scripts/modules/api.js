@@ -1,15 +1,17 @@
-﻿
-function post(url, data) {
-    return new Promise((resolve, reject) => {
+﻿const utils = {
+    post(url, data) {
+        return new Promise((resolve, reject) => {
 
-        $.post({
-            url: '/api/ideas',
-            data: JSON.stringify(idea),
-            success: resolve,
-            error: reject
+            $.post({
+                url: '/api/ideas',
+                data: JSON.stringify(data),
+                success: resolve,
+                error: reject
+            });
         });
-    });
-}
+    }
+};
+
 export default class ApiClient {
 
     constructor() {
@@ -21,9 +23,11 @@ export default class ApiClient {
         });
     }
 
+    
+
     createIdea(idea) {
 
-        return post('/api/ideas', idea);
+        return utils.post('/api/ideas', idea);
     }
 
     getIdeas() {

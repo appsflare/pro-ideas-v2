@@ -35,10 +35,10 @@ export default class IdeaBasicInfoViewModel {
 
         this.isSaving(true);
         const { save } = this.actions;
-        return save()
+        return save(form)
             .then(res => {
                 this.isSaving(false);
-                return res;
+                return Promise.resolve(res);
             }).catch(e => {
                 this.isSaving(false);
             });

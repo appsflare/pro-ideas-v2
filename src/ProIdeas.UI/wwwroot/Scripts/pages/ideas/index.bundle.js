@@ -43,17 +43,19 @@ var createClass = function () {
   };
 }();
 
-function post(url, data) {
-    return new Promise(function (resolve, reject) {
+var utils = {
+    post: function post(url, data) {
+        return new Promise(function (resolve, reject) {
 
-        $.post({
-            url: '/api/ideas',
-            data: JSON.stringify(idea),
-            success: resolve,
-            error: reject
+            $.post({
+                url: '/api/ideas',
+                data: JSON.stringify(data),
+                success: resolve,
+                error: reject
+            });
         });
-    });
-}
+    }
+};
 
 var ApiClient = function () {
     function ApiClient() {
@@ -71,7 +73,7 @@ var ApiClient = function () {
         key: 'createIdea',
         value: function createIdea(idea) {
 
-            return post('/api/ideas', idea);
+            return utils.post('/api/ideas', idea);
         }
     }, {
         key: 'getIdeas',

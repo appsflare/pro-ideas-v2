@@ -35,7 +35,10 @@ namespace ProIdeas.Logic
         {
             return Task.Factory.StartNew(() =>
             {
-                return _dataMapper.Map<IdeaDto>(_repository.Add(_dataMapper.Map<Idea>(idea)));
+                var newIdea = _dataMapper.Map<Idea>(idea);
+                newIdea.Status = Status.Draft.ToString();
+                var addedIdea = _repository.Add(newIdea);
+                return _dataMapper.Map<IdeaDto>(addedIdea);
             });
         }
 
@@ -59,6 +62,7 @@ namespace ProIdeas.Logic
             {
                 var query = new QueryBuilder<Idea>()
                 //.WithCondition(i => i.Title.Contains(keyword) || i.Description.Contains(keyword) || i.FundingRequirement.Contains(keyword))
+                .WithCondition(i => i.Status == Status.Published.ToString())
                 .OrderBy(i => i.OrderBy(j => j.Title))
                 .Skip(Math.Max(page, 0) * pageSize)
                 .Take(pageSize)

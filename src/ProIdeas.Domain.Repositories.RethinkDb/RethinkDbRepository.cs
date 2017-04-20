@@ -35,7 +35,8 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
         public TEntity Add<TEntity>(TEntity item) where TEntity : class, IEntity, new()
         {
-            return GetTable<TEntity>().Insert(item).RunAtom<TEntity>(_connection);
+            var result = GetTable<TEntity>().Insert(item).RunResult(_connection);
+            return result.GeneratedKeys.Any()? GetOne<TEntity>(result.GeneratedKeys.First().ToString()): default(TEntity);
         }
 
         public IEnumerable<TEntity> All<TEntity>() where TEntity : class, IEntity, new()
@@ -118,7 +119,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             return result;
         }
 
-        TEntity IRepository.GetOne<TEntity>(string id)
+        public TEntity GetOne<TEntity>(string id) where TEntity : class, IEntity, new()
         {
             return RethinkDB.R.Table(GetTableName<TEntity>()).Get(id).RunResult<TEntity>(_connection);
         }

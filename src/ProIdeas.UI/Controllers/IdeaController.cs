@@ -35,7 +35,7 @@ namespace ProIdeas.UI.Controllers
         }
 
         // GET: Idea/Create
-        public ActionResult Images(string ideaId)
+        public ActionResult Images(string id)
         {
             //var idea = _ideaService.GetIdea(ideaId);
             return View();

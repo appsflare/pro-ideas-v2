@@ -3,6 +3,14 @@ using System.Collections.Generic;
 
 namespace ProIdeas.Domain.Entities
 {
+
+    public enum Status
+    {
+        Draft,
+        Published,
+        Unpublished
+    }
+
     public class Idea : BaseEntity
     {
 
@@ -27,6 +35,8 @@ namespace ProIdeas.Domain.Entities
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }
+
+        public string Status { get; set; }
 
     }
 }

@@ -43,17 +43,19 @@ var createClass = function () {
   };
 }();
 
-function post(url, data) {
-    return new Promise(function (resolve, reject) {
+var utils = {
+    post: function post(url, data) {
+        return new Promise(function (resolve, reject) {
 
-        $.post({
-            url: '/api/ideas',
-            data: JSON.stringify(idea),
-            success: resolve,
-            error: reject
+            $.post({
+                url: '/api/ideas',
+                data: JSON.stringify(data),
+                success: resolve,
+                error: reject
+            });
         });
-    });
-}
+    }
+};
 
 var ApiClient = function () {
     function ApiClient() {
@@ -71,7 +73,7 @@ var ApiClient = function () {
         key: 'createIdea',
         value: function createIdea(idea) {
 
-            return post('/api/ideas', idea);
+            return utils.post('/api/ideas', idea);
         }
     }, {
         key: 'getIdeas',
@@ -12790,9 +12792,9 @@ var IdeaBasicInfoViewModel = function () {
             this.isSaving(true);
             var save = this.actions.save;
 
-            return save().then(function (res) {
+            return save(form).then(function (res) {
                 _this.isSaving(false);
-                return res;
+                return Promise.resolve(res);
             }).catch(function (e) {
                 _this.isSaving(false);
             });
@@ -12808,8 +12810,9 @@ $(function () {
     var viewModel = new IdeaBasicInfoViewModel({
         actions: {
             save: function save(idea) {
-                debugger;
-                return client.createIdea(idea);
+                return client.createIdea(idea).then(function (data) {
+                    document.location.href = '/ideas/images/' + data.id;
+                });
             }
         }
     });
