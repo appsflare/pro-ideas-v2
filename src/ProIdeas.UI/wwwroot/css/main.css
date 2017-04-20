@@ -7791,9 +7791,9 @@ select.form-control {
   color: #6fcf97;
   border-bottom: 3px solid #6fcf97; }
 
-.nav-pills > li.complete {
-  color: #6fcf97;
-  border-bottom: 3px solid #6fcf97; }
+.nav-pills > li.complete > a {
+  color: #7e8bda;
+  border-bottom: 3px solid #7e8bda; }
 
 .nav-pills.nav-pills-info > li.active > a, .nav-pills.nav-pills-info > li.active > a:focus, .nav-pills.nav-pills-info > li.active > a:hover {
   background-color: #03a9f4;

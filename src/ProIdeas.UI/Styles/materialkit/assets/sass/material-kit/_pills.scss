@@ -34,9 +34,9 @@
             }
         }
 
-        &.complete {
-            color: $active-color;
-            border-bottom: 3px solid $active-color;
+        &.complete > a {
+            color: $deactive;
+            border-bottom: 3px solid $deactive;
         }
     }
 
