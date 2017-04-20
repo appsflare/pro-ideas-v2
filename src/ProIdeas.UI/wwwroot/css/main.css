@@ -5964,7 +5964,7 @@ a, a:hover, a:focus {
     .navbar .navbar-nav > li > a.btn.btn-default:focus,
     .navbar .navbar-nav > li > a.btn.btn-default:active,
     .navbar .navbar-nav > li > a.btn.btn-default:hover {
-      box-shadow: 0 14px 26px -12px rgba(153, 153, 153, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(153, 153, 153, 0.2); }
+      box-shadow: 0 4px 2px -2px rgba(153, 153, 153, 0.42), 0 0 0 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(153, 153, 153, 0.2); }
     .btn.disabled, .btn.disabled:hover, .btn.disabled:focus, .btn.disabled.focus, .btn.disabled:active, .btn.disabled.active, .btn:disabled, .btn:disabled:hover, .btn:disabled:focus, .btn:disabled.focus, .btn:disabled:active, .btn:disabled.active, .btn[disabled], .btn[disabled]:hover, .btn[disabled]:focus, .btn[disabled].focus, .btn[disabled]:active, .btn[disabled].active,
     fieldset[disabled] .btn,
     fieldset[disabled] .btn:hover,
@@ -6082,7 +6082,7 @@ a, a:hover, a:focus {
     .navbar .navbar-nav > li > a.btn.btn-primary:focus,
     .navbar .navbar-nav > li > a.btn.btn-primary:active,
     .navbar .navbar-nav > li > a.btn.btn-primary:hover {
-      box-shadow: 0 14px 26px -12px rgba(255, 152, 0, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(255, 152, 0, 0.2); }
+      box-shadow: 0 4px 2px -2px rgba(255, 152, 0, 0.42), 0 0 0 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(255, 152, 0, 0.2); }
     .btn.btn-primary.disabled, .btn.btn-primary.disabled:hover, .btn.btn-primary.disabled:focus, .btn.btn-primary.disabled.focus, .btn.btn-primary.disabled:active, .btn.btn-primary.disabled.active, .btn.btn-primary:disabled, .btn.btn-primary:disabled:hover, .btn.btn-primary:disabled:focus, .btn.btn-primary:disabled.focus, .btn.btn-primary:disabled:active, .btn.btn-primary:disabled.active, .btn.btn-primary[disabled], .btn.btn-primary[disabled]:hover, .btn.btn-primary[disabled]:focus, .btn.btn-primary[disabled].focus, .btn.btn-primary[disabled]:active, .btn.btn-primary[disabled].active,
     fieldset[disabled] .btn.btn-primary,
     fieldset[disabled] .btn.btn-primary:hover,
@@ -6160,7 +6160,7 @@ a, a:hover, a:focus {
     .navbar .navbar-nav > li > a.btn.btn-info:focus,
     .navbar .navbar-nav > li > a.btn.btn-info:active,
     .navbar .navbar-nav > li > a.btn.btn-info:hover {
-      box-shadow: 0 14px 26px -12px rgba(3, 169, 244, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(3, 169, 244, 0.2); }
+      box-shadow: 0 4px 2px -2px rgba(3, 169, 244, 0.42), 0 0 0 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(3, 169, 244, 0.2); }
     .btn.btn-info.disabled, .btn.btn-info.disabled:hover, .btn.btn-info.disabled:focus, .btn.btn-info.disabled.focus, .btn.btn-info.disabled:active, .btn.btn-info.disabled.active, .btn.btn-info:disabled, .btn.btn-info:disabled:hover, .btn.btn-info:disabled:focus, .btn.btn-info:disabled.focus, .btn.btn-info:disabled:active, .btn.btn-info:disabled.active, .btn.btn-info[disabled], .btn.btn-info[disabled]:hover, .btn.btn-info[disabled]:focus, .btn.btn-info[disabled].focus, .btn.btn-info[disabled]:active, .btn.btn-info[disabled].active,
     fieldset[disabled] .btn.btn-info,
     fieldset[disabled] .btn.btn-info:hover,
@@ -6238,7 +6238,7 @@ a, a:hover, a:focus {
     .navbar .navbar-nav > li > a.btn.btn-success:focus,
     .navbar .navbar-nav > li > a.btn.btn-success:active,
     .navbar .navbar-nav > li > a.btn.btn-success:hover {
-      box-shadow: 0 14px 26px -12px rgba(76, 175, 80, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(76, 175, 80, 0.2); }
+      box-shadow: 0 4px 2px -2px rgba(76, 175, 80, 0.42), 0 0 0 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(76, 175, 80, 0.2); }
     .btn.btn-success.disabled, .btn.btn-success.disabled:hover, .btn.btn-success.disabled:focus, .btn.btn-success.disabled.focus, .btn.btn-success.disabled:active, .btn.btn-success.disabled.active, .btn.btn-success:disabled, .btn.btn-success:disabled:hover, .btn.btn-success:disabled:focus, .btn.btn-success:disabled.focus, .btn.btn-success:disabled:active, .btn.btn-success:disabled.active, .btn.btn-success[disabled], .btn.btn-success[disabled]:hover, .btn.btn-success[disabled]:focus, .btn.btn-success[disabled].focus, .btn.btn-success[disabled]:active, .btn.btn-success[disabled].active,
     fieldset[disabled] .btn.btn-success,
     fieldset[disabled] .btn.btn-success:hover,
@@ -6316,7 +6316,7 @@ a, a:hover, a:focus {
     .navbar .navbar-nav > li > a.btn.btn-warning:focus,
     .navbar .navbar-nav > li > a.btn.btn-warning:active,
     .navbar .navbar-nav > li > a.btn.btn-warning:hover {
-      box-shadow: 0 14px 26px -12px rgba(251, 192, 45, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(251, 192, 45, 0.2); }
+      box-shadow: 0 4px 2px -2px rgba(251, 192, 45, 0.42), 0 0 0 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(251, 192, 45, 0.2); }
     .btn.btn-warning.disabled, .btn.btn-warning.disabled:hover, .btn.btn-warning.disabled:focus, .btn.btn-warning.disabled.focus, .btn.btn-warning.disabled:active, .btn.btn-warning.disabled.active, .btn.btn-warning:disabled, .btn.btn-warning:disabled:hover, .btn.btn-warning:disabled:focus, .btn.btn-warning:disabled.focus, .btn.btn-warning:disabled:active, .btn.btn-warning:disabled.active, .btn.btn-warning[disabled], .btn.btn-warning[disabled]:hover, .btn.btn-warning[disabled]:focus, .btn.btn-warning[disabled].focus, .btn.btn-warning[disabled]:active, .btn.btn-warning[disabled].active,
     fieldset[disabled] .btn.btn-warning,
     fieldset[disabled] .btn.btn-warning:hover,
@@ -6394,7 +6394,7 @@ a, a:hover, a:focus {
     .navbar .navbar-nav > li > a.btn.btn-danger:focus,
     .navbar .navbar-nav > li > a.btn.btn-danger:active,
     .navbar .navbar-nav > li > a.btn.btn-danger:hover {
-      box-shadow: 0 14px 26px -12px rgba(244, 67, 54, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(244, 67, 54, 0.2); }
+      box-shadow: 0 4px 2px -2px rgba(244, 67, 54, 0.42), 0 0 0 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(244, 67, 54, 0.2); }
     .btn.btn-danger.disabled, .btn.btn-danger.disabled:hover, .btn.btn-danger.disabled:focus, .btn.btn-danger.disabled.focus, .btn.btn-danger.disabled:active, .btn.btn-danger.disabled.active, .btn.btn-danger:disabled, .btn.btn-danger:disabled:hover, .btn.btn-danger:disabled:focus, .btn.btn-danger:disabled.focus, .btn.btn-danger:disabled:active, .btn.btn-danger:disabled.active, .btn.btn-danger[disabled], .btn.btn-danger[disabled]:hover, .btn.btn-danger[disabled]:focus, .btn.btn-danger[disabled].focus, .btn.btn-danger[disabled]:active, .btn.btn-danger[disabled].active,
     fieldset[disabled] .btn.btn-danger,
     fieldset[disabled] .btn.btn-danger:hover,
@@ -6472,7 +6472,7 @@ a, a:hover, a:focus {
     .navbar .navbar-nav > li > a.btn.btn-upgrade:focus,
     .navbar .navbar-nav > li > a.btn.btn-upgrade:active,
     .navbar .navbar-nav > li > a.btn.btn-upgrade:hover {
-      box-shadow: 0 14px 26px -12px rgba(233, 30, 99, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(233, 30, 99, 0.2); }
+      box-shadow: 0 4px 2px -2px rgba(233, 30, 99, 0.42), 0 0 0 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(233, 30, 99, 0.2); }
     .btn.btn-upgrade.disabled, .btn.btn-upgrade.disabled:hover, .btn.btn-upgrade.disabled:focus, .btn.btn-upgrade.disabled.focus, .btn.btn-upgrade.disabled:active, .btn.btn-upgrade.disabled.active, .btn.btn-upgrade:disabled, .btn.btn-upgrade:disabled:hover, .btn.btn-upgrade:disabled:focus, .btn.btn-upgrade:disabled.focus, .btn.btn-upgrade:disabled:active, .btn.btn-upgrade:disabled.active, .btn.btn-upgrade[disabled], .btn.btn-upgrade[disabled]:hover, .btn.btn-upgrade[disabled]:focus, .btn.btn-upgrade[disabled].focus, .btn.btn-upgrade[disabled]:active, .btn.btn-upgrade[disabled].active,
     fieldset[disabled] .btn.btn-upgrade,
     fieldset[disabled] .btn.btn-upgrade:hover,
