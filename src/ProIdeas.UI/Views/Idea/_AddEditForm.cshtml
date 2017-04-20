@@ -1,0 +1,39 @@
+@model IdeaInfoViewModel
+<div class="container create-idea">
+    <div class="row">
+        <h4 class="common-page-header">Post your new idea</h4>
+        <section>
+            <ul class="nav nav-pills" role="tablist">
+                <li class="active"><a href="javascript:void()">Basic Information</a></li>
+                <li class=""><a href="/idea/images/@Model.Id">Images</a></li>
+                <li class=""><a href="/idea/pages/@Model.Id">Pages</a></li>                
+            </ul>
+            <div class="content">
+                <form id="create-idea-form" class="form" data-bind="submit: save">
+                    <div class="col-sm-12 input-group">
+                        <div class="form-group is-empty">
+                            <input class="form-control" value="" type="text" placeholder="Name your idea *" autocomplete="off" data-bind="value: form.title" />
+                            <span class="material-icons form-control-feedback">clear</span>
+                            <span class="material-input"></span>
+                            <span class="help-block validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 input-group">
+                        <div class="form-group is-empty">
+                            <textarea class="form-control" value="" placeholder="Description your idea *" autocomplete="off" data-bind="value: form.description"></textarea>
+                            <span class="material-icons form-control-feedback">clear</span>
+                            <span class="material-input"></span>
+                            <span class="help-block validation-message"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 input-group">
+                        <div class="form-group is-empty">
+                            <textarea class="form-control" value="" placeholder="Describe if  require funding for your idea." data-bind="value: form.fundingRequirement"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary pull-right" type="submit">Next</button>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>

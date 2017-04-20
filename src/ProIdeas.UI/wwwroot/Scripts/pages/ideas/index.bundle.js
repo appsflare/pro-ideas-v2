@@ -44,11 +44,32 @@ var createClass = function () {
 }();
 
 var utils = {
+    get: function get$$1(url) {
+        return new Promise(function (resolve, reject) {
+
+            $.post({
+                url: url,
+                success: resolve,
+                error: reject
+            });
+        });
+    },
+    put: function put(url, data) {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                data: JSON.stringify(data),
+                success: resolve,
+                error: reject
+            });
+        });
+    },
     post: function post(url, data) {
         return new Promise(function (resolve, reject) {
 
             $.post({
-                url: '/api/ideas',
+                url: url,
                 data: JSON.stringify(data),
                 success: resolve,
                 error: reject
@@ -70,10 +91,21 @@ var ApiClient = function () {
     }
 
     createClass(ApiClient, [{
+        key: 'getIdea',
+        value: function getIdea(id) {
+            return utils.get('/api/ideas/' + id);
+        }
+    }, {
         key: 'createIdea',
         value: function createIdea(idea) {
 
             return utils.post('/api/ideas', idea);
+        }
+    }, {
+        key: 'updateIdea',
+        value: function updateIdea(idea) {
+
+            return utils.post('/api/ideas/' + idea.id, idea);
         }
     }, {
         key: 'getIdeas',

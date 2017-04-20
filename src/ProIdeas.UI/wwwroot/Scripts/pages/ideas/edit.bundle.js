@@ -1,5 +1,5 @@
 this[''] = this[''] || {};
-this['']['/Scripts/pages/ideas/create'] = this['']['/Scripts/pages/ideas/create'] || {};
+this['']['/Scripts/pages/ideas/edit'] = this['']['/Scripts/pages/ideas/edit'] || {};
 (function () {
 'use strict';
 
@@ -1820,20 +1820,34 @@ var IdeaBasicInfoViewModel = function () {
 
 $(function () {
 
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
     var client = new ApiClient();
 
-    var viewModel = new IdeaBasicInfoViewModel({
-        actions: {
-            save: function save(idea) {
-                return client.createIdea(idea).then(function (data) {
-                    document.location.href = '/ideas/images/' + data.id;
-                });
-            }
-        }
-    });
+    client.getIdea(getParameterByName('id')).then(function (ideaDetails) {
 
-    knockout.applyBindings(viewModel, document.getElementById('create-idea-form'));
+        var viewModel = new IdeaBasicInfoViewModel({
+            idea: ideaDetails,
+            actions: {
+                save: function save(idea) {
+                    return client.updateIdea(idea).then(function (data) {
+                        document.location.href = '/ideas/images/' + data.id;
+                    });
+                }
+            }
+        });
+
+        knockout.applyBindings(viewModel, document.getElementById('create-idea-form'));
+    });
 });
 
 }());
-//# sourceMappingURL=create.bundle.js.map
+//# sourceMappingURL=edit.bundle.js.map

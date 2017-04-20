@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ProIdeas.UI.Models.IdeaViewModels
+﻿namespace ProIdeas.UI.Models.IdeaViewModels
 {
     public class IdeaInfoViewModel
     {
+        public string Id { get; set; }
 
         public string Title { get; set; }
 

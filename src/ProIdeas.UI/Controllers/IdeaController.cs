@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Services.Contracts;
+using ProIdeas.UI.Models.IdeaViewModels;
 
 namespace ProIdeas.UI.Controllers
 {
@@ -31,10 +32,17 @@ namespace ProIdeas.UI.Controllers
         // GET: Idea/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new IdeaInfoViewModel());
         }
 
-        // GET: Idea/Create
+        // GET: Idea/Edit
+        async public Task<IActionResult> Edit(string id)
+        {
+            var idea = await _ideaService.GetIdeaAsync(id);
+            return View(idea);
+        }
+
+        // GET: Idea/Images
         public ActionResult Images(string id)
         {
             //var idea = _ideaService.GetIdea(ideaId);
