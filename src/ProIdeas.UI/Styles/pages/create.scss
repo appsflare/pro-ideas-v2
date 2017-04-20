@@ -1,12 +1,20 @@
 .create-idea {
-    .nav-pills {
+    .nav-pills-vertical {
         margin-bottom: 30px;
+
         > li {
-            width: 250px;
+            width: calc(25% - 2px);
 
             > a {
                 border-radius: 0;
             }
         }
+    }
+}
+
+.create-page {
+
+    span {
+        padding-left: 3px;
     }
 }

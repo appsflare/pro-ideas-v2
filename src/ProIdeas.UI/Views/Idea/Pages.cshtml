@@ -14,13 +14,34 @@
                 <li class=""><a href="#payments">Review</a></li>
             </ul>
             <div class="content">
-                <aside>
-                    <ul class="nav nav-pills nav-stacked">
-                        <li role="presentation" class="active"><a href="#">Home</a></li>
-                        <li role="presentation"><a href="#">Profile</a></li>
-                        <li role="presentation"><a href="#">Messages</a></li>
+                <aside class="col-sm-3">
+                    <ul class="nav nav-pills nav-stacked nav-pills-horizontal">
+                        <li><a href="#">Created page 1</a></li>
+                        <li>
+                            <a href="#">
+                                <div class="col-sm-12 input-group">
+                                    <div class="form-group is-empty">
+                                        <input class="form-control" value="" type="text" placeholder="Enter page name" autocomplete="off" data-bind="value: form.title" />
+                                        <span class="material-icons form-control-feedback">clear</span>
+                                        <span class="material-input"></span>
+                                        <span class="help-block validation-message"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
                     </ul>
+                    <button class="btn btn-simple create-page"><i class="material-icons">add</i><span>Create New Page</span></button>
                 </aside>
+                <content class="col-sm-9 tab-content">
+                    <div class="col-sm-12 input-group">
+                        <div class="form-group is-empty">
+                            <textarea class="form-control" value="" placeholder="Description your idea *" autocomplete="off" data-bind="value: form.description"></textarea>
+                            <span class="material-icons form-control-feedback">clear</span>
+                            <span class="material-input"></span>
+                            <span class="help-block validation-message"></span>
+                        </div>
+                    </div>
+                </content>
             </div>
         </section>
     </div>
