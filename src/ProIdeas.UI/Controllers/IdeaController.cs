@@ -34,14 +34,20 @@ namespace ProIdeas.UI.Controllers
             return View();
         }
 
-        // GET: Idea/Create
+        // GET: Idea/Images
         public ActionResult Images(string ideaId)
         {
             //var idea = _ideaService.GetIdea(ideaId);
             return View();
         }
 
-        // POST: Idea/Create
+        // GET: Idea/Pages
+        public ActionResult Pages(string ideaId)
+        {
+            //var idea = _ideaService.GetIdea(ideaId);
+            return View();
+        }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
