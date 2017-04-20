@@ -1,8 +1,9 @@
-﻿import 'jquery';
-import 'bootstrap';
-import '../../lib/bootstrap-datepicker.js';
-import '../../lib/material.min.js';
-import '../../lib/material-kit.js';
-import Barba from 'barba.js';
+﻿import Barba from 'barba.js';
+import FadeTransition from '../../transitions/fade';
+
+
+Barba.Pjax.getTransition = function () {
+    return FadeTransition;
+};
 
 Barba.Pjax.start();

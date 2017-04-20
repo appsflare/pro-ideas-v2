@@ -17,6 +17,7 @@
     <Content Include="Scripts\lib\bootstrap-datepicker.js" />
     <Content Include="Scripts\lib\material-kit.js" />
     <Content Include="Scripts\lib\material.min.js" />
+    <Content Include="Scripts\lib\index.js" />
     <Content Include="Scripts\lib\nouislider.min.js" />
     <Content Include="wwwroot\css\site-old.css" />
     <Content Include="wwwroot\css\site-old.min.css" />
@@ -34,6 +35,9 @@
     <Content Include="wwwroot\logos\ideaboard-logo-white-nocap.png" />
     <Content Include="wwwroot\logos\ideaboard-logo-white.png" />
     <Content Include="wwwroot\logos\new-logo.png" />
+    <Content Include="wwwroot\Scripts\pages\common\index - Copy.bundle.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
