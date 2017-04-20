@@ -9189,9 +9189,61 @@ textarea {
 .create-page span {
   padding-left: 3px; }
 
+.idea-card-wrap {
+  padding: 27px;
+  border-radius: 5px; }
+
 .idea-card {
-  border-radius: 5px;
-  background: #f5f5f5; }
+  -webkit-box-shadow: 0px 0 5px 0 rgba(51, 51, 51, 0.35) ;
+  -moz-box-shadow: 0px 0 5px 0 rgba(51, 51, 51, 0.35) ;
+  box-shadow: 0px 0 5px 0 rgba(51, 51, 51, 0.35) ;
+  height: 450px;
+  background: #ffffff;
+  border-radius: 5px; }
+  .idea-card:hover {
+    -webkit-box-shadow: 0px 0 7px 0 rgba(51, 51, 51, 0.45) ;
+    -moz-box-shadow: 0px 0 7px 0 rgba(51, 51, 51, 0.45) ;
+    box-shadow: 0px 0 7px 0 rgba(51, 51, 51, 0.45) ; }
+  .idea-card img {
+    border-radius: 5px 5px 0 0;
+    height: 188px; }
+
+.card-image {
+  text-align: center;
+  width: 100%;
+  overflow: hidden; }
+
+.card-content-container {
+  padding: 10px 20px; }
+
+.card-header {
+  font-weight: 500;
+  font-size: 1.5em;
+  color: #727272;
+  padding: 10px 0 0;
+  margin: 0; }
+
+.author-wrap {
+  display: block;
+  color: #999999;
+  padding-bottom: 20px; }
+  .author-wrap .author {
+    color: #7e8bda; }
+
+.card-footer {
+  padding: 5px 20px; }
+
+.btn.btn-simple.idea-like {
+  padding: 0 20px 0 0;
+  color: #f48d8d; }
+  .btn.btn-simple.idea-like span {
+    padding-left: 6px; }
+
+.btn.btn-simple.idea-comment {
+  padding: 0 20px 0 0;
+  color: #19b7df; }
+  .btn.btn-simple.idea-comment span {
+    padding-left: 6px; }
 
 .logo img {
   height: 42px; }
@@ -9201,8 +9253,6 @@ textarea {
 
 footer {
   padding: 0;
-  position: fixed;
-  bottom: 0;
   width: 100%; }
 
 .copyright {

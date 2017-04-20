@@ -11,7 +11,7 @@
 
             @foreach (var idea in Model.Ideas)
             {
-                <li data-target="#myCarousel" data-slide-to="@index" @(index == 0 ? Html.Raw(@"class=""active""") : Html.Raw(string.Empty))></li>
+            <li data-target="#myCarousel" data-slide-to="@index" @(index == 0 ? Html.Raw(@"class=""active""") : Html.Raw(string.Empty))></li>
                 index++;
             }
         </ol>
@@ -22,17 +22,17 @@
 
             @foreach (var idea in Model.Ideas)
             {
-                <div class="item active">
-                    <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
-                    <div class="carousel-caption" role="option">
-                        <p>
-                            @idea.Title
-                            <a class="btn btn-default" href="/idea/@idea.Id">
-                                Learn More
-                            </a>
-                        </p>
-                    </div>
+            <div class="item active">
+                <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        @idea.Title
+                        <a class="btn btn-default" href="/idea/@idea.Id">
+                            Learn More
+                        </a>
+                    </p>
                 </div>
+            </div>
 
             }
 
@@ -55,28 +55,103 @@
         <div class="row">
             <h4 class="common-page-header">Explore Ideas</h4>
             <div class="content">
-                <div class="col-sm-4 idea-card">
-                    testing
+                <div class="col-sm-4 idea-card-wrap">
+                    <div class="idea-card">
+                        <div class="card-image"><img src="~/images/banner-1.gif" /></div>
+                        <div class="card-content-container">
+                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
+                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
+                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
+                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col-sm-4">
-                    testing
+                <div class="col-sm-4 idea-card-wrap">
+                    <div class="idea-card">
+                        <div class="card-image"><img src="~/images/banner-1.gif" /></div>
+                        <div class="card-content-container">
+                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
+                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
+                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
+                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col-sm-4">
-                    testing
+                <div class="col-sm-4 idea-card-wrap">
+                    <div class="idea-card">
+                        <div class="card-image"><img src="~/images/banner-1.gif" /></div>
+                        <div class="card-content-container">
+                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
+                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
+                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
+                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col-sm-4">
-                    testing
+                <div class="col-sm-4 idea-card-wrap">
+                    <div class="idea-card">
+                        <div class="card-image"><img src="~/images/banner-1.gif" /></div>
+                        <div class="card-content-container">
+                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
+                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
+                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
+                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col-sm-4">
-                    testing
+                <div class="col-sm-4 idea-card-wrap">
+                    <div class="idea-card">
+                        <div class="card-image"><img src="~/images/banner-1.gif" /></div>
+                        <div class="card-content-container">
+                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
+                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
+                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
+                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col-sm-4">
-                    testing
+                <div class="col-sm-4 idea-card-wrap">
+                    <div class="idea-card">
+                        <div class="card-image"><img src="~/images/banner-1.gif" /></div>
+                        <div class="card-content-container">
+                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
+                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
+                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
+                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 idea-card-wrap">
+                    <div class="idea-card">
+                        <div class="card-image"><img src="~/images/banner-1.gif" /></div>
+                        <div class="card-content-container">
+                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
+                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
+                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
+                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
