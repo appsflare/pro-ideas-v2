@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Services.Contracts;
 using ProIdeas.UI.Models.IdeaViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProIdeas.UI.Controllers
 {
+    [Authorize]
     public class IdeaController : Controller
     {
         private readonly IIdeaService _ideaService;

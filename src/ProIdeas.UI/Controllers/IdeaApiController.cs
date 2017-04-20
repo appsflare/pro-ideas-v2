@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Services.Contracts;
 using ProIdeas.DTO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProIdeas.UI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/ideas")]
+    [Route("api/ideas")]    
     public class IdeaApiController : Controller
     {
 
