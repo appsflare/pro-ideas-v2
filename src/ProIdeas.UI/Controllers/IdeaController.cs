@@ -34,6 +34,13 @@ namespace ProIdeas.UI.Controllers
             return View();
         }
 
+        // GET: Idea/Create
+        public ActionResult Images(string ideaId)
+        {
+            //var idea = _ideaService.GetIdea(ideaId);
+            return View();
+        }
+
         // POST: Idea/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

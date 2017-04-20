@@ -7776,7 +7776,7 @@ select.form-control {
   color: #999999;
   transition: all .3s;
   border-bottom: 3px solid #dedede; }
-  .nav-pills > li > a:hover {
+  .nav-pills > li > a:focus, .nav-pills > li > a:hover {
     background: none;
     border-bottom: 3px solid #6fcf97;
     color: #6fcf97; }
@@ -7788,6 +7788,10 @@ select.form-control {
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
   background-color: #ffffff;
+  color: #6fcf97;
+  border-bottom: 3px solid #6fcf97; }
+
+.nav-pills > li.complete {
   color: #6fcf97;
   border-bottom: 3px solid #6fcf97; }
 
