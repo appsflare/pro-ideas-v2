@@ -23,15 +23,19 @@ export default class IdeaBasicInfoViewModel {
         const part1valid = formData.title && formData.description;
 
         return part1valid && (formData.isFundingRequired ? !!formData.fundingRequirement : true);
-
-
-
     }
 
     save() {
+        if (!this._validate())
+        { return Promise.reject('Validation failed'); }
+
+        const form = ko.toJS(this.form);
+
+        form.isFundingRequired = form.fundingRequirement && form.fundingRequirement.length > 0;
+
         this.isSaving(true);
         const { save } = this.actions;
-        return save(ko.toJS(this.form))
+        return save()
             .then(res => {
                 this.isSaving(false);
                 return res;

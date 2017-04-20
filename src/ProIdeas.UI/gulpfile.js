@@ -17,7 +17,7 @@ var gulp = require("gulp"),
 
 // other content removed
 
-gulp.task("sass", function () {
+gulp.task("build-sass", function () {
     return gulp.src('Styles/main.scss')
         .pipe(sass())
         .pipe(gulp.dest('wwwroot/css'));
@@ -120,4 +120,4 @@ gulp.task('build-pages', function (done) {
 
 });
 
-gulp.task('build', ['build-lib', 'build-pages']);
+gulp.task('build', ['build-sass','build-lib', 'build-pages']);

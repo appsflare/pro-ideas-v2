@@ -12779,10 +12779,18 @@ var IdeaBasicInfoViewModel = function () {
         value: function save() {
             var _this = this;
 
+            if (!this._validate()) {
+                return Promise.reject('Validation failed');
+            }
+
+            var form = knockout.toJS(this.form);
+
+            form.isFundingRequired = form.fundingRequirement && form.fundingRequirement.length > 0;
+
             this.isSaving(true);
             var save = this.actions.save;
 
-            return save(knockout.toJS(this.form)).then(function (res) {
+            return save().then(function (res) {
                 _this.isSaving(false);
                 return res;
             }).catch(function (e) {
@@ -12806,7 +12814,7 @@ $(function () {
         }
     });
 
-    knockout.applyBindings(viewModel, document.getElementById('create-form'));
+    knockout.applyBindings(viewModel, document.getElementById('create-idea-form'));
 });
 
 }());
