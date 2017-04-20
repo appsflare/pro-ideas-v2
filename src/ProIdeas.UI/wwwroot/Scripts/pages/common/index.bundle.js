@@ -1741,6 +1741,7 @@ var FadeTransition = barba.BaseTransition.extend({
         });
 
         $el.animate({ opacity: 1 }, 400, function () {
+            $.material.init();
             _this.done();
         });
     }

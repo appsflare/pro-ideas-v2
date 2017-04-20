@@ -43,13 +43,38 @@ var createClass = function () {
   };
 }();
 
+function post(url, data) {
+    return new Promise(function (resolve, reject) {
+
+        $.post({
+            url: '/api/ideas',
+            data: JSON.stringify(idea),
+            success: resolve,
+            error: reject
+        });
+    });
+}
+
 var ApiClient = function () {
     function ApiClient() {
         classCallCheck(this, ApiClient);
+
+        $.ajaxSetup({
+            headers: {
+                'content-type': 'application/json;charset=utf8'
+            },
+            dataType: 'json'
+        });
     }
 
     createClass(ApiClient, [{
-        key: "getIdeas",
+        key: 'createIdea',
+        value: function createIdea(idea) {
+
+            return post('/api/ideas', idea);
+        }
+    }, {
+        key: 'getIdeas',
         value: function getIdeas() {
             return Promise.resolve([]);
         }

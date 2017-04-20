@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using ProIdeas.DTO;
 using ProIdeas.Logic.Contracts;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Services
 {
@@ -16,12 +17,17 @@ namespace ProIdeas.Services
 
         }
 
-        public IdeaDto GetIdea(string ideaId)
+        public Task<IdeaDto> CreateAsync(IdeaDto idea)
+        {
+            return _ideaLogic.CreateIdea(idea);
+        }
+
+        public Task<IdeaDto> GetIdeaAsync(string ideaId)
         {
             return _ideaLogic.GetIdea(ideaId);
         }
 
-        public IEnumerable<IdeaDto> GetIdeas(int pageSize, int page)
+        public Task<IEnumerable<IdeaDto>> GetIdeasAsync(int pageSize, int page)
         {
             return _ideaLogic.GetIdeas(pageSize, page, string.Empty);
         }

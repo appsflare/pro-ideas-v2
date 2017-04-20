@@ -19,6 +19,8 @@
     <Content Include="Scripts\lib\material.min.js" />
     <Content Include="Scripts\lib\index.js" />
     <Content Include="Scripts\lib\nouislider.min.js" />
+    <Content Include="wwwroot\css\quill.core.css" />
+    <Content Include="wwwroot\css\quill.snow.css" />
     <Content Include="wwwroot\css\site-old.css" />
     <Content Include="wwwroot\css\site-old.min.css" />
     <Content Include="wwwroot\fonts\bootstrap\glyphicons-halflings-regular.eot" />

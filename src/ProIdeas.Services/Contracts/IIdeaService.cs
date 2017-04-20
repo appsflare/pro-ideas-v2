@@ -1,15 +1,16 @@
 ﻿using ProIdeas.DTO;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Services.Contracts
 {
     public interface IIdeaService
     {
-        IdeaDto GetIdea(string ideaId);
+        Task<IdeaDto> GetIdeaAsync(string ideaId);
 
-        IEnumerable<IdeaDto> GetIdeas(int pageSize, int page);
+        Task<IdeaDto> CreateAsync(IdeaDto idea);
+
+        Task<IEnumerable<IdeaDto>> GetIdeasAsync(int pageSize, int page);
 
     }
 }
