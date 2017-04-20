@@ -28,6 +28,7 @@
     <Content Include="wwwroot\fonts\bootstrap\glyphicons-halflings-regular.ttf" />
     <Content Include="wwwroot\fonts\bootstrap\glyphicons-halflings-regular.woff" />
     <Content Include="wwwroot\fonts\bootstrap\glyphicons-halflings-regular.woff2" />
+    <Content Include="wwwroot\images\banner-1.gif" />
     <Content Include="wwwroot\js\require.js" />
     <Content Include="wwwroot\js\text.js" />
     <Content Include="wwwroot\logos\idea-icon-blue.svg" />
