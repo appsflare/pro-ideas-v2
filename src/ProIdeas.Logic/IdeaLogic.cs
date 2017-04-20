@@ -11,6 +11,7 @@ using ProIdeas.Domain.Core.Events;
 using ProIdeas.Infra.Commands.Idea;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Events;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Logic
 {
@@ -30,21 +31,33 @@ namespace ProIdeas.Logic
             _bus = bus;
         }
 
-        public IdeaDto GetIdea(string ideaId)
+        public Task<IdeaDto> CreateIdea(IdeaDto idea)
         {
-
-            var query = new QueryBuilder<Idea>()
-                .WithCondition(i => i.Id == ideaId)
-                .Build();
-
-
-            return _dataMapper.Map<IdeaDto>(_repository.Query(query));
+            return Task.Factory.StartNew(() =>
+            {
+                return _dataMapper.Map<IdeaDto>(_repository.Add(_dataMapper.Map<Idea>(idea)));
+            });
         }
 
-        public IEnumerable<IdeaDto> GetIdeas(int pageSize, int page, string keyword)
+        public Task<IdeaDto> GetIdea(string ideaId)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                var query = new QueryBuilder<Idea>()
+                    .WithCondition(i => i.Id == ideaId)
+                    .Build();
+
+
+                return _dataMapper.Map<IdeaDto>(_repository.Query(query));
+            });
+        }
+
+        public Task<IEnumerable<IdeaDto>> GetIdeas(int pageSize, int page, string keyword)
         {
 
-            var query = new QueryBuilder<Idea>()
+            return Task.Factory.StartNew(() =>
+            {
+                var query = new QueryBuilder<Idea>()
                 //.WithCondition(i => i.Title.Contains(keyword) || i.Description.Contains(keyword) || i.FundingRequirement.Contains(keyword))
                 .OrderBy(i => i.OrderBy(j => j.Title))
                 .Skip(Math.Max(page, 0) * pageSize)
@@ -52,32 +65,37 @@ namespace ProIdeas.Logic
                 .Build();
 
 
-            return _dataMapper.Map<IEnumerable<IdeaDto>>(_repository.Query(query));
+                return _dataMapper.Map<IEnumerable<IdeaDto>>(_repository.Query(query));
+            });
         }
 
 
-        public IEnumerable<IdeaCommentDto> GetIdeaComments(string ideaId, int pageSize, int page)
+        public Task<IEnumerable<IdeaCommentDto>> GetIdeaComments(string ideaId, int pageSize, int page)
         {
-
-            var query = new QueryBuilder<IdeaComment>()
+            return Task.Factory.StartNew(() =>
+            {
+                var query = new QueryBuilder<IdeaComment>()
                 .WithCondition(i => i.Id == ideaId)
                 .Skip(Math.Max(page, 0) * pageSize)
                 .Take(pageSize)
                 .Build();
 
 
-            return _dataMapper.Map<IEnumerable<IdeaCommentDto>>(_repository.Query(query));
+                return _dataMapper.Map<IEnumerable<IdeaCommentDto>>(_repository.Query(query));
+            });
         }
 
-        public IEnumerable<IdeaLikeDto> GetFollowers(string ideaId)
+        public Task<IEnumerable<IdeaLikeDto>> GetFollowers(string ideaId)
         {
-
-            var query = new QueryBuilder<IdeaLike>()
+            return Task.Factory.StartNew(() =>
+            {
+                var query = new QueryBuilder<IdeaLike>()
                 .WithCondition(i => i.IdeaId == ideaId && i.IsLike)
                 .Build();
 
 
-            return _dataMapper.Map<IEnumerable<IdeaLikeDto>>(_repository.Query(query));
+                return _dataMapper.Map<IEnumerable<IdeaLikeDto>>(_repository.Query(query));
+            });
         }
 
 
@@ -105,13 +123,13 @@ namespace ProIdeas.Logic
             _bus.RaiseEvent(new IdeaUpdatedEvent(_dataMapper.Map<IdeaDto>(result)));
         }
 
-        public void Handle(DeleteIdeaCommand message)
+        async public void Handle(DeleteIdeaCommand message)
         {
             if (!message.IsValid())
             { throw new ArgumentException("invalid command message", nameof(message)); }
 
 
-            var idea = GetIdea(message.IdeaId);
+            var idea = await GetIdea(message.IdeaId);
 
             if (idea == null)
             { return; }

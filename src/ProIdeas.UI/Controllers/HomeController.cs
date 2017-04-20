@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Services.Contracts;
 using ProIdeas.UI.Models.IdeaViewModels;
+using System.Threading.Tasks;
 
 namespace ProIdeas.UI.Controllers
 {
@@ -14,9 +15,9 @@ namespace ProIdeas.UI.Controllers
         }
 
 
-        public IActionResult Index()
+        async public Task<IActionResult> Index()
         {
-            var ideas = _ideaService.GetIdeas(10, 1);
+            var ideas = await _ideaService.GetIdeasAsync(10, 1);
 
 
 

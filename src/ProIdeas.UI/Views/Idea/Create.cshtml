@@ -3,6 +3,15 @@
     ViewData["Title"] = "Index";
 }
 
+@section Styles{
+    <link href="~/css/quill.core.css" rel="stylesheet" />
+    <link href="~/css/quill.snow.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    <script src="~/Scripts/pages/ideas/create.bundle.js"></script>
+}
+
 <div class="container">
     <div class="row">
         <section>
@@ -39,13 +48,13 @@
             <div class="content">
 
 
-                <form class="form">
+                <form class="form" id="create-form" data-bind="submit: save">
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="material-icons">email</i>
                         </span>
                         <div class="form-group is-empty">
-                            <input class="form-control" value="" type="text" placeholder="Title..." autocomplete="off" />
+                            <input class="form-control" value="" type="text" placeholder="Title..." autocomplete="off" data-bind="value: form.title" />
                             <span class="material-icons form-control-feedback">clear</span>
                             <span class="material-input"></span>
                             <span class="help-block validation-message"></span>
@@ -56,26 +65,30 @@
                             <i class="material-icons">email</i>
                         </span>
                         <div class="form-group is-empty">
-                            <textarea class="form-control" value="" placeholder="Description..." autocomplete="off"></textarea>
+                            <textarea class="form-control" value="" placeholder="Description..." autocomplete="off" data-bind="value: form.description"></textarea>
+                            @*<rich-text-editor class="form-control" params="value: form.description"></rich-text-editor>*@
                             <span class="material-icons form-control-feedback">clear</span>
                             <span class="material-input"></span>
-                            <span  class="help-block validation-message"></span>
+                            <span class="help-block validation-message"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="checkbox">
                                 <div class="togglebutton">
-                                    <label>My idea requires funding
-                                        <input type="checkbox" />                                        
+                                    <label>
+                                        My idea requires funding
+                                        <input type="checkbox" data-bind="checked: form.isFundingRequired" />
                                     </label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 short-text">
-                        <textarea  class="form-control" value="" placeholder="Decribe your funding requirement..."></textarea>
+                    <div class="col-sm-12 short-text" data-bind="if: form.isFundingRequired">
+                        <textarea class="form-control" value="" placeholder="Decribe your funding requirement..." data-bind="value: form.fundingRequirement"></textarea>
                     </div>
+
+                    <button class="btn btn-primary" type="submit" data-bind="disable: isSaving">Next</button>
                 </form>
 
             </div>

@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using ProIdeas.DTO;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Logic.Contracts
 {
     public interface IIdeaLogic
     {
-        IEnumerable<IdeaLikeDto> GetFollowers(string ideaId);
-        IdeaDto GetIdea(string ideaId);
-        IEnumerable<IdeaCommentDto> GetIdeaComments(string ideaId, int pageSize, int page);
-        IEnumerable<IdeaDto> GetIdeas(int pageSize, int page, string keyword);
+        Task<IEnumerable<IdeaLikeDto>> GetFollowers(string ideaId);
+        Task<IdeaDto> GetIdea(string ideaId);
+        Task<IdeaDto> CreateIdea(IdeaDto idea);
+        Task<IEnumerable<IdeaCommentDto>> GetIdeaComments(string ideaId, int pageSize, int page);
+        Task<IEnumerable<IdeaDto>> GetIdeas(int pageSize, int page, string keyword);
     }
 }
