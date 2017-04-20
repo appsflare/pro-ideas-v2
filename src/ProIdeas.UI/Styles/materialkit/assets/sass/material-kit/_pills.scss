@@ -1,45 +1,46 @@
-.nav-pills{
+.nav-pills {
 
     > li {
-        > a{
+        > a {
             line-height: $mdb-btn-font-size-base * 2;
-            text-transform: uppercase;
             font-size: $mdb-btn-font-size-base;
-            font-weight: $font-weight-bold;
+            font-weight: $font-weight-default;
             min-width: 100px;
             text-align: center;
-            color: $gray;
+            color: $label-color;
             transition: all .3s;
+            border-bottom: 3px solid $label-border-color;
 
-            &:hover{
-                background-color: rgba(200, 200, 200, 0.2);
+            &:hover {
+                background: none;
+                border-bottom: 3px solid $active-color;
+                color: $active-color;
             }
         }
 
-        i{
+        i {
             display: block;
             font-size: 30px;
             padding: 15px 0;
         }
 
-        &.active > a{
+        &.active > a {
             &,
             &:focus,
-            &:hover{
-                background-color: $brand-primary;
-                color: $white-color;
-                @include shadow-big-color($brand-primary);
+            &:hover {
+                background-color: $white;
+                color: $active-color;
+                border-bottom: 3px solid $active-color;
             }
         }
-
     }
 
-    &.nav-pills-info{
+    &.nav-pills-info {
         > li {
-            &.active > a{
+            &.active > a {
                 &,
                 &:focus,
-                &:hover{
+                &:hover {
                     background-color: $brand-info;
                     @include shadow-big-color($brand-info);
                 }
@@ -47,12 +48,12 @@
         }
     }
 
-    &.nav-pills-success{
+    &.nav-pills-success {
         > li {
-            &.active > a{
+            &.active > a {
                 &,
                 &:focus,
-                &:hover{
+                &:hover {
                     background-color: $brand-success;
                     @include shadow-big-color($brand-success);
                 }
@@ -60,12 +61,12 @@
         }
     }
 
-    &.nav-pills-warning{
+    &.nav-pills-warning {
         > li {
-            &.active > a{
+            &.active > a {
                 &,
                 &:focus,
-                &:hover{
+                &:hover {
                     background-color: $brand-warning;
                     @include shadow-big-color($brand-warning);
                 }
@@ -73,12 +74,12 @@
         }
     }
 
-    &.nav-pills-danger{
+    &.nav-pills-danger {
         > li {
-            &.active > a{
+            &.active > a {
                 &,
                 &:focus,
-                &:hover{
+                &:hover {
                     background-color: $brand-danger;
                     @include shadow-big-color($brand-danger);
                 }
@@ -86,6 +87,7 @@
         }
     }
 }
-.tab-space{
+
+.tab-space {
     padding: 20px 0 50px 0px;
 }

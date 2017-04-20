@@ -1,0 +1,12 @@
+.create-idea {
+    .nav-pills {
+        margin-bottom: 30px;
+        > li {
+            width: 250px;
+
+            > a {
+                border-radius: 0;
+            }
+        }
+    }
+}

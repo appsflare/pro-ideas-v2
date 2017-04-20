@@ -45,7 +45,7 @@ $font-weight-bold:    500 !default;
 $font-weight-extra-bold: 700 !default;
 $font-weight-ultra-bold: 900 !default;
 
-$body-bg: #EEEEEE !default;
+$body-bg: #ffffff !default;
 //---
 
 // import bs variables for sass, first declared wins.
@@ -159,7 +159,7 @@ $mdb-radio-color-off: $mdb-label-color-toggle-focus !default;
 $mdb-radio-color-on: $brand-primary !default;
 
 // Buttons:
-$mdb-btn-font-size-base: 12px !default;
+$mdb-btn-font-size-base: 1em !default;
 $mdb-btn-font-size-lg: 14px !default;
 $mdb-btn-font-size-sm: 11px !default;
 $mdb-btn-font-size-xs: 10px !default;

@@ -1,16 +1,26 @@
 @import 'materialkit/assets/sass/material-kit.scss';
+@import 'common.scss';
+@import 'pages/create.scss';
 @import 'pages/idea.scss';
 
 .logo img {
     height: 42px;
-    margin-top: -6px;
 }
 
 .app-page {
     padding-top: 75px;
+}
 
-    .main {
-        min-height: 90vh;
-        height: auto;
-    }
+footer {
+    padding: 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.copyright {
+    font-size: 1em;
+    text-align: center;
+    color: $gray-color;
+    margin: 0;
 }

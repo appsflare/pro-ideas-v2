@@ -3,84 +3,42 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="container">
+<div class="container create-idea">
     <div class="row">
+        <h4 class="common-page-header">Post your new idea</h4>
         <section>
-
-
             <ul class="nav nav-pills" role="tablist">
-
-                <li class="active">
-                    <a href="#dashboard">
-                        <i class="material-icons">dashboard</i>
-                        Basic Information
-                    </a>
-                </li>
-                <li class="">
-                    <a href="#schedule">
-                        <i class="material-icons">schedule</i>
-                        Images
-                    </a>
-                </li>
-                <li class="">
-                    <a href="#tasks">
-                        <i class="material-icons">list</i>
-                        Pages
-                    </a>
-                </li>
-                <li class="">
-                    <a href="#payments">
-                        <i class="material-icons">attach_money</i>
-                        Review
-                    </a>
-                </li>
+                <li class="active"><a href="#dashboard">Basic Information</a></li>
+                <li class=""><a href="#schedule">Images</a></li>
+                <li class=""><a href="#tasks">Pages</a></li>
+                <li class=""><a href="#payments">Review</a></li>
             </ul>
-
             <div class="content">
-
-
                 <form class="form">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">email</i>
-                        </span>
+                    <div class="col-sm-12 input-group">
                         <div class="form-group is-empty">
-                            <input class="form-control" value="" type="text" placeholder="Title..." autocomplete="off" />
+                            <input class="form-control" value="" type="text" placeholder="Name your idea *" autocomplete="off" />
                             <span class="material-icons form-control-feedback">clear</span>
                             <span class="material-input"></span>
                             <span class="help-block validation-message"></span>
                         </div>
                     </div>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">email</i>
-                        </span>
+                    <div class="col-sm-12 input-group">
                         <div class="form-group is-empty">
-                            <textarea class="form-control" value="" placeholder="Description..." autocomplete="off"></textarea>
+                            <textarea class="form-control" value="" placeholder="Description your idea *" autocomplete="off"></textarea>
                             <span class="material-icons form-control-feedback">clear</span>
                             <span class="material-input"></span>
-                            <span  class="help-block validation-message"></span>
+                            <span class="help-block validation-message"></span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="checkbox">
-                                <div class="togglebutton">
-                                    <label>My idea requires funding
-                                        <input type="checkbox" />                                        
-                                    </label>
-                                </div>
-                            </div>
+                    <div class="col-sm-12 input-group">
+                        <div class="form-group is-empty">
+                            <textarea class="form-control" value="" placeholder="Describe if  require funding for your idea."></textarea>
                         </div>
                     </div>
-                    <div class="col-sm-12 short-text">
-                        <textarea  class="form-control" value="" placeholder="Decribe your funding requirement..."></textarea>
-                    </div>
+                    <button class="btn btn-primary pull-right" type="submit">Next</button>
                 </form>
-
             </div>
-
-
         </section>
     </div>
 </div>
