@@ -1,0 +1,60 @@
+.nav-pills-vertical {
+
+    > li {
+        > a {
+            color: $label-color;
+            border-bottom: 3px solid $label-border-color;
+
+            &:focus, &:hover {
+                background: none;
+                border-bottom: 3px solid $active-color;
+                color: $active-color;
+            }
+        }
+
+        &.active > a {
+            &,
+            &:focus,
+            &:hover {
+                background-color: $white;
+                color: $active-color;
+                border-bottom: 3px solid $active-color;
+            }
+        }
+
+        &.complete > a {
+            color: $deactive;
+            border-bottom: 3px solid $deactive;
+        }
+    }
+}
+
+.nav-pills-horizontal {
+    > li {
+        > a {
+            text-align: left;
+            color: $label-color;
+            border-bottom: 1px solid $label-border-color;
+
+            &:focus, &:hover {
+                background: none;
+                border-bottom: 1px solid $active-color;
+                color: $active-color;
+            }
+
+            &.active > a {
+                &,
+                &:focus,
+                &:hover {
+                    color: $active-color;
+                    border-bottom: 1px solid $active-color;
+                }
+            }
+
+            &.complete > a {
+                color: $deactive;
+                border-bottom: 1px solid $deactive;
+            }
+        }
+    }
+}

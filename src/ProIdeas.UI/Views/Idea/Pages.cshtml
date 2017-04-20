@@ -1,63 +1,47 @@
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Creat your idea";
 }
 
-<div class="container">
+<div class="container create-idea">
     <div class="row">
+        <h4 class="common-page-header">Post your new idea</h4>
         <section>
-            <div class="wizard">
-                <div class="wizard-inner">
-                    <div class="connecting-line"></div>
-                    <ul class="nav nav-tabs" role="tablist">                        
-                        <li role="presentation" class="active">
-                            <a href="#step1" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
-                                <span class="round-tab">
-                                    <i class="glyphicon glyphicon-pencil"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li role="presentation" class="disabled">
-                            <a href="#step2" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
-                                <span class="round-tab">
-                                    <i class="glyphicon glyphicon-picture"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li role="presentation" class="disabled">
-                            <a href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Complete">
-                                <span class="round-tab">
-                                    <i class="glyphicon glyphicon-ok"></i>
-                                </span>
+            <ul class="nav nav-pills nav-pills-vertical" role="tablist">
+                <li class="complete"><a href="#dashboard">Basic Information</a></li>
+                <li class="complete"><a href="#schedule">Images</a></li>
+                <li class="active"><a href="#tasks">Pages</a></li>
+                @*<li class=""><a href="#payments">Review</a></li>*@
+            </ul>
+            <div class="content">
+                <aside class="col-sm-3">
+                    <ul class="nav nav-pills nav-stacked nav-pills-horizontal">
+                        <li><a href="#">Created page 1</a></li>
+                        <li>
+                            <a href="#">
+                                <div class="col-sm-12 input-group">
+                                    <div class="form-group is-empty">
+                                        <input class="form-control" value="" type="text" placeholder="Enter page name" autocomplete="off" data-bind="value: form.title" />
+                                        <span class="material-icons form-control-feedback">clear</span>
+                                        <span class="material-input"></span>
+                                        <span class="help-block validation-message"></span>
+                                    </div>
+                                </div>
                             </a>
                         </li>
                     </ul>
-                </div>
-                <form role="form">
-                    <div class="tab-content">                       
-                        <div class="tab-pane active" role="tabpanel" id="step1">
-                            <h3>Describe</h3>
-                            <p>Record your idea details</p>
-                            <ul class="list-inline pull-right">                                
-                                <li><button type="button" class="btn btn-primary next-step">Save and continue</button></li>
-                            </ul>
+                    <button class="btn btn-simple create-page"><i class="material-icons">add</i><span>Create New Page</span></button>
+                </aside>
+                <content class="col-sm-9 tab-content">
+                    <div class="col-sm-12 input-group">
+                        <div class="form-group is-empty">
+                            <textarea class="form-control" value="" placeholder="Description your idea *" autocomplete="off" data-bind="value: form.description"></textarea>
+                            <span class="material-icons form-control-feedback">clear</span>
+                            <span class="material-input"></span>
+                            <span class="help-block validation-message"></span>
                         </div>
-                        <div class="tab-pane" role="tabpanel" id="step2">
-                            <h3>Step 3</h3>
-                            <p>This is step 3</p>
-                            <ul class="list-inline pull-right">
-                                <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
-                                <li><button type="button" class="btn btn-default next-step">Skip</button></li>
-                                <li><button type="button" class="btn btn-primary btn-info-full next-step">Save and continue</button></li>
-                            </ul>
-                        </div>
-                        <div class="tab-pane" role="tabpanel" id="complete">
-                            <h3>Complete</h3>
-                            <p>You have successfully completed all steps.</p>
-                        </div>
-                        <div class="clearfix"></div>
                     </div>
-                </form>
+                </content>
             </div>
         </section>
     </div>

@@ -1,5 +1,9 @@
 @import 'materialkit/assets/sass/material-kit.scss';
+
+@import 'override/_override_pills.scss';
+
 @import 'common.scss';
+
 @import 'pages/create.scss';
 @import 'pages/idea.scss';
 

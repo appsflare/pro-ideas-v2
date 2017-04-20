@@ -49,7 +49,13 @@ namespace ProIdeas.UI.Controllers
             return View();
         }
 
-        // POST: Idea/Create
+        // GET: Idea/Pages
+        public ActionResult Pages(string ideaId)
+        {
+            //var idea = _ideaService.GetIdea(ideaId);
+            return View();
+        }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
