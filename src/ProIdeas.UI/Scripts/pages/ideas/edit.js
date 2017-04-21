@@ -2,29 +2,38 @@
 import ko from 'knockout';
 
 import IdeaBasicInfoViewModel from '../../modules/ideas/ideaBasicInfoViewModel';
+import BasePage from '../../basePage';
 
-$(function () {
+class EditPage extends BasePage {
+    constructor(client) {
+        super(...arguments);
+        this._client = client;
+    }
 
-    const client = new ApiClient();
+    onReady() {
+        console.log('edit page ready');
+        this._client.getIdea($('#IdeaId').val()).then(ideaDetails => {
 
-    client.getIdea($('#IdeaId').val()).then(ideaDetails => {
 
-
-
-        var viewModel = new IdeaBasicInfoViewModel({
-            idea: ideaDetails,
-            actions: {
-                save(idea) {
-                    return client.updateIdea(idea)
-                        .then(data => {
-                            document.location.href = `/ideas/images/${data.id}`;
-                        });
+            var viewModel = new IdeaBasicInfoViewModel({
+                idea: ideaDetails,
+                actions: {
+                    save: (idea) => {
+                        return this._client.updateIdea(idea)
+                            .then(data => {
+                                document.location.href = `/ideas/images/${data.id}`;
+                            });
+                    }
                 }
-            }
+            });
+
+            ko.applyBindings(viewModel, document.getElementById('create-idea-form'));
         });
 
-        ko.applyBindings(viewModel, document.getElementById('create-idea-form'));
+    }
+}
 
-    });
 
-});
+const client = new ApiClient();
+const page = new EditPage(client);
+page.init();

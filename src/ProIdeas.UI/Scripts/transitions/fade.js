@@ -1,17 +1,17 @@
 ﻿import Barba from 'barba.js';
 
 const FadeTransition = Barba.BaseTransition.extend({
-    start: function () {
-        Promise
+    start() {
+        return Promise
             .all([this.newContainerLoading, this.fadeOut()])
             .then(this.fadeIn.bind(this));
     },
 
-    fadeOut: function () {
+    fadeOut() {
         return $(this.oldContainer).animate({ opacity: 0 }).promise();
     },
 
-    fadeIn: function () {
+    fadeIn() {
         var _this = this;
         var $el = $(this.newContainer);
 

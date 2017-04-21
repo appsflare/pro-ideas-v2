@@ -107,7 +107,8 @@ namespace ProIdeas.UI
                        nameof(Idea),
                        nameof(IdeaComment),
                        nameof(IdeaLike),
-                       nameof(Page));
+                       nameof(Page),
+                       nameof(StoredEvent));
             }
 
         }
