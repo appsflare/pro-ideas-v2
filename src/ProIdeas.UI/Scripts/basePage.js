@@ -1,12 +1,14 @@
-﻿import Barba from 'barba.js';
-import FadeTransition from './transitions/fade';
-
+﻿//import Barba from 'barba.js';
+//import FadeTransition from './transitions/fade';
+import Turbolinks from 'turbolinks';
+Turbolinks.start();
+Turbolinks.controller.adapter.showProgressBar()
 
 export default class BasePage {
 
     constructor() {
 
-        this._url = Barba.Pjax.getCurrentUrl();
+        //this._url = Barba.Pjax.getCurrentUrl();
     }
 
     getTransition() {
@@ -14,18 +16,19 @@ export default class BasePage {
     }
 
     configure() {
-        Barba.Pjax.getTransition = () => this.getTransition();
+        //Barba.Pjax.getTransition = () => this.getTransition();
     }
 
     init() {
         this.configure();
-        Barba.Pjax.start();
+        
         this.onReady();
 
-        Barba.Dispatcher.on('newPageReady', (currentStatus, oldStatus, container) => {            
-            if (currentStatus.url == this._url)
-            { this.onReady(); }
-        });
+        //Barba.Dispatcher.on('newPageReady', (currentStatus, oldStatus, container) => {
+        //    debugger;
+        //    if (currentStatus.url == this._url)
+        //    { this.onReady(); }
+        //});
     }
 
     onReady() {

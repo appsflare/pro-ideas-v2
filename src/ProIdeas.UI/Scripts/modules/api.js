@@ -25,9 +25,8 @@ const utils = {
 
     post(url, data) {
         return new Promise((resolve, reject) => {
-
             $.post({
-                url,
+                url,                
                 data: JSON.stringify(data),
                 success: resolve,
                 error: reject

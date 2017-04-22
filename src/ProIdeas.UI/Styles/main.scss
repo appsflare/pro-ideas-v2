@@ -26,3 +26,14 @@ footer {
     color: $gray-color;
     margin: 0;
 }
+
+.button-floater {
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+}
+
+.turbolinks-progress-bar {
+    height: 5px;
+    background-color: #fff;
+}

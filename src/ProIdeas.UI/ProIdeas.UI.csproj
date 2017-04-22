@@ -209,6 +209,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNet.Identity.Repository\AspNet.Identity.Repository.csproj" />
+    <ProjectReference Include="..\ProIdeas.Authentication.Contracts\ProIdeas.Authentication.Contracts.csproj" />
     <ProjectReference Include="..\ProIdeas.Data.Mappings\ProIdeas.Data.Mappings.csproj" />
     <ProjectReference Include="..\ProIdeas.DataMappings.Data.Mappings.Contracts\ProIdeas.DataMappings.Data.Mappings.Contracts.csproj" />
     <ProjectReference Include="..\ProIdeas.Domain.Core\ProIdeas.Domain.Core.csproj" />

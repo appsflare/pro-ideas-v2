@@ -111,7 +111,6 @@ var utils = {
     },
     post: function post(url, data) {
         return new Promise(function (resolve, reject) {
-
             $.post({
                 url: url,
                 data: JSON.stringify(data),
@@ -160,7 +159,9 @@ var ApiClient = function () {
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-
+function commonjsRequire () {
+	throw new Error('Dynamic requires are not currently supported by rollup-plugin-commonjs');
+}
 
 
 
@@ -1797,12 +1798,1533 @@ var knockout = createCommonjsModule(function (module, exports) {
   })();
 });
 
+var knockout_validation = createCommonjsModule(function (module, exports) {
+/*=============================================================================
+	Author:			Eric M. Barnard - @ericmbarnard								
+	License:		MIT (http://opensource.org/licenses/mit-license.php)		
+																				
+	Description:	Validation Library for KnockoutJS							
+	Version:		2.0.3											
+===============================================================================
+*/
+/*globals require: false, exports: false, define: false, ko: false */
+
+(function (factory) {
+	// Module systems magic dance.
+
+	if (typeof commonjsRequire === "function" && 'object' === "object" && 'object' === "object") {
+		// CommonJS or Node: hard-coded dependency on "knockout"
+		factory(knockout, exports);
+	} else if (typeof undefined === "function" && undefined["amd"]) {
+		// AMD anonymous module with hard-coded dependency on "knockout"
+		undefined(["knockout", "exports"], factory);
+	} else {
+		// <script> tag: use the global `ko` object, attaching a `mapping` property
+		factory(ko, ko.validation = {});
+	}
+}(function ( ko, exports ) {
+
+	if (typeof (ko) === 'undefined') {
+		throw new Error('Knockout is required, please ensure it is loaded before loading this validation plug-in');
+	}
+
+	// create our namespace object
+	ko.validation = exports;
+
+	var kv = ko.validation,
+		koUtils = ko.utils,
+		unwrap = koUtils.unwrapObservable,
+		forEach = koUtils.arrayForEach,
+		extend = koUtils.extend;
+/*global ko: false*/
+
+var defaults = {
+	registerExtenders: true,
+	messagesOnModified: true,
+	errorsAsTitle: true,            // enables/disables showing of errors as title attribute of the target element.
+	errorsAsTitleOnModified: false, // shows the error when hovering the input field (decorateElement must be true)
+	messageTemplate: null,
+	insertMessages: true,           // automatically inserts validation messages as <span></span>
+	parseInputAttributes: false,    // parses the HTML5 validation attribute from a form element and adds that to the object
+	writeInputAttributes: false,    // adds HTML5 input validation attributes to form elements that ko observable's are bound to
+	decorateInputElement: false,         // false to keep backward compatibility
+	decorateElementOnModified: true,// true to keep backward compatibility
+	errorClass: null,               // single class for error message and element
+	errorElementClass: 'validationElement',  // class to decorate error element
+	errorMessageClass: 'validationMessage',  // class to decorate error message
+	allowHtmlMessages: false,		// allows HTML in validation messages
+	grouping: {
+		deep: false,        //by default grouping is shallow
+		observable: true,   //and using observables
+		live: false		    //react to changes to observableArrays if observable === true
+	},
+	validate: {
+		// throttle: 10
+	}
+};
+
+// make a copy  so we can use 'reset' later
+var configuration = extend({}, defaults);
+
+configuration.html5Attributes = ['required', 'pattern', 'min', 'max', 'step'];
+configuration.html5InputTypes = ['email', 'number', 'date'];
+
+configuration.reset = function () {
+	extend(configuration, defaults);
+};
+
+kv.configuration = configuration;
+kv.utils = (function () {
+	var seedId = new Date().getTime();
+
+	var domData = {}; //hash of data objects that we reference from dom elements
+	var domDataKey = '__ko_validation__';
+
+	return {
+		isArray: function (o) {
+			return o.isArray || Object.prototype.toString.call(o) === '[object Array]';
+		},
+		isObject: function (o) {
+			return o !== null && typeof o === 'object';
+		},
+		isNumber: function(o) {
+			return !isNaN(o);	
+		},
+		isObservableArray: function(instance) {
+			return !!instance &&
+					typeof instance["remove"] === "function" &&
+					typeof instance["removeAll"] === "function" &&
+					typeof instance["destroy"] === "function" &&
+					typeof instance["destroyAll"] === "function" &&
+					typeof instance["indexOf"] === "function" &&
+					typeof instance["replace"] === "function";
+		},
+		values: function (o) {
+			var r = [];
+			for (var i in o) {
+				if (o.hasOwnProperty(i)) {
+					r.push(o[i]);
+				}
+			}
+			return r;
+		},
+		getValue: function (o) {
+			return (typeof o === 'function' ? o() : o);
+		},
+		hasAttribute: function (node, attr) {
+			return node.getAttribute(attr) !== null;
+		},
+		getAttribute: function (element, attr) {
+			return element.getAttribute(attr);
+		},
+		setAttribute: function (element, attr, value) {
+			return element.setAttribute(attr, value);
+		},
+		isValidatable: function (o) {
+			return !!(o && o.rules && o.isValid && o.isModified);
+		},
+		insertAfter: function (node, newNode) {
+			node.parentNode.insertBefore(newNode, node.nextSibling);
+		},
+		newId: function () {
+			return seedId += 1;
+		},
+		getConfigOptions: function (element) {
+			var options = kv.utils.contextFor(element);
+
+			return options || kv.configuration;
+		},
+		setDomData: function (node, data) {
+			var key = node[domDataKey];
+
+			if (!key) {
+				node[domDataKey] = key = kv.utils.newId();
+			}
+
+			domData[key] = data;
+		},
+		getDomData: function (node) {
+			var key = node[domDataKey];
+
+			if (!key) {
+				return undefined;
+			}
+
+			return domData[key];
+		},
+		contextFor: function (node) {
+			switch (node.nodeType) {
+				case 1:
+				case 8:
+					var context = kv.utils.getDomData(node);
+					if (context) { return context; }
+					if (node.parentNode) { return kv.utils.contextFor(node.parentNode); }
+					break;
+			}
+			return undefined;
+		},
+		isEmptyVal: function (val) {
+			if (val === undefined) {
+				return true;
+			}
+			if (val === null) {
+				return true;
+			}
+			if (val === "") {
+				return true;
+			}
+		},
+		getOriginalElementTitle: function (element) {
+			var savedOriginalTitle = kv.utils.getAttribute(element, 'data-orig-title'),
+				currentTitle = element.title,
+				hasSavedOriginalTitle = kv.utils.hasAttribute(element, 'data-orig-title');
+
+			return hasSavedOriginalTitle ?
+				savedOriginalTitle : currentTitle;
+		},
+		async: function (expr) {
+			if (window.setImmediate) { window.setImmediate(expr); }
+			else { window.setTimeout(expr, 0); }
+		},
+		forEach: function (object, callback) {
+			if (kv.utils.isArray(object)) {
+				return forEach(object, callback);
+			}
+			for (var prop in object) {
+				if (object.hasOwnProperty(prop)) {
+					callback(object[prop], prop);
+				}
+			}
+		}
+	};
+}());var api = (function () {
+
+	var isInitialized = 0,
+		configuration = kv.configuration,
+		utils = kv.utils;
+
+	function cleanUpSubscriptions(context) {
+		forEach(context.subscriptions, function (subscription) {
+			subscription.dispose();
+		});
+		context.subscriptions = [];
+	}
+
+	function dispose(context) {
+		if (context.options.deep) {
+			forEach(context.flagged, function (obj) {
+				delete obj.__kv_traversed;
+			});
+			context.flagged.length = 0;
+		}
+
+		if (!context.options.live) {
+			cleanUpSubscriptions(context);
+		}
+	}
+
+	function runTraversal(obj, context) {
+		context.validatables = [];
+		cleanUpSubscriptions(context);
+		traverseGraph(obj, context);
+		dispose(context);
+	}
+
+	function traverseGraph(obj, context, level) {
+		var objValues = [],
+			val = obj.peek ? obj.peek() : obj;
+
+		if (obj.__kv_traversed === true) {
+			return;
+		}
+
+		if (context.options.deep) {
+			obj.__kv_traversed = true;
+			context.flagged.push(obj);
+		}
+
+		//default level value depends on deep option.
+		level = (level !== undefined ? level : context.options.deep ? 1 : -1);
+
+		// if object is observable then add it to the list
+		if (ko.isObservable(obj)) {
+			// ensure it's validatable but don't extend validatedObservable because it
+			// would overwrite isValid property.
+			if (!obj.errors && !utils.isValidatable(obj)) {
+				obj.extend({ validatable: true });
+			}
+			context.validatables.push(obj);
+
+			if (context.options.live && utils.isObservableArray(obj)) {
+				context.subscriptions.push(obj.subscribe(function () {
+					context.graphMonitor.valueHasMutated();
+				}));
+			}
+		}
+
+		//get list of values either from array or object but ignore non-objects
+		// and destroyed objects
+		if (val && !val._destroy) {
+			if (utils.isArray(val)) {
+				objValues = val;
+			}
+			else if (utils.isObject(val)) {
+				objValues = utils.values(val);
+			}
+		}
+
+		//process recursively if it is deep grouping
+		if (level !== 0) {
+			utils.forEach(objValues, function (observable) {
+				//but not falsy things and not HTML Elements
+				if (observable && !observable.nodeType && (!ko.isComputed(observable) || observable.rules)) {
+					traverseGraph(observable, context, level + 1);
+				}
+			});
+		}
+	}
+
+	function collectErrors(array) {
+		var errors = [];
+		forEach(array, function (observable) {
+			// Do not collect validatedObservable errors
+			if (utils.isValidatable(observable) && !observable.isValid()) {
+				// Use peek because we don't want a dependency for 'error' property because it
+				// changes before 'isValid' does. (Issue #99)
+				errors.push(observable.error.peek());
+			}
+		});
+		return errors;
+	}
+
+	return {
+		//Call this on startup
+		//any config can be overridden with the passed in options
+		init: function (options, force) {
+			//done run this multiple times if we don't really want to
+			if (isInitialized > 0 && !force) {
+				return;
+			}
+
+			//because we will be accessing options properties it has to be an object at least
+			options = options || {};
+			//if specific error classes are not provided then apply generic errorClass
+			//it has to be done on option so that options.errorClass can override default
+			//errorElementClass and errorMessage class but not those provided in options
+			options.errorElementClass = options.errorElementClass || options.errorClass || configuration.errorElementClass;
+			options.errorMessageClass = options.errorMessageClass || options.errorClass || configuration.errorMessageClass;
+
+			extend(configuration, options);
+
+			if (configuration.registerExtenders) {
+				kv.registerExtenders();
+			}
+
+			isInitialized = 1;
+		},
+
+		// resets the config back to its original state
+		reset: kv.configuration.reset,
+
+		// recursively walks a viewModel and creates an object that
+		// provides validation information for the entire viewModel
+		// obj -> the viewModel to walk
+		// options -> {
+		//	  deep: false, // if true, will walk past the first level of viewModel properties
+		//	  observable: false // if true, returns a computed observable indicating if the viewModel is valid
+		// }
+		group: function group(obj, options) { // array of observables or viewModel
+			options = extend(extend({}, configuration.grouping), options);
+
+			var context = {
+				options: options,
+				graphMonitor: ko.observable(),
+				flagged: [],
+				subscriptions: [],
+				validatables: []
+			};
+
+			var result = null;
+
+			//if using observables then traverse structure once and add observables
+			if (options.observable) {
+				result = ko.computed(function () {
+					context.graphMonitor(); //register dependency
+					runTraversal(obj, context);
+					return collectErrors(context.validatables);
+				});
+			}
+			else { //if not using observables then every call to error() should traverse the structure
+				result = function () {
+					runTraversal(obj, context);
+					return collectErrors(context.validatables);
+				};
+			}
+
+			result.showAllMessages = function (show) { // thanks @heliosPortal
+				if (show === undefined) {//default to true
+					show = true;
+				}
+
+				result.forEach(function (observable) {
+					if (utils.isValidatable(observable)) {
+						observable.isModified(show);
+					}
+				});
+			};
+
+			result.isAnyMessageShown = function () {
+				var invalidAndModifiedPresent;
+
+				invalidAndModifiedPresent = !!result.find(function (observable) {
+					return utils.isValidatable(observable) && !observable.isValid() && observable.isModified();
+				});
+				return invalidAndModifiedPresent;
+			};
+
+			result.filter = function(predicate) {
+				predicate = predicate || function () { return true; };
+				// ensure we have latest changes
+				result();
+
+				return koUtils.arrayFilter(context.validatables, predicate);
+			};
+
+			result.find = function(predicate) {
+				predicate = predicate || function () { return true; };
+				// ensure we have latest changes
+				result();
+
+				return koUtils.arrayFirst(context.validatables, predicate);
+			};
+
+			result.forEach = function(callback) {
+				callback = callback || function () { };
+				// ensure we have latest changes
+				result();
+
+				forEach(context.validatables, callback);
+			};
+
+			result.map = function(mapping) {
+				mapping = mapping || function (item) { return item; };
+				// ensure we have latest changes
+				result();
+
+				return koUtils.arrayMap(context.validatables, mapping);
+			};
+
+			/**
+			 * @private You should not rely on this method being here.
+			 * It's a private method and it may change in the future.
+			 *
+			 * @description Updates the validated object and collects errors from it.
+			 */
+			result._updateState = function(newValue) {
+				if (!utils.isObject(newValue)) {
+					throw new Error('An object is required.');
+				}
+				obj = newValue;
+				if (options.observable) {
+					context.graphMonitor.valueHasMutated();
+				}
+				else {
+					runTraversal(newValue, context);
+					return collectErrors(context.validatables);
+				}
+			};
+			return result;
+		},
+
+		formatMessage: function (message, params, observable) {
+			if (utils.isObject(params) && params.typeAttr) {
+				params = params.value;
+			}
+			if (typeof message === 'function') {
+				return message(params, observable);
+			}
+			var replacements = unwrap(params);
+            if (replacements == null) {
+                replacements = [];
+            }
+			if (!utils.isArray(replacements)) {
+				replacements = [replacements];
+			}
+			return message.replace(/{(\d+)}/gi, function(match, index) {
+				if (typeof replacements[index] !== 'undefined') {
+					return replacements[index];
+				}
+				return match;
+			});
+		},
+
+		// addRule:
+		// This takes in a ko.observable and a Rule Context - which is just a rule name and params to supply to the validator
+		// ie: kv.addRule(myObservable, {
+		//		  rule: 'required',
+		//		  params: true
+		//	  });
+		//
+		addRule: function (observable, rule) {
+			observable.extend({ validatable: true });
+
+			var hasRule = !!koUtils.arrayFirst(observable.rules(), function(item) {
+				return item.rule && item.rule === rule.rule;
+			});
+
+			if (!hasRule) {
+				//push a Rule Context to the observables local array of Rule Contexts
+				observable.rules.push(rule);
+			}
+			return observable;
+		},
+
+		// addAnonymousRule:
+		// Anonymous Rules essentially have all the properties of a Rule, but are only specific for a certain property
+		// and developers typically are wanting to add them on the fly or not register a rule with the 'kv.rules' object
+		//
+		// Example:
+		// var test = ko.observable('something').extend{(
+		//	  validation: {
+		//		  validator: function(val, someOtherVal){
+		//			  return true;
+		//		  },
+		//		  message: "Something must be really wrong!',
+		//		  params: true
+		//	  }
+		//  )};
+		addAnonymousRule: function (observable, ruleObj) {
+			if (ruleObj['message'] === undefined) {
+				ruleObj['message'] = 'Error';
+			}
+
+			//make sure onlyIf is honoured
+			if (ruleObj.onlyIf) {
+				ruleObj.condition = ruleObj.onlyIf;
+			}
+
+			//add the anonymous rule to the observable
+			kv.addRule(observable, ruleObj);
+		},
+
+		addExtender: function (ruleName) {
+			ko.extenders[ruleName] = function (observable, params) {
+				//params can come in a few flavors
+				// 1. Just the params to be passed to the validator
+				// 2. An object containing the Message to be used and the Params to pass to the validator
+				// 3. A condition when the validation rule to be applied
+				//
+				// Example:
+				// var test = ko.observable(3).extend({
+				//	  max: {
+				//		  message: 'This special field has a Max of {0}',
+				//		  params: 2,
+				//		  onlyIf: function() {
+				//					  return specialField.IsVisible();
+				//				  }
+				//	  }
+				//  )};
+				//
+				if (params && (params.message || params.onlyIf)) { //if it has a message or condition object, then its an object literal to use
+					return kv.addRule(observable, {
+						rule: ruleName,
+						message: params.message,
+						params: utils.isEmptyVal(params.params) ? true : params.params,
+						condition: params.onlyIf
+					});
+				} else {
+					return kv.addRule(observable, {
+						rule: ruleName,
+						params: params
+					});
+				}
+			};
+		},
+
+		// loops through all kv.rules and adds them as extenders to
+		// ko.extenders
+		registerExtenders: function () { // root extenders optional, use 'validation' extender if would cause conflicts
+			if (configuration.registerExtenders) {
+				for (var ruleName in kv.rules) {
+					if (kv.rules.hasOwnProperty(ruleName)) {
+						if (!ko.extenders[ruleName]) {
+							kv.addExtender(ruleName);
+						}
+					}
+				}
+			}
+		},
+
+		//creates a span next to the @element with the specified error class
+		insertValidationMessage: function (element) {
+			var span = document.createElement('SPAN');
+			span.className = utils.getConfigOptions(element).errorMessageClass;
+			utils.insertAfter(element, span);
+			return span;
+		},
+
+		// if html-5 validation attributes have been specified, this parses
+		// the attributes on @element
+		parseInputValidationAttributes: function (element, valueAccessor) {
+			forEach(kv.configuration.html5Attributes, function (attr) {
+				if (utils.hasAttribute(element, attr)) {
+
+					var params = element.getAttribute(attr) || true;
+
+					if (attr === 'min' || attr === 'max')
+					{
+						// If we're validating based on the min and max attributes, we'll
+						// need to know what the 'type' attribute is set to
+						var typeAttr = element.getAttribute('type');
+						if (typeof typeAttr === "undefined" || !typeAttr)
+						{
+							// From http://www.w3.org/TR/html-markup/input:
+							//   An input element with no type attribute specified represents the
+							//   same thing as an input element with its type attribute set to "text".
+							typeAttr = "text";
+						}
+						params = {typeAttr: typeAttr, value: params};
+					}
+
+					kv.addRule(valueAccessor(), {
+						rule: attr,
+						params: params
+					});
+				}
+			});
+
+			var currentType = element.getAttribute('type');
+			forEach(kv.configuration.html5InputTypes, function (type) {
+				if (type === currentType) {
+					kv.addRule(valueAccessor(), {
+						rule: (type === 'date') ? 'dateISO' : type,
+						params: true
+					});
+				}
+			});
+		},
+
+		// writes html5 validation attributes on the element passed in
+		writeInputValidationAttributes: function (element, valueAccessor) {
+			var observable = valueAccessor();
+
+			if (!observable || !observable.rules) {
+				return;
+			}
+
+			var contexts = observable.rules(); // observable array
+
+			// loop through the attributes and add the information needed
+			forEach(kv.configuration.html5Attributes, function (attr) {
+				var ctx = koUtils.arrayFirst(contexts, function (ctx) {
+					return ctx.rule && ctx.rule.toLowerCase() === attr.toLowerCase();
+				});
+
+				if (!ctx) {
+					return;
+				}
+
+				// we have a rule matching a validation attribute at this point
+				// so lets add it to the element along with the params
+				ko.computed({
+					read: function() {
+						var params = ko.unwrap(ctx.params);
+
+						// we have to do some special things for the pattern validation
+						if (ctx.rule === "pattern" && params instanceof RegExp) {
+							// we need the pure string representation of the RegExpr without the //gi stuff
+							params = params.source;
+						}
+
+						element.setAttribute(attr, params);
+					},
+					disposeWhenNodeIsRemoved: element
+				});
+			});
+
+			contexts = null;
+		},
+
+		//take an existing binding handler and make it cause automatic validations
+		makeBindingHandlerValidatable: function (handlerName) {
+			var init = ko.bindingHandlers[handlerName].init;
+
+			ko.bindingHandlers[handlerName].init = function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+
+				init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+
+				return ko.bindingHandlers['validationCore'].init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+			};
+		},
+
+		// visit an objects properties and apply validation rules from a definition
+		setRules: function (target, definition) {
+			var setRules = function (target, definition) {
+				if (!target || !definition) { return; }
+
+				for (var prop in definition) {
+					if (!definition.hasOwnProperty(prop)) { continue; }
+					var ruleDefinitions = definition[prop];
+
+					//check the target property exists and has a value
+					if (!target[prop]) { continue; }
+					var targetValue = target[prop],
+						unwrappedTargetValue = unwrap(targetValue),
+						rules = {},
+						nonRules = {};
+
+					for (var rule in ruleDefinitions) {
+						if (!ruleDefinitions.hasOwnProperty(rule)) { continue; }
+						if (kv.rules[rule]) {
+							rules[rule] = ruleDefinitions[rule];
+						} else {
+							nonRules[rule] = ruleDefinitions[rule];
+						}
+					}
+
+					//apply rules
+					if (ko.isObservable(targetValue)) {
+						targetValue.extend(rules);
+					}
+
+					//then apply child rules
+					//if it's an array, apply rules to all children
+					if (unwrappedTargetValue && utils.isArray(unwrappedTargetValue)) {
+						for (var i = 0; i < unwrappedTargetValue.length; i++) {
+							setRules(unwrappedTargetValue[i], nonRules);
+						}
+						//otherwise, just apply to this property
+					} else {
+						setRules(unwrappedTargetValue, nonRules);
+					}
+				}
+			};
+			setRules(target, definition);
+		}
+	};
+
+}());
+
+// expose api publicly
+extend(ko.validation, api);
+//Validation Rules:
+// You can view and override messages or rules via:
+// kv.rules[ruleName]
+//
+// To implement a custom Rule, simply use this template:
+// kv.rules['<custom rule name>'] = {
+//      validator: function (val, param) {
+//          <custom logic>
+//          return <true or false>;
+//      },
+//      message: '<custom validation message>' //optionally you can also use a '{0}' to denote a placeholder that will be replaced with your 'param'
+// };
+//
+// Example:
+// kv.rules['mustEqual'] = {
+//      validator: function( val, mustEqualVal ){
+//          return val === mustEqualVal;
+//      },
+//      message: 'This field must equal {0}'
+// };
+//
+kv.rules = {};
+kv.rules['required'] = {
+	validator: function (val, required) {
+		var testVal;
+
+		if (val === undefined || val === null) {
+			return !required;
+		}
+
+		testVal = val;
+		if (typeof (val) === 'string') {
+			if (String.prototype.trim) {
+				testVal = val.trim();
+			}
+			else {
+				testVal = val.replace(/^\s+|\s+$/g, '');
+			}
+		}
+
+		if (!required) {// if they passed: { required: false }, then don't require this
+			return true;
+		}
+
+		return ((testVal + '').length > 0);
+	},
+	message: 'This field is required.'
+};
+
+function minMaxValidatorFactory(validatorName) {
+    var isMaxValidation = validatorName === "max";
+
+    return function (val, options) {
+        if (kv.utils.isEmptyVal(val)) {
+            return true;
+        }
+
+        var comparisonValue, type;
+        if (options.typeAttr === undefined) {
+            // This validator is being called from javascript rather than
+            // being bound from markup
+            type = "text";
+            comparisonValue = options;
+        } else {
+            type = options.typeAttr;
+            comparisonValue = options.value;
+        }
+
+        // From http://www.w3.org/TR/2012/WD-html5-20121025/common-input-element-attributes.html#attr-input-min,
+        // if the value is parseable to a number, then the minimum should be numeric
+        if (!isNaN(comparisonValue) && !(comparisonValue instanceof Date)) {
+            type = "number";
+        }
+
+        var regex, valMatches, comparisonValueMatches;
+        switch (type.toLowerCase()) {
+            case "week":
+                regex = /^(\d{4})-W(\d{2})$/;
+                valMatches = val.match(regex);
+                if (valMatches === null) {
+                    throw new Error("Invalid value for " + validatorName + " attribute for week input.  Should look like " +
+                        "'2000-W33' http://www.w3.org/TR/html-markup/input.week.html#input.week.attrs.min");
+                }
+                comparisonValueMatches = comparisonValue.match(regex);
+                // If no regex matches were found, validation fails
+                if (!comparisonValueMatches) {
+                    return false;
+                }
+
+                if (isMaxValidation) {
+                    return (valMatches[1] < comparisonValueMatches[1]) || // older year
+                        // same year, older week
+                        ((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] <= comparisonValueMatches[2]));
+                } else {
+                    return (valMatches[1] > comparisonValueMatches[1]) || // newer year
+                        // same year, newer week
+                        ((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] >= comparisonValueMatches[2]));
+                }
+                break;
+
+            case "month":
+                regex = /^(\d{4})-(\d{2})$/;
+                valMatches = val.match(regex);
+                if (valMatches === null) {
+                    throw new Error("Invalid value for " + validatorName + " attribute for month input.  Should look like " +
+                        "'2000-03' http://www.w3.org/TR/html-markup/input.month.html#input.month.attrs.min");
+                }
+                comparisonValueMatches = comparisonValue.match(regex);
+                // If no regex matches were found, validation fails
+                if (!comparisonValueMatches) {
+                    return false;
+                }
+
+                if (isMaxValidation) {
+                    return ((valMatches[1] < comparisonValueMatches[1]) || // older year
+                        // same year, older month
+                        ((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] <= comparisonValueMatches[2])));
+                } else {
+                    return (valMatches[1] > comparisonValueMatches[1]) || // newer year
+                        // same year, newer month
+                        ((valMatches[1] === comparisonValueMatches[1]) && (valMatches[2] >= comparisonValueMatches[2]));
+                }
+                break;
+
+            case "number":
+            case "range":
+                if (isMaxValidation) {
+                    return (!isNaN(val) && parseFloat(val) <= parseFloat(comparisonValue));
+                } else {
+                    return (!isNaN(val) && parseFloat(val) >= parseFloat(comparisonValue));
+                }
+                break;
+
+            default:
+                if (isMaxValidation) {
+                    return val <= comparisonValue;
+                } else {
+                    return val >= comparisonValue;
+                }
+        }
+    };
+}
+
+kv.rules['min'] = {
+	validator: minMaxValidatorFactory("min"),
+	message: 'Please enter a value greater than or equal to {0}.'
+};
+
+kv.rules['max'] = {
+	validator: minMaxValidatorFactory("max"),
+	message: 'Please enter a value less than or equal to {0}.'
+};
+
+kv.rules['minLength'] = {
+	validator: function (val, minLength) {
+		if(kv.utils.isEmptyVal(val)) { return true; }
+		var normalizedVal = kv.utils.isNumber(val) ? ('' + val) : val;
+		return normalizedVal.length >= minLength;
+	},
+	message: 'Please enter at least {0} characters.'
+};
+
+kv.rules['maxLength'] = {
+	validator: function (val, maxLength) {
+		if(kv.utils.isEmptyVal(val)) { return true; }
+		var normalizedVal = kv.utils.isNumber(val) ? ('' + val) : val;
+		return normalizedVal.length <= maxLength;
+	},
+	message: 'Please enter no more than {0} characters.'
+};
+
+kv.rules['pattern'] = {
+	validator: function (val, regex) {
+		return kv.utils.isEmptyVal(val) || val.toString().match(regex) !== null;
+	},
+	message: 'Please check this value.'
+};
+
+kv.rules['step'] = {
+	validator: function (val, step) {
+
+		// in order to handle steps of .1 & .01 etc.. Modulus won't work
+		// if the value is a decimal, so we have to correct for that
+		if (kv.utils.isEmptyVal(val) || step === 'any') { return true; }
+		var dif = (val * 100) % (step * 100);
+		return Math.abs(dif) < 0.00001 || Math.abs(1 - dif) < 0.00001;
+	},
+	message: 'The value must increment by {0}.'
+};
+
+kv.rules['email'] = {
+	validator: function (val, validate) {
+		if (!validate) { return true; }
+
+		//I think an empty email address is also a valid entry
+		//if one want's to enforce entry it should be done with 'required: true'
+		return kv.utils.isEmptyVal(val) || (
+			// jquery validate regex - thanks Scott Gonzalez
+			validate && /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i.test(val)
+		);
+	},
+	message: 'Please enter a proper email address.'
+};
+
+kv.rules['date'] = {
+	validator: function (value, validate) {
+		if (!validate) { return true; }
+		return kv.utils.isEmptyVal(value) || (validate && !/Invalid|NaN/.test(new Date(value)));
+	},
+	message: 'Please enter a proper date.'
+};
+
+kv.rules['dateISO'] = {
+	validator: function (value, validate) {
+		if (!validate) { return true; }
+		return kv.utils.isEmptyVal(value) || (validate && /^\d{4}[-/](?:0?[1-9]|1[012])[-/](?:0?[1-9]|[12][0-9]|3[01])$/.test(value));
+	},
+	message: 'Please enter a proper date.'
+};
+
+kv.rules['number'] = {
+	validator: function (value, validate) {
+		if (!validate) { return true; }
+		return kv.utils.isEmptyVal(value) || (validate && /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value));
+	},
+	message: 'Please enter a number.'
+};
+
+kv.rules['digit'] = {
+	validator: function (value, validate) {
+		if (!validate) { return true; }
+		return kv.utils.isEmptyVal(value) || (validate && /^\d+$/.test(value));
+	},
+	message: 'Please enter a digit.'
+};
+
+kv.rules['phoneUS'] = {
+	validator: function (phoneNumber, validate) {
+		if (!validate) { return true; }
+		if (kv.utils.isEmptyVal(phoneNumber)) { return true; } // makes it optional, use 'required' rule if it should be required
+		if (typeof (phoneNumber) !== 'string') { return false; }
+		phoneNumber = phoneNumber.replace(/\s+/g, "");
+		return validate && phoneNumber.length > 9 && phoneNumber.match(/^(1-?)?(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+	},
+	message: 'Please specify a valid phone number.'
+};
+
+kv.rules['equal'] = {
+	validator: function (val, params) {
+		var otherValue = params;
+		return val === kv.utils.getValue(otherValue);
+	},
+	message: 'Values must equal.'
+};
+
+kv.rules['notEqual'] = {
+	validator: function (val, params) {
+		var otherValue = params;
+		return val !== kv.utils.getValue(otherValue);
+	},
+	message: 'Please choose another value.'
+};
+
+//unique in collection
+// options are:
+//    collection: array or function returning (observable) array
+//              in which the value has to be unique
+//    valueAccessor: function that returns value from an object stored in collection
+//              if it is null the value is compared directly
+//    external: set to true when object you are validating is automatically updating collection
+kv.rules['unique'] = {
+	validator: function (val, options) {
+		var c = kv.utils.getValue(options.collection),
+			external = kv.utils.getValue(options.externalValue),
+			counter = 0;
+
+		if (!val || !c) { return true; }
+
+		koUtils.arrayFilter(c, function (item) {
+			if (val === (options.valueAccessor ? options.valueAccessor(item) : item)) { counter++; }
+		});
+		// if value is external even 1 same value in collection means the value is not unique
+		return counter < (!!external ? 1 : 2);
+	},
+	message: 'Please make sure the value is unique.'
+};
+
+
+//now register all of these!
+(function () {
+	kv.registerExtenders();
+}());
+// The core binding handler
+// this allows us to setup any value binding that internally always
+// performs the same functionality
+ko.bindingHandlers['validationCore'] = (function () {
+
+	return {
+		init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+			var config = kv.utils.getConfigOptions(element);
+			var observable = valueAccessor();
+
+			// parse html5 input validation attributes, optional feature
+			if (config.parseInputAttributes) {
+				kv.utils.async(function () { kv.parseInputValidationAttributes(element, valueAccessor); });
+			}
+
+			// if requested insert message element and apply bindings
+			if (config.insertMessages && kv.utils.isValidatable(observable)) {
+
+				// insert the <span></span>
+				var validationMessageElement = kv.insertValidationMessage(element);
+
+				// if we're told to use a template, make sure that gets rendered
+				if (config.messageTemplate) {
+					ko.renderTemplate(config.messageTemplate, { field: observable }, null, validationMessageElement, 'replaceNode');
+				} else {
+					ko.applyBindingsToNode(validationMessageElement, { validationMessage: observable });
+				}
+			}
+
+			// write the html5 attributes if indicated by the config
+			if (config.writeInputAttributes && kv.utils.isValidatable(observable)) {
+
+				kv.writeInputValidationAttributes(element, valueAccessor);
+			}
+
+			// if requested, add binding to decorate element
+			if (config.decorateInputElement && kv.utils.isValidatable(observable)) {
+				ko.applyBindingsToNode(element, { validationElement: observable });
+			}
+		}
+	};
+
+}());
+
+// override for KO's default 'value', 'checked', 'textInput' and selectedOptions bindings
+kv.makeBindingHandlerValidatable("value");
+kv.makeBindingHandlerValidatable("checked");
+if (ko.bindingHandlers.textInput) {
+	kv.makeBindingHandlerValidatable("textInput");
+}
+kv.makeBindingHandlerValidatable("selectedOptions");
+
+
+ko.bindingHandlers['validationMessage'] = { // individual error message, if modified or post binding
+	update: function (element, valueAccessor) {
+		var obsv = valueAccessor(),
+			config = kv.utils.getConfigOptions(element),
+			val = unwrap(obsv),
+			msg = null,
+			isModified = false,
+			isValid = false;
+
+		if (obsv === null || typeof obsv === 'undefined') {
+			throw new Error('Cannot bind validationMessage to undefined value. data-bind expression: ' +
+				element.getAttribute('data-bind'));
+		}
+
+		isModified = obsv.isModified && obsv.isModified();
+		isValid = obsv.isValid && obsv.isValid();
+
+		var error = null;
+		if (!config.messagesOnModified || isModified) {
+			error = isValid ? null : obsv.error;
+		}
+
+		var isVisible = !config.messagesOnModified || isModified ? !isValid : false;
+		var isCurrentlyVisible = element.style.display !== "none";
+
+		if (config.allowHtmlMessages) {
+			koUtils.setHtml(element, error);
+		} else {
+			ko.bindingHandlers.text.update(element, function () { return error; });
+		}
+
+		if (isCurrentlyVisible && !isVisible) {
+			element.style.display = 'none';
+		} else if (!isCurrentlyVisible && isVisible) {
+			element.style.display = '';
+		}
+	}
+};
+
+ko.bindingHandlers['validationElement'] = {
+	update: function (element, valueAccessor, allBindingsAccessor) {
+		var obsv = valueAccessor(),
+			config = kv.utils.getConfigOptions(element),
+			val = unwrap(obsv),
+			msg = null,
+			isModified = false,
+			isValid = false;
+
+		if (obsv === null || typeof obsv === 'undefined') {
+			throw new Error('Cannot bind validationElement to undefined value. data-bind expression: ' +
+				element.getAttribute('data-bind'));
+		}
+
+		isModified = obsv.isModified && obsv.isModified();
+		isValid = obsv.isValid && obsv.isValid();
+
+		// create an evaluator function that will return something like:
+		// css: { validationElement: true }
+		var cssSettingsAccessor = function () {
+			var css = {};
+
+			var shouldShow = ((!config.decorateElementOnModified || isModified) ? !isValid : false);
+
+			// css: { validationElement: false }
+			css[config.errorElementClass] = shouldShow;
+
+			return css;
+		};
+
+		//add or remove class on the element;
+		ko.bindingHandlers.css.update(element, cssSettingsAccessor, allBindingsAccessor);
+		if (!config.errorsAsTitle) { return; }
+
+		ko.bindingHandlers.attr.update(element, function () {
+			var
+				hasModification = !config.errorsAsTitleOnModified || isModified,
+				title = kv.utils.getOriginalElementTitle(element);
+
+			if (hasModification && !isValid) {
+				return { title: obsv.error, 'data-orig-title': title };
+			} else if (!hasModification || isValid) {
+				return { title: title, 'data-orig-title': null };
+			}
+		});
+	}
+};
+
+// ValidationOptions:
+// This binding handler allows you to override the initial config by setting any of the options for a specific element or context of elements
+//
+// Example:
+// <div data-bind="validationOptions: { insertMessages: true, messageTemplate: 'customTemplate', errorMessageClass: 'mySpecialClass'}">
+//      <input type="text" data-bind="value: someValue"/>
+//      <input type="text" data-bind="value: someValue2"/>
+// </div>
+ko.bindingHandlers['validationOptions'] = (function () {
+	return {
+		init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+			var options = unwrap(valueAccessor());
+			if (options) {
+				var newConfig = extend({}, kv.configuration);
+				extend(newConfig, options);
+
+				//store the validation options on the node so we can retrieve it later
+				kv.utils.setDomData(element, newConfig);
+			}
+		}
+	};
+}());
+// Validation Extender:
+// This is for creating custom validation logic on the fly
+// Example:
+// var test = ko.observable('something').extend{(
+//      validation: {
+//          validator: function(val, someOtherVal){
+//              return true;
+//          },
+//          message: "Something must be really wrong!',
+//          params: true
+//      }
+//  )};
+ko.extenders['validation'] = function (observable, rules) { // allow single rule or array
+	forEach(kv.utils.isArray(rules) ? rules : [rules], function (rule) {
+		// the 'rule' being passed in here has no name to identify a core Rule,
+		// so we add it as an anonymous rule
+		// If the developer is wanting to use a core Rule, but use a different message see the 'addExtender' logic for examples
+		kv.addAnonymousRule(observable, rule);
+	});
+	return observable;
+};
+
+//This is the extender that makes a Knockout Observable also 'Validatable'
+//examples include:
+// 1. var test = ko.observable('something').extend({validatable: true});
+// this will ensure that the Observable object is setup properly to respond to rules
+//
+// 2. test.extend({validatable: false});
+// this will remove the validation properties from the Observable object should you need to do that.
+ko.extenders['validatable'] = function (observable, options) {
+	if (!kv.utils.isObject(options)) {
+		options = { enable: options };
+	}
+
+	if (!('enable' in options)) {
+		options.enable = true;
+	}
+
+	if (options.enable && !kv.utils.isValidatable(observable)) {
+		var config = kv.configuration.validate || {};
+		var validationOptions = {
+			throttleEvaluation : options.throttle || config.throttle
+		};
+
+		observable.error = ko.observable(null); // holds the error message, we only need one since we stop processing validators when one is invalid
+
+		// observable.rules:
+		// ObservableArray of Rule Contexts, where a Rule Context is simply the name of a rule and the params to supply to it
+		//
+		// Rule Context = { rule: '<rule name>', params: '<passed in params>', message: '<Override of default Message>' }
+		observable.rules = ko.observableArray(); //holds the rule Contexts to use as part of validation
+
+		//in case async validation is occurring
+		observable.isValidating = ko.observable(false);
+
+		//the true holder of whether the observable is valid or not
+		observable.__valid__ = ko.observable(true);
+
+		observable.isModified = ko.observable(false);
+
+		// a semi-protected observable
+		observable.isValid = ko.computed(observable.__valid__);
+
+		//manually set error state
+		observable.setError = function (error) {
+			var previousError = observable.error.peek();
+			var previousIsValid = observable.__valid__.peek();
+
+			observable.error(error);
+			observable.__valid__(false);
+
+			if (previousError !== error && !previousIsValid) {
+				// if the observable was not valid before then isValid will not mutate,
+				// hence causing any grouping to not display the latest error.
+				observable.isValid.notifySubscribers();
+			}
+		};
+
+		//manually clear error state
+		observable.clearError = function () {
+			observable.error(null);
+			observable.__valid__(true);
+			return observable;
+		};
+
+		//subscribe to changes in the observable
+		var h_change = observable.subscribe(function () {
+			observable.isModified(true);
+		});
+
+		// we use a computed here to ensure that anytime a dependency changes, the
+		// validation logic evaluates
+		var h_obsValidationTrigger = ko.computed(extend({
+			read: function () {
+				var obs = observable(),
+					ruleContexts = observable.rules();
+
+				kv.validateObservable(observable);
+
+				return true;
+			}
+		}, validationOptions));
+
+		extend(h_obsValidationTrigger, validationOptions);
+
+		observable._disposeValidation = function () {
+			//first dispose of the subscriptions
+			observable.isValid.dispose();
+			observable.rules.removeAll();
+			h_change.dispose();
+			h_obsValidationTrigger.dispose();
+
+			delete observable['rules'];
+			delete observable['error'];
+			delete observable['isValid'];
+			delete observable['isValidating'];
+			delete observable['__valid__'];
+			delete observable['isModified'];
+            delete observable['setError'];
+            delete observable['clearError'];
+            delete observable['_disposeValidation'];
+		};
+	} else if (options.enable === false && observable._disposeValidation) {
+		observable._disposeValidation();
+	}
+	return observable;
+};
+
+function validateSync(observable, rule, ctx) {
+	//Execute the validator and see if its valid
+	if (!rule.validator(observable(), (ctx.params === undefined ? true : unwrap(ctx.params)))) { // default param is true, eg. required = true
+
+		//not valid, so format the error message and stick it in the 'error' variable
+		observable.setError(kv.formatMessage(
+					ctx.message || rule.message,
+					unwrap(ctx.params),
+					observable));
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function validateAsync(observable, rule, ctx) {
+	observable.isValidating(true);
+
+	var callBack = function (valObj) {
+		var isValid = false,
+			msg = '';
+
+		if (!observable.__valid__()) {
+
+			// since we're returning early, make sure we turn this off
+			observable.isValidating(false);
+
+			return; //if its already NOT valid, don't add to that
+		}
+
+		//we were handed back a complex object
+		if (valObj['message']) {
+			isValid = valObj.isValid;
+			msg = valObj.message;
+		} else {
+			isValid = valObj;
+		}
+
+		if (!isValid) {
+			//not valid, so format the error message and stick it in the 'error' variable
+			observable.error(kv.formatMessage(
+				msg || ctx.message || rule.message,
+				unwrap(ctx.params),
+				observable));
+			observable.__valid__(isValid);
+		}
+
+		// tell it that we're done
+		observable.isValidating(false);
+	};
+
+	kv.utils.async(function() {
+	    //fire the validator and hand it the callback
+        rule.validator(observable(), ctx.params === undefined ? true : unwrap(ctx.params), callBack);
+	});
+}
+
+kv.validateObservable = function (observable) {
+	var i = 0,
+		rule, // the rule validator to execute
+		ctx, // the current Rule Context for the loop
+		ruleContexts = observable.rules(), //cache for iterator
+		len = ruleContexts.length; //cache for iterator
+
+	for (; i < len; i++) {
+
+		//get the Rule Context info to give to the core Rule
+		ctx = ruleContexts[i];
+
+		// checks an 'onlyIf' condition
+		if (ctx.condition && !ctx.condition()) {
+			continue;
+		}
+
+		//get the core Rule to use for validation
+		rule = ctx.rule ? kv.rules[ctx.rule] : ctx;
+
+		if (rule['async'] || ctx['async']) {
+			//run async validation
+			validateAsync(observable, rule, ctx);
+
+		} else {
+			//run normal sync validation
+			if (!validateSync(observable, rule, ctx)) {
+				return false; //break out of the loop
+			}
+		}
+	}
+	//finally if we got this far, make the observable valid again!
+	observable.clearError();
+	return true;
+};
+
+var _locales = {};
+var _currentLocale;
+
+kv.defineLocale = function(name, values) {
+	if (name && values) {
+		_locales[name.toLowerCase()] = values;
+		return values;
+	}
+	return null;
+};
+
+kv.locale = function(name) {
+	if (name) {
+		name = name.toLowerCase();
+
+		if (_locales.hasOwnProperty(name)) {
+			kv.localize(_locales[name]);
+			_currentLocale = name;
+		}
+		else {
+			throw new Error('Localization ' + name + ' has not been loaded.');
+		}
+	}
+	return _currentLocale;
+};
+
+//quick function to override rule messages
+kv.localize = function (msgTranslations) {
+	var rules = kv.rules;
+
+	//loop the properties in the object and assign the msg to the rule
+	for (var ruleName in msgTranslations) {
+		if (rules.hasOwnProperty(ruleName)) {
+			rules[ruleName].message = msgTranslations[ruleName];
+		}
+	}
+};
+
+// Populate default locale (this will make en-US.js somewhat redundant)
+(function() {
+	var localeData = {};
+	var rules = kv.rules;
+
+	for (var ruleName in rules) {
+		if (rules.hasOwnProperty(ruleName)) {
+			localeData[ruleName] = rules[ruleName].message;
+		}
+	}
+	kv.defineLocale('en-us', localeData);
+})();
+
+// No need to invoke locale because the messages are already defined along with the rules for en-US
+_currentLocale = 'en-us';
+/**
+ * Possible invocations:
+ * 		applyBindingsWithValidation(viewModel)
+ * 		applyBindingsWithValidation(viewModel, options)
+ * 		applyBindingsWithValidation(viewModel, rootNode)
+ *		applyBindingsWithValidation(viewModel, rootNode, options)
+ */
+ko.applyBindingsWithValidation = function (viewModel, rootNode, options) {
+	var node = document.body,
+		config;
+
+	if (rootNode && rootNode.nodeType) {
+		node = rootNode;
+		config = options;
+	}
+	else {
+		config = rootNode;
+	}
+
+	kv.init();
+
+	if (config) {
+		config = extend(extend({}, kv.configuration), config);
+		kv.utils.setDomData(node, config);
+	}
+
+	ko.applyBindings(viewModel, node);
+};
+
+//override the original applyBindings so that we can ensure all new rules and what not are correctly registered
+var origApplyBindings = ko.applyBindings;
+ko.applyBindings = function (viewModel, rootNode) {
+
+	kv.init();
+
+	origApplyBindings(viewModel, rootNode);
+};
+
+ko.validatedObservable = function (initialValue, options) {
+	if (!options && !kv.utils.isObject(initialValue)) {
+		return ko.observable(initialValue).extend({ validatable: true });
+	}
+
+	var obsv = ko.observable(initialValue);
+	obsv.errors = kv.group(kv.utils.isObject(initialValue) ? initialValue : {}, options);
+	obsv.isValid = ko.observable(obsv.errors().length === 0);
+
+	if (ko.isObservable(obsv.errors)) {
+		obsv.errors.subscribe(function(errors) {
+			obsv.isValid(errors.length === 0);
+		});
+	}
+	else {
+		ko.computed(obsv.errors).subscribe(function (errors) {
+			obsv.isValid(errors.length === 0);
+		});
+	}
+
+	obsv.subscribe(function(newValue) {
+		if (!kv.utils.isObject(newValue)) {
+			/*
+			 * The validation group works on objects.
+			 * Since the new value is a primitive (scalar, null or undefined) we need
+			 * to create an empty object to pass along.
+			 */
+			newValue = {};
+		}
+		// Force the group to refresh
+		obsv.errors._updateState(newValue);
+		obsv.isValid(obsv.errors().length === 0);
+	});
+
+	return obsv;
+};
+}));
+});
+
 var IdeaBasicInfoViewModel = function () {
     function IdeaBasicInfoViewModel(_ref) {
         var _ref$idea = _ref.idea,
             idea = _ref$idea === undefined ? {} : _ref$idea,
             save = _ref.actions.save;
         classCallCheck(this, IdeaBasicInfoViewModel);
+
+
+        knockout.validation.init({
+            errorElementClass: 'has-error',
+            errorMessageClass: 'help-block',
+            decorateInputElement: true
+        });
 
         this.actions = { save: save };
         this.isSaving = knockout.observable(false);
@@ -1822,22 +3344,23 @@ var IdeaBasicInfoViewModel = function () {
                 _ref2$fundingRequirem = _ref2.fundingRequirement,
                 fundingRequirement = _ref2$fundingRequirem === undefined ? '' : _ref2$fundingRequirem;
 
-            this.form = {
+            this.form = knockout.validatedObservable({
                 id: id,
-                title: knockout.observable(title),
-                description: knockout.observable(description),
-                isFundingRequired: knockout.observable(isFundingRequired),
-                fundingRequirement: knockout.observable(fundingRequirement)
-            };
+                title: knockout.observable(title).extend({ required: true }),
+                description: knockout.observable(description).extend({ required: true }),
+                isFundingRequired: knockout.observable(isFundingRequired).extend({ required: true }),
+                fundingRequirement: knockout.observable(fundingRequirement).extend({ required: false })
+            });
         }
     }, {
         key: '_validate',
         value: function _validate() {
-            var formData = knockout.toJS(this.form);
 
-            var part1valid = formData.title && formData.description;
-
-            return part1valid && (formData.isFundingRequired ? !!formData.fundingRequirement : true);
+            if (!this.form.isValid()) {
+                this.form.errors.showAllMessages();
+                return false;
+            }
+            return true;
         }
     }, {
         key: 'save',
@@ -1850,7 +3373,7 @@ var IdeaBasicInfoViewModel = function () {
 
             var form = knockout.toJS(this.form);
 
-            form.isFundingRequired = form.fundingRequirement && form.fundingRequirement.length > 0;
+            form.isFundingRequired = !!(form.fundingRequirement && form.fundingRequirement.length > 0);
 
             this.isSaving(true);
             var save = this.actions.save;
@@ -1866,1744 +3389,26 @@ var IdeaBasicInfoViewModel = function () {
     return IdeaBasicInfoViewModel;
 }();
 
-var barba = createCommonjsModule(function (module, exports) {
-(function webpackUniversalModuleDefinition(root, factory) {
-	module.exports = factory();
-})(commonjsGlobal, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "http://localhost:8080/dist";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports, __webpack_require__) {
-
-	//Promise polyfill https://github.com/taylorhakes/promise-polyfill
-	
-	if (typeof Promise !== 'function') {
-	 window.Promise = __webpack_require__(1);
-	}
-	
-	var Barba = {
-	  version: '1.0.0',
-	  BaseTransition: __webpack_require__(4),
-	  BaseView: __webpack_require__(6),
-	  BaseCache: __webpack_require__(8),
-	  Dispatcher: __webpack_require__(7),
-	  HistoryManager: __webpack_require__(9),
-	  Pjax: __webpack_require__(10),
-	  Prefetch: __webpack_require__(13),
-	  Utils: __webpack_require__(5)
-	};
-	
-	module.exports = Barba;
-
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(setImmediate) {(function (root) {
-	
-	  // Store setTimeout reference so promise-polyfill will be unaffected by
-	  // other code modifying setTimeout (like sinon.useFakeTimers())
-	  var setTimeoutFunc = setTimeout;
-	
-	  function noop() {
-	  }
-	
-	  // Use polyfill for setImmediate for performance gains
-	  var asap = (typeof setImmediate === 'function' && setImmediate) ||
-	    function (fn) {
-	      setTimeoutFunc(fn, 0);
-	    };
-	
-	  var onUnhandledRejection = function onUnhandledRejection(err) {
-	    if (typeof console !== 'undefined' && console) {
-	      console.warn('Possible Unhandled Promise Rejection:', err); // eslint-disable-line no-console
-	    }
-	  };
-	
-	  // Polyfill for Function.prototype.bind
-	  function bind(fn, thisArg) {
-	    return function () {
-	      fn.apply(thisArg, arguments);
-	    };
-	  }
-	
-	  function Promise(fn) {
-	    if (typeof this !== 'object') throw new TypeError('Promises must be constructed via new');
-	    if (typeof fn !== 'function') throw new TypeError('not a function');
-	    this._state = 0;
-	    this._handled = false;
-	    this._value = undefined;
-	    this._deferreds = [];
-	
-	    doResolve(fn, this);
-	  }
-	
-	  function handle(self, deferred) {
-	    while (self._state === 3) {
-	      self = self._value;
-	    }
-	    if (self._state === 0) {
-	      self._deferreds.push(deferred);
-	      return;
-	    }
-	    self._handled = true;
-	    asap(function () {
-	      var cb = self._state === 1 ? deferred.onFulfilled : deferred.onRejected;
-	      if (cb === null) {
-	        (self._state === 1 ? resolve : reject)(deferred.promise, self._value);
-	        return;
-	      }
-	      var ret;
-	      try {
-	        ret = cb(self._value);
-	      } catch (e) {
-	        reject(deferred.promise, e);
-	        return;
-	      }
-	      resolve(deferred.promise, ret);
-	    });
-	  }
-	
-	  function resolve(self, newValue) {
-	    try {
-	      // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
-	      if (newValue === self) throw new TypeError('A promise cannot be resolved with itself.');
-	      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
-	        var then = newValue.then;
-	        if (newValue instanceof Promise) {
-	          self._state = 3;
-	          self._value = newValue;
-	          finale(self);
-	          return;
-	        } else if (typeof then === 'function') {
-	          doResolve(bind(then, newValue), self);
-	          return;
-	        }
-	      }
-	      self._state = 1;
-	      self._value = newValue;
-	      finale(self);
-	    } catch (e) {
-	      reject(self, e);
-	    }
-	  }
-	
-	  function reject(self, newValue) {
-	    self._state = 2;
-	    self._value = newValue;
-	    finale(self);
-	  }
-	
-	  function finale(self) {
-	    if (self._state === 2 && self._deferreds.length === 0) {
-	      asap(function() {
-	        if (!self._handled) {
-	          onUnhandledRejection(self._value);
-	        }
-	      });
-	    }
-	
-	    for (var i = 0, len = self._deferreds.length; i < len; i++) {
-	      handle(self, self._deferreds[i]);
-	    }
-	    self._deferreds = null;
-	  }
-	
-	  function Handler(onFulfilled, onRejected, promise) {
-	    this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
-	    this.onRejected = typeof onRejected === 'function' ? onRejected : null;
-	    this.promise = promise;
-	  }
-	
-	  /**
-	   * Take a potentially misbehaving resolver function and make sure
-	   * onFulfilled and onRejected are only called once.
-	   *
-	   * Makes no guarantees about asynchrony.
-	   */
-	  function doResolve(fn, self) {
-	    var done = false;
-	    try {
-	      fn(function (value) {
-	        if (done) return;
-	        done = true;
-	        resolve(self, value);
-	      }, function (reason) {
-	        if (done) return;
-	        done = true;
-	        reject(self, reason);
-	      });
-	    } catch (ex) {
-	      if (done) return;
-	      done = true;
-	      reject(self, ex);
-	    }
-	  }
-	
-	  Promise.prototype['catch'] = function (onRejected) {
-	    return this.then(null, onRejected);
-	  };
-	
-	  Promise.prototype.then = function (onFulfilled, onRejected) {
-	    var prom = new (this.constructor)(noop);
-	
-	    handle(this, new Handler(onFulfilled, onRejected, prom));
-	    return prom;
-	  };
-	
-	  Promise.all = function (arr) {
-	    var args = Array.prototype.slice.call(arr);
-	
-	    return new Promise(function (resolve, reject) {
-	      if (args.length === 0) return resolve([]);
-	      var remaining = args.length;
-	
-	      function res(i, val) {
-	        try {
-	          if (val && (typeof val === 'object' || typeof val === 'function')) {
-	            var then = val.then;
-	            if (typeof then === 'function') {
-	              then.call(val, function (val) {
-	                res(i, val);
-	              }, reject);
-	              return;
-	            }
-	          }
-	          args[i] = val;
-	          if (--remaining === 0) {
-	            resolve(args);
-	          }
-	        } catch (ex) {
-	          reject(ex);
-	        }
-	      }
-	
-	      for (var i = 0; i < args.length; i++) {
-	        res(i, args[i]);
-	      }
-	    });
-	  };
-	
-	  Promise.resolve = function (value) {
-	    if (value && typeof value === 'object' && value.constructor === Promise) {
-	      return value;
-	    }
-	
-	    return new Promise(function (resolve) {
-	      resolve(value);
-	    });
-	  };
-	
-	  Promise.reject = function (value) {
-	    return new Promise(function (resolve, reject) {
-	      reject(value);
-	    });
-	  };
-	
-	  Promise.race = function (values) {
-	    return new Promise(function (resolve, reject) {
-	      for (var i = 0, len = values.length; i < len; i++) {
-	        values[i].then(resolve, reject);
-	      }
-	    });
-	  };
-	
-	  /**
-	   * Set the immediate function to execute callbacks
-	   * @param fn {function} Function to execute
-	   * @private
-	   */
-	  Promise._setImmediateFn = function _setImmediateFn(fn) {
-	    asap = fn;
-	  };
-	
-	  Promise._setUnhandledRejectionFn = function _setUnhandledRejectionFn(fn) {
-	    onUnhandledRejection = fn;
-	  };
-	
-	  if (typeof module !== 'undefined' && module.exports) {
-	    module.exports = Promise;
-	  } else if (!root.Promise) {
-	    root.Promise = Promise;
-	  }
-	
-	})(this);
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2).setImmediate));
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(3).nextTick;
-	var apply = Function.prototype.apply;
-	var slice = Array.prototype.slice;
-	var immediateIds = {};
-	var nextImmediateId = 0;
-	
-	// DOM APIs, for completeness
-	
-	exports.setTimeout = function() {
-	  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-	};
-	exports.setInterval = function() {
-	  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-	};
-	exports.clearTimeout =
-	exports.clearInterval = function(timeout) { timeout.close(); };
-	
-	function Timeout(id, clearFn) {
-	  this._id = id;
-	  this._clearFn = clearFn;
-	}
-	Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-	Timeout.prototype.close = function() {
-	  this._clearFn.call(window, this._id);
-	};
-	
-	// Does not start the time, just sets up the members needed.
-	exports.enroll = function(item, msecs) {
-	  clearTimeout(item._idleTimeoutId);
-	  item._idleTimeout = msecs;
-	};
-	
-	exports.unenroll = function(item) {
-	  clearTimeout(item._idleTimeoutId);
-	  item._idleTimeout = -1;
-	};
-	
-	exports._unrefActive = exports.active = function(item) {
-	  clearTimeout(item._idleTimeoutId);
-	
-	  var msecs = item._idleTimeout;
-	  if (msecs >= 0) {
-	    item._idleTimeoutId = setTimeout(function onTimeout() {
-	      if (item._onTimeout)
-	        item._onTimeout();
-	    }, msecs);
-	  }
-	};
-	
-	// That's not how node.js implements it but the exposed api is the same.
-	exports.setImmediate = typeof setImmediate === "function" ? setImmediate : function(fn) {
-	  var id = nextImmediateId++;
-	  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
-	
-	  immediateIds[id] = true;
-	
-	  nextTick(function onNextTick() {
-	    if (immediateIds[id]) {
-	      // fn.call() is faster so we optimize for the common use-case
-	      // @see http://jsperf.com/call-apply-segu
-	      if (args) {
-	        fn.apply(null, args);
-	      } else {
-	        fn.call(null);
-	      }
-	      // Prevent ids from leaking
-	      exports.clearImmediate(id);
-	    }
-	  });
-	
-	  return id;
-	};
-	
-	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
-	  delete immediateIds[id];
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2).setImmediate, __webpack_require__(2).clearImmediate));
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	// shim for using process in browser
-	
-	var process = module.exports = {};
-	
-	// cached from whatever global is present so that test runners that stub it
-	// don't break things.  But we need to wrap it in a try catch in case it is
-	// wrapped in strict mode code which doesn't define any globals.  It's inside a
-	// function because try/catches deoptimize in certain engines.
-	
-	var cachedSetTimeout;
-	var cachedClearTimeout;
-	
-	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
-	    };
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
-	    };
-	  }
-	} ());
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
-	
-	function cleanUpNextTick() {
-	    if (!draining || !currentQueue) {
-	        return;
-	    }
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
-	    } else {
-	        queueIndex = -1;
-	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-	
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
-	    draining = true;
-	
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            if (currentQueue) {
-	                currentQueue[queueIndex].run();
-	            }
-	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    cachedClearTimeout(timeout);
-	}
-	
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
-	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
-	    }
-	};
-	
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-	
-	function noop() {}
-	
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-	
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-	
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
-
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Utils = __webpack_require__(5);
-	
-	/**
-	 * BaseTransition to extend
-	 *
-	 * @namespace Barba.BaseTransition
-	 * @type {Object}
-	 */
-	var BaseTransition = {
-	  /**
-	   * @memberOf Barba.BaseTransition
-	   * @type {HTMLElement}
-	   */
-	  oldContainer: undefined,
-	
-	  /**
-	   * @memberOf Barba.BaseTransition
-	   * @type {HTMLElement}
-	   */
-	  newContainer: undefined,
-	
-	  /**
-	   * @memberOf Barba.BaseTransition
-	   * @type {Promise}
-	   */
-	  newContainerLoading: undefined,
-	
-	  /**
-	   * Helper to extend the object
-	   *
-	   * @memberOf Barba.BaseTransition
-	   * @param  {Object} newObject
-	   * @return {Object} newInheritObject
-	   */
-	  extend: function(obj){
-	    return Utils.extend(this, obj);
-	  },
-	
-	  /**
-	   * This function is called from Pjax module to initialize
-	   * the transition.
-	   *
-	   * @memberOf Barba.BaseTransition
-	   * @private
-	   * @param  {HTMLElement} oldContainer
-	   * @param  {Promise} newContainer
-	   * @return {Promise}
-	   */
-	  init: function(oldContainer, newContainer) {
-	    var _this = this;
-	
-	    this.oldContainer = oldContainer;
-	    this._newContainerPromise = newContainer;
-	
-	    this.deferred = Utils.deferred();
-	    this.newContainerReady = Utils.deferred();
-	    this.newContainerLoading = this.newContainerReady.promise;
-	
-	    this.start();
-	
-	    this._newContainerPromise.then(function(newContainer) {
-	      _this.newContainer = newContainer;
-	      _this.newContainerReady.resolve();
-	    });
-	
-	    return this.deferred.promise;
-	  },
-	
-	  /**
-	   * This function needs to be called as soon the Transition is finished
-	   *
-	   * @memberOf Barba.BaseTransition
-	   */
-	  done: function() {
-	    this.oldContainer.parentNode.removeChild(this.oldContainer);
-	    this.newContainer.style.visibility = 'visible';
-	    this.deferred.resolve();
-	  },
-	
-	  /**
-	   * Constructor for your Transition
-	   *
-	   * @memberOf Barba.BaseTransition
-	   * @abstract
-	   */
-	  start: function() {},
-	};
-	
-	module.exports = BaseTransition;
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	/**
-	 * Just an object with some helpful functions
-	 *
-	 * @type {Object}
-	 * @namespace Barba.Utils
-	 */
-	var Utils = {
-	  /**
-	   * Return the current url
-	   *
-	   * @memberOf Barba.Utils
-	   * @return {String} currentUrl
-	   */
-	  getCurrentUrl: function() {
-	    return window.location.protocol + '//' +
-	           window.location.host +
-	           window.location.pathname +
-	           window.location.search;
-	  },
-	
-	  /**
-	   * Given an url, return it without the hash
-	   *
-	   * @memberOf Barba.Utils
-	   * @private
-	   * @param  {String} url
-	   * @return {String} newCleanUrl
-	   */
-	  cleanLink: function(url) {
-	    return url.replace(/#.*/, '');
-	  },
-	
-	  /**
-	   * Time in millisecond after the xhr request goes in timeout
-	   *
-	   * @memberOf Barba.Utils
-	   * @type {Number}
-	   * @default
-	   */
-	  xhrTimeout: 5000,
-	
-	  /**
-	   * Start an XMLHttpRequest() and return a Promise
-	   *
-	   * @memberOf Barba.Utils
-	   * @param  {String} url
-	   * @return {Promise}
-	   */
-	  xhr: function(url) {
-	    var deferred = this.deferred();
-	    var req = new XMLHttpRequest();
-	
-	    req.onreadystatechange = function() {
-	      if (req.readyState === 4) {
-	        if (req.status === 200) {
-	          return deferred.resolve(req.responseText);
-	        } else {
-	          return deferred.reject(new Error('xhr: HTTP code is not 200'));
-	        }
-	      }
-	    };
-	
-	    req.ontimeout = function() {
-	      return deferred.reject(new Error('xhr: Timeout exceeded'));
-	    };
-	
-	    req.open('GET', url);
-	    req.timeout = this.xhrTimeout;
-	    req.setRequestHeader('x-barba', 'yes');
-	    req.send();
-	
-	    return deferred.promise;
-	  },
-	
-	  /**
-	   * Get obj and props and return a new object with the property merged
-	   *
-	   * @memberOf Barba.Utils
-	   * @param  {object} obj
-	   * @param  {object} props
-	   * @return {object}
-	   */
-	  extend: function(obj, props) {
-	    var newObj = Object.create(obj);
-	
-	    for(var prop in props) {
-	      if(props.hasOwnProperty(prop)) {
-	        newObj[prop] = props[prop];
-	      }
-	    }
-	
-	    return newObj;
-	  },
-	
-	  /**
-	   * Return a new "Deferred" object
-	   * https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Deferred
-	   *
-	   * @memberOf Barba.Utils
-	   * @return {Deferred}
-	   */
-	  deferred: function() {
-	    return new function() {
-	      this.resolve = null;
-	      this.reject = null;
-	
-	      this.promise = new Promise(function(resolve, reject) {
-	        this.resolve = resolve;
-	        this.reject = reject;
-	      }.bind(this));
-	    };
-	  },
-	
-	  /**
-	   * Return the port number normalized, eventually you can pass a string to be normalized.
-	   *
-	   * @memberOf Barba.Utils
-	   * @private
-	   * @param  {String} p
-	   * @return {Int} port
-	   */
-	  getPort: function(p) {
-	    var port = typeof p !== 'undefined' ? p : window.location.port;
-	    var protocol = window.location.protocol;
-	
-	    if (port != '')
-	      return parseInt(port);
-	
-	    if (protocol === 'http:')
-	      return 80;
-	
-	    if (protocol === 'https:')
-	      return 443;
-	  }
-	};
-	
-	module.exports = Utils;
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(7);
-	var Utils = __webpack_require__(5);
-	
-	/**
-	 * BaseView to be extended
-	 *
-	 * @namespace Barba.BaseView
-	 * @type {Object}
-	 */
-	var BaseView  = {
-	  /**
-	   * Namespace of the view.
-	   * (need to be associated with the data-namespace of the container)
-	   *
-	   * @memberOf Barba.BaseView
-	   * @type {String}
-	   */
-	  namespace: null,
-	
-	  /**
-	   * Helper to extend the object
-	   *
-	   * @memberOf Barba.BaseView
-	   * @param  {Object} newObject
-	   * @return {Object} newInheritObject
-	   */
-	  extend: function(obj){
-	    return Utils.extend(this, obj);
-	  },
-	
-	  /**
-	   * Init the view.
-	   * P.S. Is suggested to init the view before starting Barba.Pjax.start(),
-	   * in this way .onEnter() and .onEnterCompleted() will be fired for the current
-	   * container when the page is loaded.
-	   *
-	   * @memberOf Barba.BaseView
-	   */
-	  init: function() {
-	    var _this = this;
-	
-	    Dispatcher.on('initStateChange',
-	      function(newStatus, oldStatus) {
-	        if (oldStatus && oldStatus.namespace === _this.namespace)
-	          _this.onLeave();
-	      }
-	    );
-	
-	    Dispatcher.on('newPageReady',
-	      function(newStatus, oldStatus, container) {
-	        _this.container = container;
-	
-	        if (newStatus.namespace === _this.namespace)
-	          _this.onEnter();
-	      }
-	    );
-	
-	    Dispatcher.on('transitionCompleted',
-	      function(newStatus, oldStatus) {
-	        if (newStatus.namespace === _this.namespace)
-	          _this.onEnterCompleted();
-	
-	        if (oldStatus && oldStatus.namespace === _this.namespace)
-	          _this.onLeaveCompleted();
-	      }
-	    );
-	  },
-	
-	 /**
-	  * This function will be fired when the container
-	  * is ready and attached to the DOM.
-	  *
-	  * @memberOf Barba.BaseView
-	  * @abstract
-	  */
-	  onEnter: function() {},
-	
-	  /**
-	   * This function will be fired when the transition
-	   * to this container has just finished.
-	   *
-	   * @memberOf Barba.BaseView
-	   * @abstract
-	   */
-	  onEnterCompleted: function() {},
-	
-	  /**
-	   * This function will be fired when the transition
-	   * to a new container has just started.
-	   *
-	   * @memberOf Barba.BaseView
-	   * @abstract
-	   */
-	  onLeave: function() {},
-	
-	  /**
-	   * This function will be fired when the container
-	   * has just been removed from the DOM.
-	   *
-	   * @memberOf Barba.BaseView
-	   * @abstract
-	   */
-	  onLeaveCompleted: function() {}
-	};
-	
-	module.exports = BaseView;
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	/**
-	 * Little Dispatcher inspired by MicroEvent.js
-	 *
-	 * @namespace Barba.Dispatcher
-	 * @type {Object}
-	 */
-	var Dispatcher = {
-	  /**
-	   * Object that keeps all the events
-	   *
-	   * @memberOf Barba.Dispatcher
-	   * @readOnly
-	   * @type {Object}
-	   */
-	  events: {},
-	
-	  /**
-	   * Bind a callback to an event
-	   *
-	   * @memberOf Barba.Dispatcher
-	   * @param  {String} eventName
-	   * @param  {Function} function
-	   */
-	  on: function(e, f) {
-	    this.events[e] = this.events[e] || [];
-	    this.events[e].push(f);
-	  },
-	
-	  /**
-	   * Unbind event
-	   *
-	   * @memberOf Barba.Dispatcher
-	   * @param  {String} eventName
-	   * @param  {Function} function
-	   */
-	  off: function(e, f) {
-	    if(e in this.events === false)
-	      return;
-	
-	    this.events[e].splice(this.events[e].indexOf(f), 1);
-	  },
-	
-	  /**
-	   * Fire the event running all the event associated to it
-	   *
-	   * @memberOf Barba.Dispatcher
-	   * @param  {String} eventName
-	   * @param  {...*} args
-	   */
-	  trigger: function(e) {//e, ...args
-	    if (e in this.events === false)
-	      return;
-	
-	    for(var i = 0; i < this.events[e].length; i++){
-	      this.events[e][i].apply(this, Array.prototype.slice.call(arguments, 1));
-	    }
-	  }
-	};
-	
-	module.exports = Dispatcher;
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Utils = __webpack_require__(5);
-	
-	/**
-	 * BaseCache it's a simple static cache
-	 *
-	 * @namespace Barba.BaseCache
-	 * @type {Object}
-	 */
-	var BaseCache = {
-	  /**
-	   * The Object that keeps all the key value information
-	   *
-	   * @memberOf Barba.BaseCache
-	   * @type {Object}
-	   */
-	  data: {},
-	
-	  /**
-	   * Helper to extend this object
-	   *
-	   * @memberOf Barba.BaseCache
-	   * @private
-	   * @param  {Object} newObject
-	   * @return {Object} newInheritObject
-	   */
-	  extend: function(obj) {
-	    return Utils.extend(this, obj);
-	  },
-	
-	  /**
-	   * Set a key and value data, mainly Barba is going to save promises
-	   *
-	   * @memberOf Barba.BaseCache
-	   * @param {String} key
-	   * @param {*} value
-	   */
-	  set: function(key, val) {
-	    this.data[key] = val;
-	  },
-	
-	  /**
-	   * Retrieve the data using the key
-	   *
-	   * @memberOf Barba.BaseCache
-	   * @param  {String} key
-	   * @return {*}
-	   */
-	  get: function(key) {
-	    return this.data[key];
-	  },
-	
-	  /**
-	   * Flush the cache
-	   *
-	   * @memberOf Barba.BaseCache
-	   */
-	  reset: function() {
-	    this.data = {};
-	  }
-	};
-	
-	module.exports = BaseCache;
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	/**
-	 * HistoryManager helps to keep track of the navigation
-	 *
-	 * @namespace Barba.HistoryManager
-	 * @type {Object}
-	 */
-	var HistoryManager = {
-	  /**
-	   * Keep track of the status in historic order
-	   *
-	   * @memberOf Barba.HistoryManager
-	   * @readOnly
-	   * @type {Array}
-	   */
-	  history: [],
-	
-	  /**
-	   * Add a new set of url and namespace
-	   *
-	   * @memberOf Barba.HistoryManager
-	   * @param {String} url
-	   * @param {String} namespace
-	   * @private
-	   */
-	  add: function(url, namespace) {
-	    if (!namespace)
-	      namespace = undefined;
-	
-	    this.history.push({
-	      url: url,
-	      namespace: namespace
-	    });
-	  },
-	
-	  /**
-	   * Return information about the current status
-	   *
-	   * @memberOf Barba.HistoryManager
-	   * @return {Object}
-	   */
-	  currentStatus: function() {
-	    return this.history[this.history.length - 1];
-	  },
-	
-	  /**
-	   * Return information about the previous status
-	   *
-	   * @memberOf Barba.HistoryManager
-	   * @return {Object}
-	   */
-	  prevStatus: function() {
-	    var history = this.history;
-	
-	    if (history.length < 2)
-	      return null;
-	
-	    return history[history.length - 2];
-	  }
-	};
-	
-	module.exports = HistoryManager;
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Utils = __webpack_require__(5);
-	var Dispatcher = __webpack_require__(7);
-	var HideShowTransition = __webpack_require__(11);
-	var BaseCache = __webpack_require__(8);
-	
-	var HistoryManager = __webpack_require__(9);
-	var Dom = __webpack_require__(12);
-	
-	/**
-	 * Pjax is a static object with main function
-	 *
-	 * @namespace Barba.Pjax
-	 * @borrows Dom as Dom
-	 * @type {Object}
-	 */
-	var Pjax = {
-	  Dom: Dom,
-	  History: HistoryManager,
-	  Cache: BaseCache,
-	
-	  /**
-	   * Indicate wether or not use the cache
-	   *
-	   * @memberOf Barba.Pjax
-	   * @type {Boolean}
-	   * @default
-	   */
-	  cacheEnabled: true,
-	
-	  /**
-	   * Indicate if there is an animation in progress
-	   *
-	   * @memberOf Barba.Pjax
-	   * @readOnly
-	   * @type {Boolean}
-	   */
-	  transitionProgress: false,
-	
-	  /**
-	   * Class name used to ignore links
-	   *
-	   * @memberOf Barba.Pjax
-	   * @type {String}
-	   * @default
-	   */
-	  ignoreClassLink: 'no-barba',
-	
-	  /**
-	   * Function to be called to start Pjax
-	   *
-	   * @memberOf Barba.Pjax
-	   */
-	  start: function() {
-	    this.init();
-	  },
-	
-	  /**
-	   * Init the events
-	   *
-	   * @memberOf Barba.Pjax
-	   * @private
-	   */
-	  init: function() {
-	    var container = this.Dom.getContainer();
-	    var wrapper = this.Dom.getWrapper();
-	
-	    wrapper.setAttribute('aria-live', 'polite');
-	
-	    this.History.add(
-	      this.getCurrentUrl(),
-	      this.Dom.getNamespace(container)
-	    );
-	
-	    //Fire for the current view.
-	    Dispatcher.trigger('initStateChange', this.History.currentStatus());
-	    Dispatcher.trigger('newPageReady',
-	      this.History.currentStatus(),
-	      {},
-	      container,
-	      this.Dom.currentHTML
-	    );
-	    Dispatcher.trigger('transitionCompleted', this.History.currentStatus());
-	
-	    this.bindEvents();
-	  },
-	
-	  /**
-	   * Attach the eventlisteners
-	   *
-	   * @memberOf Barba.Pjax
-	   * @private
-	   */
-	  bindEvents: function() {
-	    document.addEventListener('click',
-	      this.onLinkClick.bind(this)
-	    );
-	
-	    window.addEventListener('popstate',
-	      this.onStateChange.bind(this)
-	    );
-	  },
-	
-	  /**
-	   * Return the currentURL cleaned
-	   *
-	   * @memberOf Barba.Pjax
-	   * @return {String} currentUrl
-	   */
-	  getCurrentUrl: function() {
-	    return Utils.cleanLink(
-	      Utils.getCurrentUrl()
-	    );
-	  },
-	
-	  /**
-	   * Change the URL with pushstate and trigger the state change
-	   *
-	   * @memberOf Barba.Pjax
-	   * @param {String} newUrl
-	   */
-	  goTo: function(url) {
-	    window.history.pushState(null, null, url);
-	    this.onStateChange();
-	  },
-	
-	  /**
-	   * Force the browser to go to a certain url
-	   *
-	   * @memberOf Barba.Pjax
-	   * @param {String} url
-	   * @private
-	   */
-	  forceGoTo: function(url) {
-	    window.location = url;
-	  },
-	
-	  /**
-	   * Load an url, will start an xhr request or load from the cache
-	   *
-	   * @memberOf Barba.Pjax
-	   * @private
-	   * @param  {String} url
-	   * @return {Promise}
-	   */
-	  load: function(url) {
-	    var deferred = Utils.deferred();
-	    var _this = this;
-	    var xhr;
-	
-	    xhr = this.Cache.get(url);
-	
-	    if (!xhr) {
-	      xhr = Utils.xhr(url);
-	      this.Cache.set(url, xhr);
-	    }
-	
-	    xhr.then(
-	      function(data) {
-	        var container = _this.Dom.parseResponse(data);
-	
-	        _this.Dom.putContainer(container);
-	
-	        if (!_this.cacheEnabled)
-	          _this.Cache.reset();
-	
-	        deferred.resolve(container);
-	      },
-	      function() {
-	        //Something went wrong (timeout, 404, 505...)
-	        _this.forceGoTo(url);
-	
-	        deferred.reject();
-	      }
-	    );
-	
-	    return deferred.promise;
-	  },
-	
-	  /**
-	   * Get the .href parameter out of an element
-	   * and handle special cases (like xlink:href)
-	   *
-	   * @private
-	   * @memberOf Barba.Pjax
-	   * @param  {HTMLElement} el
-	   * @return {String} href
-	   */
-	  getHref: function(el) {
-	    if (!el) {
-	      return undefined;
-	    }
-	
-	    if (el.getAttribute && typeof el.getAttribute('xlink:href') === 'string') {
-	      return el.getAttribute('xlink:href');
-	    }
-	
-	    if (typeof el.href === 'string') {
-	      return el.href;
-	    }
-	
-	    return undefined;
-	  },
-	
-	  /**
-	   * Callback called from click event
-	   *
-	   * @memberOf Barba.Pjax
-	   * @private
-	   * @param {MouseEvent} evt
-	   */
-	  onLinkClick: function(evt) {
-	    var el = evt.target;
-	
-	    //Go up in the nodelist until we
-	    //find something with an href
-	    while (el && !this.getHref(el)) {
-	      el = el.parentNode;
-	    }
-	
-	    if (this.preventCheck(evt, el)) {
-	      evt.stopPropagation();
-	      evt.preventDefault();
-	
-	      Dispatcher.trigger('linkClicked', el, evt);
-	
-	      var href = this.getHref(el);
-	      this.goTo(href);
-	    }
-	  },
-	
-	  /**
-	   * Determine if the link should be followed
-	   *
-	   * @memberOf Barba.Pjax
-	   * @param  {MouseEvent} evt
-	   * @param  {HTMLElement} element
-	   * @return {Boolean}
-	   */
-	  preventCheck: function(evt, element) {
-	    if (!window.history.pushState)
-	      return false;
-	
-	    var href = this.getHref(element);
-	
-	    //User
-	    if (!element || !href)
-	      return false;
-	
-	    //Middle click, cmd click, and ctrl click
-	    if (evt.which > 1 || evt.metaKey || evt.ctrlKey || evt.shiftKey || evt.altKey)
-	      return false;
-	
-	    //Ignore target with _blank target
-	    if (element.target && element.target === '_blank')
-	      return false;
-	
-	    //Check if it's the same domain
-	    if (window.location.protocol !== element.protocol || window.location.hostname !== element.hostname)
-	      return false;
-	
-	    //Check if the port is the same
-	    if (Utils.getPort() !== Utils.getPort(element.port))
-	      return false;
-	
-	    //Ignore case when a hash is being tacked on the current URL
-	    if (href.indexOf('#') > -1)
-	      return false;
-	
-	    //Ignore case where there is download attribute
-	    if (element.getAttribute && typeof element.getAttribute('download') === 'string')
-	      return false;
-	
-	    //In case you're trying to load the same page
-	    if (Utils.cleanLink(href) == Utils.cleanLink(location.href))
-	      return false;
-	
-	    if (element.classList.contains(this.ignoreClassLink))
-	      return false;
-	
-	    return true;
-	  },
-	
-	  /**
-	   * Return a transition object
-	   *
-	   * @memberOf Barba.Pjax
-	   * @return {Barba.Transition} Transition object
-	   */
-	  getTransition: function() {
-	    //User customizable
-	    return HideShowTransition;
-	  },
-	
-	  /**
-	   * Method called after a 'popstate' or from .goTo()
-	   *
-	   * @memberOf Barba.Pjax
-	   * @private
-	   */
-	  onStateChange: function() {
-	    var newUrl = this.getCurrentUrl();
-	
-	    if (this.transitionProgress)
-	      this.forceGoTo(newUrl);
-	
-	    if (this.History.currentStatus().url === newUrl)
-	      return false;
-	
-	    this.History.add(newUrl);
-	
-	    var newContainer = this.load(newUrl);
-	    var transition = Object.create(this.getTransition());
-	
-	    this.transitionProgress = true;
-	
-	    Dispatcher.trigger('initStateChange',
-	      this.History.currentStatus(),
-	      this.History.prevStatus()
-	    );
-	
-	    var transitionInstance = transition.init(
-	      this.Dom.getContainer(),
-	      newContainer
-	    );
-	
-	    newContainer.then(
-	      this.onNewContainerLoaded.bind(this)
-	    );
-	
-	    transitionInstance.then(
-	      this.onTransitionEnd.bind(this)
-	    );
-	  },
-	
-	  /**
-	   * Function called as soon the new container is ready
-	   *
-	   * @memberOf Barba.Pjax
-	   * @private
-	   * @param {HTMLElement} container
-	   */
-	  onNewContainerLoaded: function(container) {
-	    var currentStatus = this.History.currentStatus();
-	    currentStatus.namespace = this.Dom.getNamespace(container);
-	
-	    Dispatcher.trigger('newPageReady',
-	      this.History.currentStatus(),
-	      this.History.prevStatus(),
-	      container,
-	      this.Dom.currentHTML
-	    );
-	  },
-	
-	  /**
-	   * Function called as soon the transition is finished
-	   *
-	   * @memberOf Barba.Pjax
-	   * @private
-	   */
-	  onTransitionEnd: function() {
-	    this.transitionProgress = false;
-	
-	    Dispatcher.trigger('transitionCompleted',
-	      this.History.currentStatus(),
-	      this.History.prevStatus()
-	    );
-	  }
-	};
-	
-	module.exports = Pjax;
-
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BaseTransition = __webpack_require__(4);
-	
-	/**
-	 * Basic Transition object, wait for the new Container to be ready,
-	 * scroll top, and finish the transition (removing the old container and displaying the new one)
-	 *
-	 * @private
-	 * @namespace Barba.HideShowTransition
-	 * @augments Barba.BaseTransition
-	 */
-	var HideShowTransition = BaseTransition.extend({
-	  start: function() {
-	    this.newContainerLoading.then(this.finish.bind(this));
-	  },
-	
-	  finish: function() {
-	    document.body.scrollTop = 0;
-	    this.done();
-	  }
-	});
-	
-	module.exports = HideShowTransition;
-
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	/**
-	 * Object that is going to deal with DOM parsing/manipulation
-	 *
-	 * @namespace Barba.Pjax.Dom
-	 * @type {Object}
-	 */
-	var Dom = {
-	  /**
-	   * The name of the data attribute on the container
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @type {String}
-	   * @default
-	   */
-	  dataNamespace: 'namespace',
-	
-	  /**
-	   * Id of the main wrapper
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @type {String}
-	   * @default
-	   */
-	  wrapperId: 'barba-wrapper',
-	
-	  /**
-	   * Class name used to identify the containers
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @type {String}
-	   * @default
-	   */
-	  containerClass: 'barba-container',
-	
-	  /**
-	   * Full HTML String of the current page.
-	   * By default is the innerHTML of the initial loaded page.
-	   *
-	   * Each time a new page is loaded, the value is the response of the xhr call.
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @type {String}
-	   */
-	  currentHTML: document.documentElement.innerHTML,
-	
-	  /**
-	   * Parse the responseText obtained from the xhr call
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @private
-	   * @param  {String} responseText
-	   * @return {HTMLElement}
-	   */
-	  parseResponse: function(responseText) {
-	    this.currentHTML = responseText;
-	
-	    var wrapper = document.createElement('div');
-	    wrapper.innerHTML = responseText;
-	
-	    var titleEl = wrapper.querySelector('title');
-	
-	    if (titleEl)
-	      document.title = titleEl.textContent;
-	
-	    return this.getContainer(wrapper);
-	  },
-	
-	  /**
-	   * Get the main barba wrapper by the ID `wrapperId`
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @return {HTMLElement} element
-	   */
-	  getWrapper: function() {
-	    var wrapper = document.getElementById(this.wrapperId);
-	
-	    if (!wrapper)
-	      throw new Error('Barba.js: wrapper not found!');
-	
-	    return wrapper;
-	  },
-	
-	  /**
-	   * Get the container on the current DOM,
-	   * or from an HTMLElement passed via argument
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @private
-	   * @param  {HTMLElement} element
-	   * @return {HTMLElement}
-	   */
-	  getContainer: function(element) {
-	    if (!element)
-	      element = document.body;
-	
-	    if (!element)
-	      throw new Error('Barba.js: DOM not ready!');
-	
-	    var container = this.parseContainer(element);
-	
-	    if (container && container.jquery)
-	      container = container[0];
-	
-	    if (!container)
-	      throw new Error('Barba.js: no container found');
-	
-	    return container;
-	  },
-	
-	  /**
-	   * Get the namespace of the container
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @private
-	   * @param  {HTMLElement} element
-	   * @return {String}
-	   */
-	  getNamespace: function(element) {
-	    if (element && element.dataset) {
-	      return element.dataset[this.dataNamespace];
-	    } else if (element) {
-	      return element.getAttribute('data-' + this.dataNamespace);
-	    }
-	
-	    return null;
-	  },
-	
-	  /**
-	   * Put the container on the page
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @private
-	   * @param  {HTMLElement} element
-	   */
-	  putContainer: function(element) {
-	    element.style.visibility = 'hidden';
-	
-	    var wrapper = this.getWrapper();
-	    wrapper.appendChild(element);
-	  },
-	
-	  /**
-	   * Get container selector
-	   *
-	   * @memberOf Barba.Pjax.Dom
-	   * @private
-	   * @param  {HTMLElement} element
-	   * @return {HTMLElement} element
-	   */
-	  parseContainer: function(element) {
-	    return element.querySelector('.' + this.containerClass);
-	  }
-	};
-	
-	module.exports = Dom;
-
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Utils = __webpack_require__(5);
-	var Pjax = __webpack_require__(10);
-	
-	/**
-	 * Prefetch
-	 *
-	 * @namespace Barba.Prefetch
-	 * @type {Object}
-	 */
-	var Prefetch = {
-	  /**
-	   * Class name used to ignore prefetch on links
-	   *
-	   * @memberOf Barba.Prefetch
-	   * @type {String}
-	   * @default
-	   */
-	  ignoreClassLink: 'no-barba-prefetch',
-	
-	  /**
-	   * Init the event listener on mouseover and touchstart
-	   * for the prefetch
-	   *
-	   * @memberOf Barba.Prefetch
-	   */
-	  init: function() {
-	    if (!window.history.pushState) {
-	      return false;
-	    }
-	
-	    document.body.addEventListener('mouseover', this.onLinkEnter.bind(this));
-	    document.body.addEventListener('touchstart', this.onLinkEnter.bind(this));
-	  },
-	
-	  /**
-	   * Callback for the mousehover/touchstart
-	   *
-	   * @memberOf Barba.Prefetch
-	   * @private
-	   * @param  {Object} evt
-	   */
-	  onLinkEnter: function(evt) {
-	    var el = evt.target;
-	
-	    while (el && !Pjax.getHref(el)) {
-	      el = el.parentNode;
-	    }
-	
-	    if (!el || el.classList.contains(this.ignoreClassLink)) {
-	      return;
-	    }
-	
-	    var url = Pjax.getHref(el);
-	
-	    //Check if the link is elegible for Pjax
-	    if (Pjax.preventCheck(evt, el) && !Pjax.Cache.get(url)) {
-	      var xhr = Utils.xhr(url);
-	      Pjax.Cache.set(url, xhr);
-	    }
-	  }
-	};
-	
-	module.exports = Prefetch;
-
-
-/***/ }
-/******/ ])
+var turbolinks = createCommonjsModule(function (module) {
+/*
+Turbolinks 5.0.0
+Copyright © 2016 Basecamp, LLC
+ */
+(function(){(function(){(function(){this.Turbolinks={supported:function(){return null!=window.history.pushState&&null!=window.requestAnimationFrame}(),visit:function(e,r){return t.controller.visit(e,r)},clearCache:function(){return t.controller.clearCache()}};}).call(this);}).call(this);var t=this.Turbolinks;(function(){(function(){var e,r;t.copyObject=function(t){var e,r,n;r={};for(e in t)n=t[e],r[e]=n;return r},t.closest=function(t,r){return e.call(t,r)},e=function(){var t,e;return t=document.documentElement,null!=(e=t.closest)?e:function(t){var e;for(e=this;e;){if(e.nodeType===Node.ELEMENT_NODE&&r.call(e,t))return e;e=e.parentNode;}}}(),t.defer=function(t){return setTimeout(t,1)},t.dispatch=function(t,e){var r,n,o,i,s;return i=null!=e?e:{},s=i.target,r=i.cancelable,n=i.data,o=document.createEvent("Events"),o.initEvent(t,!0,r===!0),o.data=null!=n?n:{},(null!=s?s:document).dispatchEvent(o),o},t.match=function(t,e){return r.call(t,e)},r=function(){var t,e,r,n;return t=document.documentElement,null!=(e=null!=(r=null!=(n=t.matchesSelector)?n:t.webkitMatchesSelector)?r:t.msMatchesSelector)?e:t.mozMatchesSelector}(),t.uuid=function(){var t,e,r;for(r="",t=e=1;36>=e;t=++e)r+=9===t||14===t||19===t||24===t?"-":15===t?"4":20===t?(Math.floor(4*Math.random())+8).toString(16):Math.floor(15*Math.random()).toString(16);return r};}).call(this),function(){t.Location=function(){function t(t){var e,r;null==t&&(t=""),r=document.createElement("a"),r.href=t.toString(),this.absoluteURL=r.href,e=r.hash.length,2>e?this.requestURL=this.absoluteURL:(this.requestURL=this.absoluteURL.slice(0,-e),this.anchor=r.hash.slice(1));}var e,r,n,o;return t.wrap=function(t){return t instanceof this?t:new this(t)},t.prototype.getOrigin=function(){return this.absoluteURL.split("/",3).join("/")},t.prototype.getPath=function(){var t,e;return null!=(t=null!=(e=this.absoluteURL.match(/\/\/[^\/]*(\/[^?;]*)/))?e[1]:void 0)?t:"/"},t.prototype.getPathComponents=function(){return this.getPath().split("/").slice(1)},t.prototype.getLastPathComponent=function(){return this.getPathComponents().slice(-1)[0]},t.prototype.getExtension=function(){var t,e;return null!=(t=null!=(e=this.getLastPathComponent().match(/\.[^.]*$/))?e[0]:void 0)?t:""},t.prototype.isHTML=function(){return this.getExtension().match(/^(?:|\.(?:htm|html|xhtml))$/)},t.prototype.isPrefixedBy=function(t){var e;return e=r(t),this.isEqualTo(t)||o(this.absoluteURL,e)},t.prototype.isEqualTo=function(t){return this.absoluteURL===(null!=t?t.absoluteURL:void 0)},t.prototype.toCacheKey=function(){return this.requestURL},t.prototype.toJSON=function(){return this.absoluteURL},t.prototype.toString=function(){return this.absoluteURL},t.prototype.valueOf=function(){return this.absoluteURL},r=function(t){return e(t.getOrigin()+t.getPath())},e=function(t){return n(t,"/")?t:t+"/"},o=function(t,e){return t.slice(0,e.length)===e},n=function(t,e){return t.slice(-e.length)===e},t}();}.call(this),function(){var e=function(t,e){return function(){return t.apply(e,arguments)}};t.HttpRequest=function(){function r(r,n,o){this.delegate=r,this.requestCanceled=e(this.requestCanceled,this),this.requestTimedOut=e(this.requestTimedOut,this),this.requestFailed=e(this.requestFailed,this),this.requestLoaded=e(this.requestLoaded,this),this.requestProgressed=e(this.requestProgressed,this),this.url=t.Location.wrap(n).requestURL,this.referrer=t.Location.wrap(o).absoluteURL,this.createXHR();}return r.NETWORK_FAILURE=0,r.TIMEOUT_FAILURE=-1,r.timeout=60,r.prototype.send=function(){var t;return this.xhr&&!this.sent?(this.notifyApplicationBeforeRequestStart(),this.setProgress(0),this.xhr.send(),this.sent=!0,"function"==typeof(t=this.delegate).requestStarted?t.requestStarted():void 0):void 0},r.prototype.cancel=function(){return this.xhr&&this.sent?this.xhr.abort():void 0},r.prototype.requestProgressed=function(t){return t.lengthComputable?this.setProgress(t.loaded/t.total):void 0},r.prototype.requestLoaded=function(){return this.endRequest(function(t){return function(){var e;return 200<=(e=t.xhr.status)&&300>e?t.delegate.requestCompletedWithResponse(t.xhr.responseText,t.xhr.getResponseHeader("Turbolinks-Location")):(t.failed=!0,t.delegate.requestFailedWithStatusCode(t.xhr.status,t.xhr.responseText))}}(this))},r.prototype.requestFailed=function(){return this.endRequest(function(t){return function(){return t.failed=!0,t.delegate.requestFailedWithStatusCode(t.constructor.NETWORK_FAILURE)}}(this))},r.prototype.requestTimedOut=function(){return this.endRequest(function(t){return function(){return t.failed=!0,t.delegate.requestFailedWithStatusCode(t.constructor.TIMEOUT_FAILURE)}}(this))},r.prototype.requestCanceled=function(){return this.endRequest()},r.prototype.notifyApplicationBeforeRequestStart=function(){return t.dispatch("turbolinks:request-start",{data:{url:this.url,xhr:this.xhr}})},r.prototype.notifyApplicationAfterRequestEnd=function(){return t.dispatch("turbolinks:request-end",{data:{url:this.url,xhr:this.xhr}})},r.prototype.createXHR=function(){return this.xhr=new XMLHttpRequest,this.xhr.open("GET",this.url,!0),this.xhr.timeout=1e3*this.constructor.timeout,this.xhr.setRequestHeader("Accept","text/html, application/xhtml+xml"),this.xhr.setRequestHeader("Turbolinks-Referrer",this.referrer),this.xhr.onprogress=this.requestProgressed,this.xhr.onload=this.requestLoaded,this.xhr.onerror=this.requestFailed,this.xhr.ontimeout=this.requestTimedOut,this.xhr.onabort=this.requestCanceled},r.prototype.endRequest=function(t){return this.xhr?(this.notifyApplicationAfterRequestEnd(),null!=t&&t.call(this),this.destroy()):void 0},r.prototype.setProgress=function(t){var e;return this.progress=t,"function"==typeof(e=this.delegate).requestProgressed?e.requestProgressed(this.progress):void 0},r.prototype.destroy=function(){var t;return this.setProgress(1),"function"==typeof(t=this.delegate).requestFinished&&t.requestFinished(),this.delegate=null,this.xhr=null},r}();}.call(this),function(){var e=function(t,e){return function(){return t.apply(e,arguments)}};t.ProgressBar=function(){function t(){this.trickle=e(this.trickle,this),this.stylesheetElement=this.createStylesheetElement(),this.progressElement=this.createProgressElement();}var r;return r=300,t.defaultCSS=".turbolinks-progress-bar {\n  position: fixed;\n  display: block;\n  top: 0;\n  left: 0;\n  height: 3px;\n  background: #0076ff;\n  z-index: 9999;\n  transition: width "+r+"ms ease-out, opacity "+r/2+"ms "+r/2+"ms ease-in;\n  transform: translate3d(0, 0, 0);\n}",t.prototype.show=function(){return this.visible?void 0:(this.visible=!0,this.installStylesheetElement(),this.installProgressElement(),this.startTrickling())},t.prototype.hide=function(){return this.visible&&!this.hiding?(this.hiding=!0,this.fadeProgressElement(function(t){return function(){return t.uninstallProgressElement(),t.stopTrickling(),t.visible=!1,t.hiding=!1}}(this))):void 0},t.prototype.setValue=function(t){return this.value=t,this.refresh()},t.prototype.installStylesheetElement=function(){return document.head.insertBefore(this.stylesheetElement,document.head.firstChild)},t.prototype.installProgressElement=function(){return this.progressElement.style.width=0,this.progressElement.style.opacity=1,document.documentElement.insertBefore(this.progressElement,document.body),this.refresh()},t.prototype.fadeProgressElement=function(t){return this.progressElement.style.opacity=0,setTimeout(t,1.5*r)},t.prototype.uninstallProgressElement=function(){return this.progressElement.parentNode?document.documentElement.removeChild(this.progressElement):void 0},t.prototype.startTrickling=function(){return null!=this.trickleInterval?this.trickleInterval:this.trickleInterval=setInterval(this.trickle,r)},t.prototype.stopTrickling=function(){return clearInterval(this.trickleInterval),this.trickleInterval=null},t.prototype.trickle=function(){return this.setValue(this.value+Math.random()/100)},t.prototype.refresh=function(){return requestAnimationFrame(function(t){return function(){return t.progressElement.style.width=10+90*t.value+"%"}}(this))},t.prototype.createStylesheetElement=function(){var t;return t=document.createElement("style"),t.type="text/css",t.textContent=this.constructor.defaultCSS,t},t.prototype.createProgressElement=function(){var t;return t=document.createElement("div"),t.className="turbolinks-progress-bar",t},t}();}.call(this),function(){var e=function(t,e){return function(){return t.apply(e,arguments)}};t.BrowserAdapter=function(){function r(r){this.controller=r,this.showProgressBar=e(this.showProgressBar,this),this.progressBar=new t.ProgressBar;}var n,o,i,s;return s=t.HttpRequest,n=s.NETWORK_FAILURE,i=s.TIMEOUT_FAILURE,o=500,r.prototype.visitProposedToLocationWithAction=function(t,e){return this.controller.startVisitToLocationWithAction(t,e)},r.prototype.visitStarted=function(t){return t.issueRequest(),t.changeHistory(),t.loadCachedSnapshot()},r.prototype.visitRequestStarted=function(t){return this.progressBar.setValue(0),t.hasCachedSnapshot()||"restore"!==t.action?this.showProgressBarAfterDelay():this.showProgressBar()},r.prototype.visitRequestProgressed=function(t){return this.progressBar.setValue(t.progress)},r.prototype.visitRequestCompleted=function(t){return t.loadResponse()},r.prototype.visitRequestFailedWithStatusCode=function(t,e){switch(e){case n:case i:return this.reload();default:return t.loadResponse()}},r.prototype.visitRequestFinished=function(t){return this.hideProgressBar()},r.prototype.visitCompleted=function(t){return t.followRedirect()},r.prototype.pageInvalidated=function(){return this.reload()},r.prototype.showProgressBarAfterDelay=function(){return this.progressBarTimeout=setTimeout(this.showProgressBar,o)},r.prototype.showProgressBar=function(){return this.progressBar.show()},r.prototype.hideProgressBar=function(){return this.progressBar.hide(),clearTimeout(this.progressBarTimeout)},r.prototype.reload=function(){return window.location.reload()},r}();}.call(this),function(){var e,r=function(t,e){return function(){return t.apply(e,arguments)}};e=!1,addEventListener("load",function(){return t.defer(function(){return e=!0})},!1),t.History=function(){function n(t){this.delegate=t,this.onPopState=r(this.onPopState,this);}return n.prototype.start=function(){return this.started?void 0:(addEventListener("popstate",this.onPopState,!1),this.started=!0)},n.prototype.stop=function(){return this.started?(removeEventListener("popstate",this.onPopState,!1),this.started=!1):void 0},n.prototype.push=function(e,r){return e=t.Location.wrap(e),this.update("push",e,r)},n.prototype.replace=function(e,r){return e=t.Location.wrap(e),this.update("replace",e,r)},n.prototype.onPopState=function(e){var r,n,o,i;return this.shouldHandlePopState()&&(i=null!=(n=e.state)?n.turbolinks:void 0)?(r=t.Location.wrap(window.location),o=i.restorationIdentifier,this.delegate.historyPoppedToLocationWithRestorationIdentifier(r,o)):void 0},n.prototype.shouldHandlePopState=function(){return e===!0},n.prototype.update=function(t,e,r){var n;return n={turbolinks:{restorationIdentifier:r}},history[t+"State"](n,null,e)},n}();}.call(this),function(){t.Snapshot=function(){function e(t){var e,r;r=t.head,e=t.body,this.head=null!=r?r:document.createElement("head"),this.body=null!=e?e:document.createElement("body");}return e.wrap=function(t){return t instanceof this?t:this.fromHTML(t)},e.fromHTML=function(t){var e;return e=document.createElement("html"),e.innerHTML=t,this.fromElement(e)},e.fromElement=function(t){return new this({head:t.querySelector("head"),body:t.querySelector("body")})},e.prototype.clone=function(){return new e({head:this.head.cloneNode(!0),body:this.body.cloneNode(!0)})},e.prototype.getRootLocation=function(){var e,r;return r=null!=(e=this.getSetting("root"))?e:"/",new t.Location(r)},e.prototype.getCacheControlValue=function(){return this.getSetting("cache-control")},e.prototype.hasAnchor=function(t){try{return null!=this.body.querySelector("[id='"+t+"']")}catch(e){}},e.prototype.isPreviewable=function(){return"no-preview"!==this.getCacheControlValue()},e.prototype.isCacheable=function(){return"no-cache"!==this.getCacheControlValue()},e.prototype.getSetting=function(t){var e,r;return r=this.head.querySelectorAll("meta[name='turbolinks-"+t+"']"),e=r[r.length-1],null!=e?e.getAttribute("content"):void 0},e}();}.call(this),function(){var e=[].slice;t.Renderer=function(){function t(){}var r;return t.render=function(){var t,r,n,o;return n=arguments[0],r=arguments[1],t=3<=arguments.length?e.call(arguments,2):[],o=function(t,e,r){r.prototype=t.prototype;var n=new r,o=t.apply(n,e);return Object(o)===o?o:n}(this,t,function(){}),o.delegate=n,o.render(r),o},t.prototype.renderView=function(t){return this.delegate.viewWillRender(this.newBody),t(),this.delegate.viewRendered(this.newBody)},t.prototype.invalidateView=function(){return this.delegate.viewInvalidated()},t.prototype.createScriptElement=function(t){var e;return"false"===t.getAttribute("data-turbolinks-eval")?t:(e=document.createElement("script"),e.textContent=t.textContent,r(e,t),e)},r=function(t,e){var r,n,o,i,s,a,u;for(i=e.attributes,a=[],r=0,n=i.length;n>r;r++)s=i[r],o=s.name,u=s.value,a.push(t.setAttribute(o,u));return a},t}();}.call(this),function(){t.HeadDetails=function(){function t(t){var e,r,i,s,a,u,c;for(this.element=t,this.elements={},c=this.element.childNodes,s=0,u=c.length;u>s;s++)i=c[s],i.nodeType===Node.ELEMENT_NODE&&(a=i.outerHTML,r=null!=(e=this.elements)[a]?e[a]:e[a]={type:o(i),tracked:n(i),elements:[]},r.elements.push(i));}var e,r,n,o;return t.prototype.hasElementWithKey=function(t){return t in this.elements},t.prototype.getTrackedElementSignature=function(){var t,e;return function(){var r,n;r=this.elements,n=[];for(t in r)e=r[t].tracked,e&&n.push(t);return n}.call(this).join("")},t.prototype.getScriptElementsNotInDetails=function(t){return this.getElementsMatchingTypeNotInDetails("script",t)},t.prototype.getStylesheetElementsNotInDetails=function(t){return this.getElementsMatchingTypeNotInDetails("stylesheet",t)},t.prototype.getElementsMatchingTypeNotInDetails=function(t,e){var r,n,o,i,s,a;o=this.elements,s=[];for(n in o)i=o[n],a=i.type,r=i.elements,a!==t||e.hasElementWithKey(n)||s.push(r[0]);return s},t.prototype.getProvisionalElements=function(){var t,e,r,n,o,i,s;r=[],n=this.elements;for(e in n)o=n[e],s=o.type,i=o.tracked,t=o.elements,null!=s||i?t.length>1&&r.push.apply(r,t.slice(1)):r.push.apply(r,t);return r},o=function(t){return e(t)?"script":r(t)?"stylesheet":void 0},n=function(t){return"reload"===t.getAttribute("data-turbolinks-track")},e=function(t){var e;return e=t.tagName.toLowerCase(),"script"===e},r=function(t){var e;return e=t.tagName.toLowerCase(),"style"===e||"link"===e&&"stylesheet"===t.getAttribute("rel")},t}();}.call(this),function(){var e=function(t,e){function n(){this.constructor=t;}for(var o in e)r.call(e,o)&&(t[o]=e[o]);return n.prototype=e.prototype,t.prototype=new n,t.__super__=e.prototype,t},r={}.hasOwnProperty;t.SnapshotRenderer=function(r){function n(e,r){this.currentSnapshot=e,this.newSnapshot=r,this.currentHeadDetails=new t.HeadDetails(this.currentSnapshot.head),this.newHeadDetails=new t.HeadDetails(this.newSnapshot.head),this.newBody=this.newSnapshot.body;}return e(n,r),n.prototype.render=function(t){return this.trackedElementsAreIdentical()?(this.mergeHead(),this.renderView(function(e){return function(){return e.replaceBody(),e.focusFirstAutofocusableElement(),t()}}(this))):this.invalidateView()},n.prototype.mergeHead=function(){return this.copyNewHeadStylesheetElements(),this.copyNewHeadScriptElements(),this.removeCurrentHeadProvisionalElements(),this.copyNewHeadProvisionalElements()},n.prototype.replaceBody=function(){return this.activateBodyScriptElements(),this.importBodyPermanentElements(),this.assignNewBody()},n.prototype.trackedElementsAreIdentical=function(){return this.currentHeadDetails.getTrackedElementSignature()===this.newHeadDetails.getTrackedElementSignature()},n.prototype.copyNewHeadStylesheetElements=function(){var t,e,r,n,o;for(n=this.getNewHeadStylesheetElements(),o=[],e=0,r=n.length;r>e;e++)t=n[e],o.push(document.head.appendChild(t));return o},n.prototype.copyNewHeadScriptElements=function(){var t,e,r,n,o;for(n=this.getNewHeadScriptElements(),o=[],e=0,r=n.length;r>e;e++)t=n[e],o.push(document.head.appendChild(this.createScriptElement(t)));return o},n.prototype.removeCurrentHeadProvisionalElements=function(){var t,e,r,n,o;for(n=this.getCurrentHeadProvisionalElements(),o=[],e=0,r=n.length;r>e;e++)t=n[e],o.push(document.head.removeChild(t));return o},n.prototype.copyNewHeadProvisionalElements=function(){var t,e,r,n,o;for(n=this.getNewHeadProvisionalElements(),o=[],e=0,r=n.length;r>e;e++)t=n[e],o.push(document.head.appendChild(t));return o},n.prototype.importBodyPermanentElements=function(){var t,e,r,n,o,i;for(n=this.getNewBodyPermanentElements(),i=[],e=0,r=n.length;r>e;e++)o=n[e],(t=this.findCurrentBodyPermanentElement(o))?i.push(o.parentNode.replaceChild(t,o)):i.push(void 0);return i},n.prototype.activateBodyScriptElements=function(){var t,e,r,n,o,i;for(n=this.getNewBodyScriptElements(),i=[],e=0,r=n.length;r>e;e++)o=n[e],t=this.createScriptElement(o),i.push(o.parentNode.replaceChild(t,o));return i},n.prototype.assignNewBody=function(){return document.body=this.newBody},n.prototype.focusFirstAutofocusableElement=function(){var t;return null!=(t=this.findFirstAutofocusableElement())?t.focus():void 0},n.prototype.getNewHeadStylesheetElements=function(){return this.newHeadDetails.getStylesheetElementsNotInDetails(this.currentHeadDetails)},n.prototype.getNewHeadScriptElements=function(){return this.newHeadDetails.getScriptElementsNotInDetails(this.currentHeadDetails)},n.prototype.getCurrentHeadProvisionalElements=function(){return this.currentHeadDetails.getProvisionalElements()},n.prototype.getNewHeadProvisionalElements=function(){return this.newHeadDetails.getProvisionalElements()},n.prototype.getNewBodyPermanentElements=function(){return this.newBody.querySelectorAll("[id][data-turbolinks-permanent]")},n.prototype.findCurrentBodyPermanentElement=function(t){return document.body.querySelector("#"+t.id+"[data-turbolinks-permanent]")},n.prototype.getNewBodyScriptElements=function(){return this.newBody.querySelectorAll("script")},n.prototype.findFirstAutofocusableElement=function(){return document.body.querySelector("[autofocus]")},n}(t.Renderer);}.call(this),function(){var e=function(t,e){function n(){this.constructor=t;}for(var o in e)r.call(e,o)&&(t[o]=e[o]);return n.prototype=e.prototype,t.prototype=new n,t.__super__=e.prototype,t},r={}.hasOwnProperty;t.ErrorRenderer=function(t){function r(t){this.html=t;}return e(r,t),r.prototype.render=function(t){return this.renderView(function(e){return function(){return e.replaceDocumentHTML(),e.activateBodyScriptElements(),t()}}(this))},r.prototype.replaceDocumentHTML=function(){return document.documentElement.innerHTML=this.html},r.prototype.activateBodyScriptElements=function(){var t,e,r,n,o,i;for(n=this.getScriptElements(),i=[],e=0,r=n.length;r>e;e++)o=n[e],t=this.createScriptElement(o),i.push(o.parentNode.replaceChild(t,o));return i},r.prototype.getScriptElements=function(){return document.documentElement.querySelectorAll("script")},r}(t.Renderer);}.call(this),function(){t.View=function(){function e(t){this.delegate=t,this.element=document.documentElement;}return e.prototype.getRootLocation=function(){return this.getSnapshot().getRootLocation()},e.prototype.getSnapshot=function(){return t.Snapshot.fromElement(this.element)},e.prototype.render=function(t,e){var r,n,o;return o=t.snapshot,r=t.error,n=t.isPreview,this.markAsPreview(n),null!=o?this.renderSnapshot(o,e):this.renderError(r,e)},e.prototype.markAsPreview=function(t){return t?this.element.setAttribute("data-turbolinks-preview",""):this.element.removeAttribute("data-turbolinks-preview")},e.prototype.renderSnapshot=function(e,r){return t.SnapshotRenderer.render(this.delegate,r,this.getSnapshot(),t.Snapshot.wrap(e))},e.prototype.renderError=function(e,r){return t.ErrorRenderer.render(this.delegate,r,e)},e}();}.call(this),function(){var e=function(t,e){return function(){return t.apply(e,arguments)}};t.ScrollManager=function(){function t(t){this.delegate=t,this.onScroll=e(this.onScroll,this);}return t.prototype.start=function(){return this.started?void 0:(addEventListener("scroll",this.onScroll,!1),this.onScroll(),this.started=!0)},t.prototype.stop=function(){return this.started?(removeEventListener("scroll",this.onScroll,!1),this.started=!1):void 0},t.prototype.scrollToElement=function(t){return t.scrollIntoView()},t.prototype.scrollToPosition=function(t){var e,r;return e=t.x,r=t.y,window.scrollTo(e,r)},t.prototype.onScroll=function(t){return this.updatePosition({x:window.pageXOffset,y:window.pageYOffset})},t.prototype.updatePosition=function(t){var e;return this.position=t,null!=(e=this.delegate)?e.scrollPositionChanged(this.position):void 0},t}();}.call(this),function(){t.SnapshotCache=function(){function e(t){this.size=t,this.keys=[],this.snapshots={};}var r;return e.prototype.has=function(t){var e;return e=r(t),e in this.snapshots},e.prototype.get=function(t){var e;if(this.has(t))return e=this.read(t),this.touch(t),e},e.prototype.put=function(t,e){return this.write(t,e),this.touch(t),e},e.prototype.read=function(t){var e;return e=r(t),this.snapshots[e]},e.prototype.write=function(t,e){var n;return n=r(t),this.snapshots[n]=e},e.prototype.touch=function(t){var e,n;return n=r(t),e=this.keys.indexOf(n),e>-1&&this.keys.splice(e,1),this.keys.unshift(n),this.trim()},e.prototype.trim=function(){var t,e,r,n,o;for(n=this.keys.splice(this.size),o=[],t=0,r=n.length;r>t;t++)e=n[t],o.push(delete this.snapshots[e]);return o},r=function(e){return t.Location.wrap(e).toCacheKey()},e}();}.call(this),function(){var e=function(t,e){return function(){return t.apply(e,arguments)}};t.Visit=function(){function r(r,n,o){this.controller=r,this.action=o,this.performScroll=e(this.performScroll,this),this.identifier=t.uuid(),this.location=t.Location.wrap(n),this.adapter=this.controller.adapter,this.state="initialized",this.timingMetrics={};}var n;return r.prototype.start=function(){return"initialized"===this.state?(this.recordTimingMetric("visitStart"),this.state="started",this.adapter.visitStarted(this)):void 0},r.prototype.cancel=function(){var t;return"started"===this.state?(null!=(t=this.request)&&t.cancel(),this.cancelRender(),this.state="canceled"):void 0},r.prototype.complete=function(){var t;return"started"===this.state?(this.recordTimingMetric("visitEnd"),this.state="completed","function"==typeof(t=this.adapter).visitCompleted&&t.visitCompleted(this),this.controller.visitCompleted(this)):void 0},r.prototype.fail=function(){var t;return"started"===this.state?(this.state="failed","function"==typeof(t=this.adapter).visitFailed?t.visitFailed(this):void 0):void 0},r.prototype.changeHistory=function(){var t,e;return this.historyChanged?void 0:(t=this.location.isEqualTo(this.referrer)?"replace":this.action,e=n(t),this.controller[e](this.location,this.restorationIdentifier),this.historyChanged=!0)},r.prototype.issueRequest=function(){return this.shouldIssueRequest()&&null==this.request?(this.progress=0,this.request=new t.HttpRequest(this,this.location,this.referrer),this.request.send()):void 0},r.prototype.getCachedSnapshot=function(){var t;return!(t=this.controller.getCachedSnapshotForLocation(this.location))||null!=this.location.anchor&&!t.hasAnchor(this.location.anchor)||"restore"!==this.action&&!t.isPreviewable()?void 0:t},r.prototype.hasCachedSnapshot=function(){return null!=this.getCachedSnapshot()},r.prototype.loadCachedSnapshot=function(){var t,e;return(e=this.getCachedSnapshot())?(t=this.shouldIssueRequest(),this.render(function(){var r;return this.cacheSnapshot(),this.controller.render({snapshot:e,isPreview:t},this.performScroll),"function"==typeof(r=this.adapter).visitRendered&&r.visitRendered(this),t?void 0:this.complete()})):void 0},r.prototype.loadResponse=function(){return null!=this.response?this.render(function(){var t,e;return this.cacheSnapshot(),this.request.failed?(this.controller.render({error:this.response},this.performScroll),"function"==typeof(t=this.adapter).visitRendered&&t.visitRendered(this),this.fail()):(this.controller.render({snapshot:this.response},this.performScroll),"function"==typeof(e=this.adapter).visitRendered&&e.visitRendered(this),this.complete())}):void 0},r.prototype.followRedirect=function(){return this.redirectedToLocation&&!this.followedRedirect?(this.location=this.redirectedToLocation,this.controller.replaceHistoryWithLocationAndRestorationIdentifier(this.redirectedToLocation,this.restorationIdentifier),this.followedRedirect=!0):void 0},r.prototype.requestStarted=function(){var t;return this.recordTimingMetric("requestStart"),"function"==typeof(t=this.adapter).visitRequestStarted?t.visitRequestStarted(this):void 0},r.prototype.requestProgressed=function(t){var e;return this.progress=t,"function"==typeof(e=this.adapter).visitRequestProgressed?e.visitRequestProgressed(this):void 0},r.prototype.requestCompletedWithResponse=function(e,r){return this.response=e,null!=r&&(this.redirectedToLocation=t.Location.wrap(r)),this.adapter.visitRequestCompleted(this)},r.prototype.requestFailedWithStatusCode=function(t,e){return this.response=e,this.adapter.visitRequestFailedWithStatusCode(this,t)},r.prototype.requestFinished=function(){var t;return this.recordTimingMetric("requestEnd"),"function"==typeof(t=this.adapter).visitRequestFinished?t.visitRequestFinished(this):void 0},r.prototype.performScroll=function(){return this.scrolled?void 0:("restore"===this.action?this.scrollToRestoredPosition()||this.scrollToTop():this.scrollToAnchor()||this.scrollToTop(),this.scrolled=!0)},r.prototype.scrollToRestoredPosition=function(){var t,e;return t=null!=(e=this.restorationData)?e.scrollPosition:void 0,null!=t?(this.controller.scrollToPosition(t),!0):void 0},r.prototype.scrollToAnchor=function(){return null!=this.location.anchor?(this.controller.scrollToAnchor(this.location.anchor),!0):void 0},r.prototype.scrollToTop=function(){return this.controller.scrollToPosition({x:0,y:0})},r.prototype.recordTimingMetric=function(t){var e;return null!=(e=this.timingMetrics)[t]?e[t]:e[t]=(new Date).getTime()},r.prototype.getTimingMetrics=function(){return t.copyObject(this.timingMetrics)},n=function(t){switch(t){case"replace":return"replaceHistoryWithLocationAndRestorationIdentifier";case"advance":case"restore":return"pushHistoryWithLocationAndRestorationIdentifier"}},r.prototype.shouldIssueRequest=function(){return"restore"===this.action?!this.hasCachedSnapshot():!0},r.prototype.cacheSnapshot=function(){return this.snapshotCached?void 0:(this.controller.cacheSnapshot(),this.snapshotCached=!0)},r.prototype.render=function(t){return this.cancelRender(),this.frame=requestAnimationFrame(function(e){return function(){return e.frame=null,t.call(e)}}(this))},r.prototype.cancelRender=function(){return this.frame?cancelAnimationFrame(this.frame):void 0},r}();}.call(this),function(){var e=function(t,e){return function(){return t.apply(e,arguments)}};t.Controller=function(){function r(){this.clickBubbled=e(this.clickBubbled,this),this.clickCaptured=e(this.clickCaptured,this),this.pageLoaded=e(this.pageLoaded,this),this.history=new t.History(this),this.view=new t.View(this),this.scrollManager=new t.ScrollManager(this),this.restorationData={},this.clearCache();}return r.prototype.start=function(){return t.supported&&!this.started?(addEventListener("click",this.clickCaptured,!0),addEventListener("DOMContentLoaded",this.pageLoaded,!1),this.scrollManager.start(),this.startHistory(),this.started=!0,this.enabled=!0):void 0},r.prototype.disable=function(){return this.enabled=!1},r.prototype.stop=function(){return this.started?(removeEventListener("click",this.clickCaptured,!0),removeEventListener("DOMContentLoaded",this.pageLoaded,!1),this.scrollManager.stop(),this.stopHistory(),this.started=!1):void 0},r.prototype.clearCache=function(){return this.cache=new t.SnapshotCache(10)},r.prototype.visit=function(e,r){var n,o;return null==r&&(r={}),e=t.Location.wrap(e),this.applicationAllowsVisitingLocation(e)?this.locationIsVisitable(e)?(n=null!=(o=r.action)?o:"advance",this.adapter.visitProposedToLocationWithAction(e,n)):window.location=e:void 0},r.prototype.startVisitToLocationWithAction=function(e,r,n){var o;return t.supported?(o=this.getRestorationDataForIdentifier(n),this.startVisit(e,r,{restorationData:o})):window.location=e},r.prototype.startHistory=function(){return this.location=t.Location.wrap(window.location),this.restorationIdentifier=t.uuid(),this.history.start(),this.history.replace(this.location,this.restorationIdentifier)},r.prototype.stopHistory=function(){return this.history.stop()},r.prototype.pushHistoryWithLocationAndRestorationIdentifier=function(e,r){return this.restorationIdentifier=r,this.location=t.Location.wrap(e),this.history.push(this.location,this.restorationIdentifier)},r.prototype.replaceHistoryWithLocationAndRestorationIdentifier=function(e,r){return this.restorationIdentifier=r,this.location=t.Location.wrap(e),this.history.replace(this.location,this.restorationIdentifier)},r.prototype.historyPoppedToLocationWithRestorationIdentifier=function(e,r){var n;return this.restorationIdentifier=r,this.enabled?(n=this.getRestorationDataForIdentifier(this.restorationIdentifier),this.startVisit(e,"restore",{restorationIdentifier:this.restorationIdentifier,restorationData:n,historyChanged:!0}),this.location=t.Location.wrap(e)):this.adapter.pageInvalidated()},r.prototype.getCachedSnapshotForLocation=function(t){var e;return e=this.cache.get(t),e?e.clone():void 0},r.prototype.shouldCacheSnapshot=function(){return this.view.getSnapshot().isCacheable()},r.prototype.cacheSnapshot=function(){var t;return this.shouldCacheSnapshot()?(this.notifyApplicationBeforeCachingSnapshot(),t=this.view.getSnapshot(),this.cache.put(this.lastRenderedLocation,t.clone())):void 0},r.prototype.scrollToAnchor=function(t){var e;return(e=document.getElementById(t))?this.scrollToElement(e):this.scrollToPosition({x:0,y:0})},r.prototype.scrollToElement=function(t){return this.scrollManager.scrollToElement(t)},r.prototype.scrollToPosition=function(t){return this.scrollManager.scrollToPosition(t)},r.prototype.scrollPositionChanged=function(t){var e;return e=this.getCurrentRestorationData(),e.scrollPosition=t},r.prototype.render=function(t,e){return this.view.render(t,e)},r.prototype.viewInvalidated=function(){return this.adapter.pageInvalidated()},r.prototype.viewWillRender=function(t){return this.notifyApplicationBeforeRender(t)},r.prototype.viewRendered=function(){return this.lastRenderedLocation=this.currentVisit.location,this.notifyApplicationAfterRender()},r.prototype.pageLoaded=function(){return this.lastRenderedLocation=this.location,this.notifyApplicationAfterPageLoad()},r.prototype.clickCaptured=function(){return removeEventListener("click",this.clickBubbled,!1),addEventListener("click",this.clickBubbled,!1)},r.prototype.clickBubbled=function(t){var e,r,n;return this.enabled&&this.clickEventIsSignificant(t)&&(r=this.getVisitableLinkForNode(t.target))&&(n=this.getVisitableLocationForLink(r))&&this.applicationAllowsFollowingLinkToLocation(r,n)?(t.preventDefault(),e=this.getActionForLink(r),this.visit(n,{action:e})):void 0},r.prototype.applicationAllowsFollowingLinkToLocation=function(t,e){var r;return r=this.notifyApplicationAfterClickingLinkToLocation(t,e),!r.defaultPrevented},r.prototype.applicationAllowsVisitingLocation=function(t){var e;return e=this.notifyApplicationBeforeVisitingLocation(t),!e.defaultPrevented},r.prototype.notifyApplicationAfterClickingLinkToLocation=function(e,r){return t.dispatch("turbolinks:click",{target:e,data:{url:r.absoluteURL},cancelable:!0})},r.prototype.notifyApplicationBeforeVisitingLocation=function(e){return t.dispatch("turbolinks:before-visit",{data:{url:e.absoluteURL},cancelable:!0})},r.prototype.notifyApplicationAfterVisitingLocation=function(e){return t.dispatch("turbolinks:visit",{data:{url:e.absoluteURL}})},r.prototype.notifyApplicationBeforeCachingSnapshot=function(){return t.dispatch("turbolinks:before-cache")},r.prototype.notifyApplicationBeforeRender=function(e){return t.dispatch("turbolinks:before-render",{data:{newBody:e}})},r.prototype.notifyApplicationAfterRender=function(){return t.dispatch("turbolinks:render")},r.prototype.notifyApplicationAfterPageLoad=function(e){return null==e&&(e={}),t.dispatch("turbolinks:load",{data:{url:this.location.absoluteURL,timing:e}})},r.prototype.startVisit=function(t,e,r){var n;return null!=(n=this.currentVisit)&&n.cancel(),this.currentVisit=this.createVisit(t,e,r),this.currentVisit.start(),this.notifyApplicationAfterVisitingLocation(t)},r.prototype.createVisit=function(e,r,n){
+var o,i,s,a,u;return i=null!=n?n:{},a=i.restorationIdentifier,s=i.restorationData,o=i.historyChanged,u=new t.Visit(this,e,r),u.restorationIdentifier=null!=a?a:t.uuid(),u.restorationData=t.copyObject(s),u.historyChanged=o,u.referrer=this.location,u},r.prototype.visitCompleted=function(t){return this.notifyApplicationAfterPageLoad(t.getTimingMetrics())},r.prototype.clickEventIsSignificant=function(t){return!(t.defaultPrevented||t.target.isContentEditable||t.which>1||t.altKey||t.ctrlKey||t.metaKey||t.shiftKey)},r.prototype.getVisitableLinkForNode=function(e){return this.nodeIsVisitable(e)?t.closest(e,"a[href]:not([target])"):void 0},r.prototype.getVisitableLocationForLink=function(e){var r;return r=new t.Location(e.getAttribute("href")),this.locationIsVisitable(r)?r:void 0},r.prototype.getActionForLink=function(t){var e;return null!=(e=t.getAttribute("data-turbolinks-action"))?e:"advance"},r.prototype.nodeIsVisitable=function(e){var r;return(r=t.closest(e,"[data-turbolinks]"))?"false"!==r.getAttribute("data-turbolinks"):!0},r.prototype.locationIsVisitable=function(t){return t.isPrefixedBy(this.view.getRootLocation())&&t.isHTML()},r.prototype.getCurrentRestorationData=function(){return this.getRestorationDataForIdentifier(this.restorationIdentifier)},r.prototype.getRestorationDataForIdentifier=function(t){var e;return null!=(e=this.restorationData)[t]?e[t]:e[t]={}},r}();}.call(this),function(){var e,r,n;t.start=function(){return r()?(null==t.controller&&(t.controller=e()),t.controller.start()):void 0},r=function(){return null==window.Turbolinks&&(window.Turbolinks=t),n()},e=function(){var e;return e=new t.Controller,e.adapter=new t.BrowserAdapter(e),e},n=function(){return window.Turbolinks===t},n()&&t.start();}.call(this);}).call(this),"object"=='object'&&module.exports?module.exports=t:"function"==typeof undefined&&undefined.amd&&undefined(t);}).call(commonjsGlobal);
 });
 
-
-});
-
-var FadeTransition = barba.BaseTransition.extend({
-    start: function start() {
-        return Promise.all([this.newContainerLoading, this.fadeOut()]).then(this.fadeIn.bind(this));
-    },
-    fadeOut: function fadeOut() {
-        return $(this.oldContainer).animate({ opacity: 0 }).promise();
-    },
-    fadeIn: function fadeIn() {
-        var _this = this;
-        var $el = $(this.newContainer);
-
-        $(this.oldContainer).hide();
-        document.body.scrollTop = 0;
-
-        $el.css({
-            visibility: 'visible',
-            opacity: 0
-        });
-
-        $el.animate({ opacity: 1 }, 400, function () {
-            $.material.init();
-            _this.done();
-        });
-    }
-});
+//import Barba from 'barba.js';
+//import FadeTransition from './transitions/fade';
+turbolinks.start();
+turbolinks.controller.adapter.showProgressBar();
 
 var BasePage = function () {
     function BasePage() {
+
+        //this._url = Barba.Pjax.getCurrentUrl();
+
         classCallCheck(this, BasePage);
-
-
-        this._url = barba.Pjax.getCurrentUrl();
     }
 
     createClass(BasePage, [{
@@ -3614,26 +3419,20 @@ var BasePage = function () {
     }, {
         key: 'configure',
         value: function configure() {
-            var _this = this;
-
-            barba.Pjax.getTransition = function () {
-                return _this.getTransition();
-            };
+            //Barba.Pjax.getTransition = () => this.getTransition();
         }
     }, {
         key: 'init',
         value: function init() {
-            var _this2 = this;
-
             this.configure();
-            barba.Pjax.start();
+
             this.onReady();
 
-            barba.Dispatcher.on('newPageReady', function (currentStatus, oldStatus, container) {
-                if (currentStatus.url == _this2._url) {
-                    _this2.onReady();
-                }
-            });
+            //Barba.Dispatcher.on('newPageReady', (currentStatus, oldStatus, container) => {
+            //    debugger;
+            //    if (currentStatus.url == this._url)
+            //    { this.onReady(); }
+            //});
         }
     }, {
         key: 'onReady',

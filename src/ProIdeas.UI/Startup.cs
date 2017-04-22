@@ -22,6 +22,9 @@ using ProIdeas.Infra.EventSourcing;
 using ProIdeas.Domain.Entities;
 using ProIdeas.Serializers.Contracts;
 using ProIdeas.Serializers;
+using ProIdeas.Authentication.Contracts;
+using ProIdeas.UI.Authentication;
+using ProIdeas.Logic.Filters;
 
 namespace ProIdeas.UI
 {
@@ -52,7 +55,7 @@ namespace ProIdeas.UI
             var mappingProvider = new MappingProvider();
 
             services.AddSingleton(mappingProvider.CreateMapper());
-
+            services.AddSingleton<IUserIdentityProvider, AspNetUserIdentityProvider>();
             services.AddSingleton<IJsonSerializer, JsonSerializer>();
             services.AddMultitenancy<TenantSettingsDto, CachingTenantResolver>();
 
@@ -71,6 +74,11 @@ namespace ProIdeas.UI
 
 
             services.AddScoped<ITenantStore, LocalJsonTenantStore>();
+
+            services.AddScoped<IMessageFilter<CreateIdeaCommand>, CreateIdeaCommandValidationFilter>();
+            services.AddScoped<IMessageFilter<UpdateIdeaCommand>, UpdateIdeaCommandValidationFilter>();
+            services.AddScoped<IMessageFilter<DeleteIdeaCommand>, DeleteIdeaCommandValidationFilter>();
+
             services.AddScoped<IHandler<CreateIdeaCommand>, IdeaLogic>();
             services.AddScoped<IHandler<UpdateIdeaCommand>, IdeaLogic>();
             services.AddScoped<IHandler<DeleteIdeaCommand>, IdeaLogic>();

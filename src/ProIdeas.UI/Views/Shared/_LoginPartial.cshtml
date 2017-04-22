@@ -6,7 +6,6 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-
     var userInfo = await UserManager.GetUserAsync(User);
 
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
@@ -18,7 +17,13 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     @*<li><a href="/profile">Profile</a></li>*@
-                    <li><a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Account</a></li>
+                    <li>
+                        <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">
+                            <i class="material-icons">account_circle</i>
+                            Account
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
                     <li><a href="#" onclick="$(this).closest('form').submit()">Log out</a></li>
                 </ul>
             </li>

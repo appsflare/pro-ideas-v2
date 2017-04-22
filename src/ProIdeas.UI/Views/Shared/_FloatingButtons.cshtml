@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="button-floater" title="Share an idea">
+        <a asp-controller="Idea" asp-action="Create" class="btn btn-primary btn-fab btn-round">
+            <i class="material-icons">add</i>
+            <div class="ripple-container"></div>
+        </a>
+    </div>
+}

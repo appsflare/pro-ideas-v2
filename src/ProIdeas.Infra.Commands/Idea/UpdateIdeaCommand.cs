@@ -14,7 +14,9 @@ namespace ProIdeas.Infra.Commands.Idea
 
         public override bool IsValid()
         {
-            return Idea != null;
+            return Idea != null
+                && !string.IsNullOrEmpty(Idea.Title?.Trim())
+                && !string.IsNullOrEmpty(Idea.Description.Trim());
         }
     }
 }

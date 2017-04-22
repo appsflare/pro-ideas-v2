@@ -14,66 +14,54 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" />
     <!-- Ionicons -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" />
-    <environment names="Development">
+    <environment names="Development,Staging,Production">
         @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
         <link rel="stylesheet" href="~/css/main.css" />
-    </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
-
     @await Html.PartialAsync("_CommonLibImports")
 
-    <div id="barba-wrapper">
-        <div class="barba-container">
+    @RenderSection("Styles", required: false)
 
-            @RenderSection("Styles", required: false)
-
-            <div class="app-page">
-                <nav class="navbar navbar-inverse navbar-fixed-top">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand logo">
-                                <img src="/logos/ideaboard-logo-white-nocap.png" />
-                            </a>
-                        </div>
-                        <div class="navbar-collapse collapse">
-                            <ul class="nav navbar-nav">
-                                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                                <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                                <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                            </ul>
-                            @await Html.PartialAsync("_LoginPartial")
-                        </div>
-                    </div>
-                </nav>
-                <div class="container body-content">
-                    <div class="wrapper">
-                        <div class="main">
-                            @RenderBody()
-                        </div>
-                    </div>
+    <div class="app-page">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand logo">
+                        <img src="/logos/ideaboard-logo-white-nocap.png" />
+                    </a>
                 </div>
-                <footer>
-                    <p class="copyright">&copy; 2017 - ProIdeas.UI</p>
-                </footer>
-                @await Html.PartialAsync("_CommonImports")
-                @RenderSection("Scripts", required: false)
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    </ul>
+                    @await Html.PartialAsync("_LoginPartial")
+                </div>
+            </div>
+        </nav>
+        <div class="container body-content">
+            <div class="wrapper">
+                <div class="main">
+                    @RenderBody()
+                </div>
             </div>
         </div>
-    </div>
+        <footer>
+            <p class="copyright">&copy; 2017 - ProIdeas.UI</p>
+        </footer>
+    </div>    
+    @await Html.PartialAsync("_CommonImports")
+    @RenderSection("Scripts", required: false)
 </body>
 
 </html>

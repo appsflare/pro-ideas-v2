@@ -69,7 +69,6 @@ var utils = {
     },
     post: function post(url, data) {
         return new Promise(function (resolve, reject) {
-
             $.post({
                 url: url,
                 data: JSON.stringify(data),

@@ -1,8 +1,9 @@
-﻿/// <binding AfterBuild='build' />
+﻿/// <binding />
 var gulp = require("gulp"),
     glob = require('glob'),
     fs = require("fs"),
     sass = require("gulp-sass"),
+    //cached = require('gulp-cached'),
     sourcemaps = require('gulp-sourcemaps'),
     babel = require('rollup-plugin-babel'),
     rollup = require('rollup-stream'),

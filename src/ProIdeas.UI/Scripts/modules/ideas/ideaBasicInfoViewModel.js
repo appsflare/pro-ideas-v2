@@ -1,29 +1,39 @@
 ﻿import ko from 'knockout';
+import 'knockout.validation';
 
 export default class IdeaBasicInfoViewModel {
 
     constructor({ idea = {}, actions: {save} }) {
+
+        ko.validation.init({
+            errorElementClass: 'has-error',
+            errorMessageClass: 'help-block',
+            decorateInputElement: true
+        });
+
         this.actions = { save };
         this.isSaving = ko.observable(false);
         this._initForm(idea);
+
     }
 
     _initForm({id, title = '', description = '', isFundingRequired = false, fundingRequirement = ''}) {
-        this.form = {
+        this.form = ko.validatedObservable({
             id,
-            title: ko.observable(title),
-            description: ko.observable(description),
-            isFundingRequired: ko.observable(isFundingRequired),
-            fundingRequirement: ko.observable(fundingRequirement)
-        };
+            title: ko.observable(title).extend({ required: true }),
+            description: ko.observable(description).extend({ required: true }),
+            isFundingRequired: ko.observable(isFundingRequired).extend({ required: true }),
+            fundingRequirement: ko.observable(fundingRequirement).extend({ required: false })
+        });
     }
 
     _validate() {
-        const formData = ko.toJS(this.form);
 
-        const part1valid = formData.title && formData.description;
-
-        return part1valid && (formData.isFundingRequired ? !!formData.fundingRequirement : true);
+        if (!this.form.isValid()) {
+            this.form.errors.showAllMessages();
+            return false;
+        }
+        return true;
     }
 
     save() {
@@ -32,7 +42,7 @@ export default class IdeaBasicInfoViewModel {
 
         const form = ko.toJS(this.form);
 
-        form.isFundingRequired = form.fundingRequirement && form.fundingRequirement.length > 0;
+        form.isFundingRequired = !!(form.fundingRequirement && form.fundingRequirement.length > 0);
 
         this.isSaving(true);
         const { save } = this.actions;

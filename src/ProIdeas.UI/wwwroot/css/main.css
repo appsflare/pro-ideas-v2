@@ -9475,3 +9475,12 @@ footer {
   text-align: center;
   color: #999999;
   margin: 0; }
+
+.button-floater {
+  position: fixed;
+  bottom: 10%;
+  right: 10%; }
+
+.turbolinks-progress-bar {
+  height: 5px;
+  background-color: #fff; }

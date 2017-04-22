@@ -59,6 +59,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.Identity.Repository", "AspNet.Identity.Repository\AspNet.Identity.Repository.csproj", "{CF12F244-6E0D-46BB-8299-B16533D59D20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProIdeas.Authentication.Contracts", "ProIdeas.Authentication.Contracts\ProIdeas.Authentication.Contracts.csproj", "{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,6 +151,10 @@ Global
 		{CF12F244-6E0D-46BB-8299-B16533D59D20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF12F244-6E0D-46BB-8299-B16533D59D20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF12F244-6E0D-46BB-8299-B16533D59D20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -180,5 +186,6 @@ Global
 		{106EC86A-1E55-471F-9C49-A48755E8CEB9} = {232AEF7D-469F-4383-A9F3-F7AFC433B1C8}
 		{B24EA95C-C64D-4168-9E4A-474F070F5137} = {232AEF7D-469F-4383-A9F3-F7AFC433B1C8}
 		{CF12F244-6E0D-46BB-8299-B16533D59D20} = {232AEF7D-469F-4383-A9F3-F7AFC433B1C8}
+		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A} = {E5D0F62B-29C9-41FC-9177-699CAC883629}
 	EndGlobalSection
 EndGlobal

@@ -34,11 +34,15 @@ namespace ProIdeas.Infra.Bus
         {
             if (_container == null) return;
 
+           var filter = _container.GetService(typeof(IMessageFilter<T>)) as IMessageFilter<T>;
+            var filterContext = new FilterContext<T>(message);
+            filter?.Execute(filterContext);
+
             var obj = _container.GetService(message.MessageType.Equals("DomainNotification")
                 ? typeof(IDomainNotificationHandler<T>)
                 : typeof(IHandler<T>));
 
-            ((IHandler<T>)obj).Handle(message);
+            ((IHandler<T>)obj)?.Handle(filterContext.Message);
         }
 
         private object GetService(Type serviceType)

@@ -10,7 +10,7 @@ class CreatePage extends BasePage {
         this._client = client;
         this._model = new IdeaBasicInfoViewModel({
             actions: {
-                save(idea) {
+                save: idea => {
                     return this._client.createIdea(idea)
                         .then(data => {
                             document.location.href = `/ideas/images/${data.id}`;
