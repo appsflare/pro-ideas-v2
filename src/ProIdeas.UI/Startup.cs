@@ -25,6 +25,7 @@ using ProIdeas.Serializers;
 using ProIdeas.Authentication.Contracts;
 using ProIdeas.UI.Authentication;
 using ProIdeas.Logic.Filters;
+using ProIdeas.Files.Contracts;
 
 namespace ProIdeas.UI
 {
@@ -89,6 +90,7 @@ namespace ProIdeas.UI
             services.AddScoped<IRethinkDbConnectionProvider, DefaultRethinkDbConnectionProvider>();
 
             services.AddScoped<IRepository, RethinkDbRepository>();
+            services.AddScoped<IFileStorage, ReGridStorageProvider>();
 
             services.AddSingleton<DatabaseConfigurator>();
 

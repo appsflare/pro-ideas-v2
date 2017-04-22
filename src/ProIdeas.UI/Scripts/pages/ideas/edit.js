@@ -21,7 +21,7 @@ class EditPage extends BasePage {
                     save: (idea) => {
                         return this._client.updateIdea(idea)
                             .then(data => {
-                                document.location.href = `/idea/images/${data.id}`;
+                                document.location.href = `/ideas/${idea.id}/images`;
                             });
                     }
                 }

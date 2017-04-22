@@ -1,5 +1,7 @@
 ﻿using ProIdeas.Authentication.Contracts;
 using ProIdeas.Domain.Core.Events;
+using ProIdeas.Domain.Entities;
+using ProIdeas.Domain.Repositories;
 using ProIdeas.Infra.Commands.Idea;
 using System;
 
@@ -8,9 +10,11 @@ namespace ProIdeas.Logic.Filters
     public class UpdateIdeaCommandValidationFilter : BaseMessageValidationFilter<UpdateIdeaCommand>
     {
         private readonly IUserIdentityProvider _userIdentityProvider;
-        public UpdateIdeaCommandValidationFilter(IUserIdentityProvider userIdentityProvider)
+        private readonly IRepository _repository;
+        public UpdateIdeaCommandValidationFilter(IUserIdentityProvider userIdentityProvider, IRepository repository)
         {
             _userIdentityProvider = userIdentityProvider;
+            _repository = repository;
         }
 
         protected override void Validate(FilterContext<UpdateIdeaCommand> context)
@@ -20,7 +24,9 @@ namespace ProIdeas.Logic.Filters
                 throw new ArgumentException(nameof(context.Message));
             }
 
-            if (context.Message.Idea.OwnerId != _userIdentityProvider.GetUserId())
+            var idea = _repository.GetOne<Idea>(context.Message.Idea.Id);
+
+            if (idea.OwnerId != _userIdentityProvider.GetUserId())
             {
                 throw new UnauthorizedAccessException();
             }

@@ -217,7 +217,6 @@
     <ProjectReference Include="..\ProIdeas.Domain.Repositories\ProIdeas.Domain.Repositories.csproj" />
     <ProjectReference Include="..\ProIdeas.DTO\ProIdeas.DTO.csproj" />
     <ProjectReference Include="..\ProIdeas.Files.Contracts\ProIdeas.Files.Contracts.csproj" />
-    <ProjectReference Include="..\ProIdeas.Files\ProIdeas.Files.csproj" />
     <ProjectReference Include="..\ProIdeas.Infra.Bus\ProIdeas.Infra.Bus.csproj" />
     <ProjectReference Include="..\ProIdeas.Infra.EventSourcing\ProIdeas.Infra.EventSourcing.csproj" />
     <ProjectReference Include="..\ProIdeas.Logic\ProIdeas.Logic.csproj" />

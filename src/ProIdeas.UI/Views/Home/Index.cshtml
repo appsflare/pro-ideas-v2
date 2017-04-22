@@ -26,7 +26,7 @@
             @foreach (var idea in Model.Ideas)
             {
             <div class="item active">
-                <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
+                <img src="/api/ideas/@idea.Id/banner" alt="ASP.NET" class="img-responsive" />
                 <div class="carousel-caption" role="option">
                     <p>
                         @idea.Title

@@ -9,26 +9,28 @@ class RichTextEditorViewModel {
 }
 
 ko.components.register('rich-text-editor', {
-    createViewModel(params, { element }) {
+    viewModel: {
+        createViewModel(params, { element }) {
 
-        var viewModel = new RichTextEditorViewModel(params);
+            var viewModel = new RichTextEditorViewModel(params);
 
-        var editor = new Quill(element.querySelector('rich-text-editor'), {
-            theme: 'snow'
-        });
+            var editor = new Quill(element.querySelector('rich-text-editor'), {
+                theme: 'snow'
+            });
 
 
-        editor.setText(params.value());
-
-        viewModel.value.subscribe(newValue => {
             editor.setText(params.value());
-        });
 
-        editor.on('text-change', () => {
-            viewModel.value(editor.getText());
-        });
+            viewModel.value.subscribe(newValue => {
+                editor.setText(params.value());
+            });
 
-        return viewModel;
+            editor.on('text-change', () => {
+                viewModel.value(editor.getText());
+            });
+
+            return viewModel;
+        }
     },
     template
 });

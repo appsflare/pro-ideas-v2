@@ -13,7 +13,7 @@ class CreatePage extends BasePage {
                 save: idea => {
                     return this._client.createIdea(idea)
                         .then(data => {
-                            document.location.href = `/idea/images/${data.id}`;
+                            document.location.href = `/ideas/${idea.id}/images`;
                         });
                 }
             }

@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="LocalStorageProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RethinkDb.Driver.ReGrid" Version="2.3.17" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ProIdeas.Files.Contracts\ProIdeas.Files.Contracts.csproj" />
   </ItemGroup>
 

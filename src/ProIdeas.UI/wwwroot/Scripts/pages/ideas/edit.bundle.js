@@ -85,9 +85,7 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
-var defaultHeaders = {
-    'content-type': 'application/json;charset=utf8'
-};
+var defaultHeaders = {};
 var utils = {
     get: function get$$1(url) {
         return new Promise(function (resolve, reject) {
@@ -118,6 +116,26 @@ var utils = {
                 error: reject
             });
         });
+    },
+    uploadFile: function uploadFile(url) {
+        var files = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+        var formData = new FormData();
+
+        files.forEach(function (file) {
+            formData.append(file.name, file);
+        });
+
+        return new Promise(function (resolve, reject) {
+            $.post({
+                url: url,
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: resolve,
+                error: reject
+            });
+        });
     }
 };
 
@@ -127,6 +145,7 @@ var ApiClient = function () {
 
         $.ajaxSetup({
             headers: defaultHeaders,
+            contentType: 'application/json;charset=utf8',
             dataType: 'json'
         });
     }
@@ -147,6 +166,11 @@ var ApiClient = function () {
         value: function updateIdea(idea) {
 
             return utils.put('/api/ideas/' + idea.id, idea);
+        }
+    }, {
+        key: 'uploadIdeaBanner',
+        value: function uploadIdeaBanner(id, file) {
+            return utils.uploadFile('/api/ideas/' + id + '/banner', [file]);
         }
     }, {
         key: 'getIdeas',
@@ -3466,7 +3490,7 @@ var EditPage = function (_BasePage) {
                     actions: {
                         save: function save(idea) {
                             return _this2._client.updateIdea(idea).then(function (data) {
-                                document.location.href = '/idea/images/' + data.id;
+                                document.location.href = '/ideas/' + idea.id + '/images';
                             });
                         }
                     }

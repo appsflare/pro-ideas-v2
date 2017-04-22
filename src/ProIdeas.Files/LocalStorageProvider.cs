@@ -3,7 +3,7 @@ using System.IO;
 
 namespace ProIdeas.Files
 {
-    public class LocalStorageProvider : IStorageProvider
+    public class LocalStorageProvider : IFileStorage
     {
         public bool CheckIfExist(string fileName)
         {

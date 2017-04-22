@@ -3,17 +3,42 @@
     ViewData["Title"] = "Creat your idea";
 }
 
+@section Scripts{
+    <script src="~/Scripts/pages/ideas/images.bundle.js"></script>
+}
+
 <div class="container create-idea">
     <div class="row">
         <h4 class="common-page-header">Post your new idea</h4>
         <section>
             <ul class="nav nav-pills nav-pills-vertical" role="tablist">
-                <li class="complete"><a href="/idea/edit/@Model.Id">Basic Information</a></li>
-                <li class="active"><a href="/idea/images/@Model.Id">Images</a></li>
-                <li class=""><a href="/idea/pages/@Model.Id">Pages</a></li>@*<li class=""><a href="#payments">Review</a></li>*@
+                <li class="complete"><a href="/ideas/@Model.Id/edit">Basic Information</a></li>
+                <li class="active"><a href="/ideas/@Model.Id/images">Images</a></li>
+                <li class=""><a href="/ideas/@Model.Id/pages">Pages</a></li>@*<li class=""><a href="#payments">Review</a></li>*@
             </ul>
-            <div class="content">
-                
+            <div class="content" id="idea-image-upload-form">
+                <div data-bind="with: form" class="row">
+                    <input id="IdeaId" type="hidden" value="@Model.Id" />
+                    <file-uploader params="icon: file.icon, value: file.value"></file-uploader>
+                    <div data-bind="if: file.selectedFile" class="card card-profile card-plain">
+                        <div class="card-image">
+                            <image data-bind="attr:{src: file.selectedFile}"></image>
+                        </div>
+                        <div class="content">
+                            <h4 class="card-title">
+                                Selected Banner Image
+                            </h4>
+                            <h6 class="category text-gray"></h6>
+                            <div class="footer">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary pull-right" data-bind="click: save">Next</button>
+                    <a asp-controller="Idea" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary pull-right">Previous</a>
+                </div>
             </div>
         </section>
     </div>

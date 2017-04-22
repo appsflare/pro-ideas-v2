@@ -16,7 +16,8 @@ namespace ProIdeas.Logic
 
         public TenantSettingsDto GetTenant(string uniqueKey)
         {
-            return _dataMapper.Map<TenantSettingsDto>(_tenantStore.GetTenant(uniqueKey));
+            return default(TenantSettingsDto);
+            //return _dataMapper.Map<TenantSettingsDto>(_tenantStore.GetTenant(uniqueKey));
         }
     }
 }

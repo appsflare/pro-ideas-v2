@@ -23,7 +23,7 @@ namespace ProIdeas.Logic
         private readonly IRepository _repository;
         private readonly IDataMapper _dataMapper;
         private readonly IBus _bus;
-
+        
         public IdeaLogic(IRepository repository, IDataMapper dataMapper, IBus bus)
         {
             _repository = repository;
@@ -94,6 +94,7 @@ namespace ProIdeas.Logic
 
             var newIdea = _dataMapper.Map<Idea>(message.Idea);
             newIdea.Status = Status.Draft.ToString();
+            
 
             var result = _repository.Add(newIdea);
 
@@ -101,23 +102,26 @@ namespace ProIdeas.Logic
 
             message.Idea.Id = createdIdea.Id;
 
+
             _bus.RaiseEvent(new IdeaCreatedEvent(_dataMapper.Map<IdeaDto>(result)));
         }
 
         public void Handle(UpdateIdeaCommand message)
         {
             if (!message.IsValid())
-            { throw new ArgumentException("invalid command message", nameof(message)); }
+            { throw new ArgumentException("invalid command message", nameof(message)); }            
+
+            var ideaTobeUpdated = _dataMapper.Map<Idea>(message.Idea);
+
+            var existing = _repository.GetOne<Idea>(message.Idea.Id);
 
 
+            existing.Title = ideaTobeUpdated.Title;
+            existing.Description = ideaTobeUpdated.Description;
+            existing.IsFundingRequired = ideaTobeUpdated.IsFundingRequired;
+            existing.FundingRequirement = ideaTobeUpdated.FundingRequirement;
 
-            var newIdea = _dataMapper.Map<Idea>(message.Idea);
-
-
-            var result = _repository.Update(newIdea);
-
-
-
+            var result = _repository.Update(existing);
 
             _bus.RaiseEvent(new IdeaUpdatedEvent(_dataMapper.Map<IdeaDto>(result)));
         }

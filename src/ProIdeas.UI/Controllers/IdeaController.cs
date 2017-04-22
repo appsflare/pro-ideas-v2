@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Services.Contracts;
 using ProIdeas.UI.Models.IdeaViewModels;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace ProIdeas.UI.Controllers
 {
     [Authorize]
+    [Route("ideas")]
     public class IdeaController : Controller
     {
         private readonly IIdeaService _ideaService;
@@ -19,6 +16,7 @@ namespace ProIdeas.UI.Controllers
             _ideaService = ideaService;
         }
 
+        [HttpGet, Route("index")]
         // GET: Idea
         public ActionResult Index()
         {
@@ -26,17 +24,20 @@ namespace ProIdeas.UI.Controllers
         }
 
         // GET: Idea/Details/5
+        [HttpGet, Route("{id}/details")]
         public ActionResult Details(int id)
         {
             return View();
         }
 
+        [HttpGet, Route("create")]
         // GET: Idea/Create
         public ActionResult Create()
         {
             return View(new IdeaInfoViewModel());
         }
 
+        [HttpGet, Route("{id}/edit")]
         // GET: Idea/Edit
         async public Task<IActionResult> Edit(string id)
         {
@@ -55,6 +56,7 @@ namespace ProIdeas.UI.Controllers
             };
         }
 
+        [HttpGet, Route("{id}/images")]
         // GET: Idea/Images
         async public Task<IActionResult> Images(string id)
         {
@@ -63,6 +65,7 @@ namespace ProIdeas.UI.Controllers
             return View(GetIdeaInfoViewModel(idea));
         }
 
+        [HttpGet, Route("{id}/pages")]
         // GET: Idea/Pages
         async public Task<IActionResult> Pages(string id)
         {
@@ -70,13 +73,6 @@ namespace ProIdeas.UI.Controllers
 
             return View(GetIdeaInfoViewModel(idea));
         }
-    
-       
-
-        // GET: Idea/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        
     }
 }

@@ -1,21 +1,28 @@
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using ProIdeas.Services.Contracts;
-using ProIdeas.DTO;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProIdeas.Authentication.Contracts;
+using ProIdeas.DTO;
+using ProIdeas.Files.Contracts;
+using ProIdeas.Services.Contracts;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProIdeas.UI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/ideas")]    
+    [Route("api/ideas")]
     public class IdeaApiController : Controller
     {
 
         private readonly IIdeaService _ideaService;
-        public IdeaApiController(IIdeaService ideaService)
+        private readonly IFileStorage _fileStorage;
+        private readonly IUserIdentityProvider _userIdentityProvider;
+        public IdeaApiController(IIdeaService ideaService, IFileStorage fileStorage, IUserIdentityProvider userIdentityProvider)
         {
             _ideaService = ideaService;
+            _fileStorage = fileStorage;
+            _userIdentityProvider = userIdentityProvider;
         }
 
         // GET: api/IdeaApi
@@ -36,20 +43,48 @@ namespace ProIdeas.UI.Controllers
         [HttpPost]
         public Task<IdeaDto> Post([FromBody]IdeaDto idea)
         {
+            idea.OwnerId = _userIdentityProvider.GetUserId();
             return _ideaService.CreateAsync(idea);
         }
 
         // PUT: api/IdeaApi/5
         [HttpPut("{id}")]
-        public void Put(string id, [FromBody]IdeaDto idea)
+        public IActionResult Put(string id, [FromBody]IdeaDto idea)
         {
             _ideaService.Update(idea);
+            return Json(new { message = "Idea updated successfully" });
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(string id)
         {
+
+        }
+
+        [HttpGet]
+        [Route("{id}/banner")]
+        [AllowAnonymous]
+        async public Task<IActionResult> GetBannerImage(string id)
+        {
+            var stream = await _fileStorage.GetFileStreamAsync($"{id}.png");
+            return new FileStreamResult(stream, "image/png");
+        }
+
+        [HttpPost]
+        [Route("{id}/banner")]
+        async public Task<IActionResult> SetBannerImage([FromRoute]string id)
+        {
+            var bannerImage = $"{id}.png";
+            var addedFiles = new List<Guid>();
+            foreach (var file in Request.Form.Files)
+            {
+                var uploadedFileId = await _fileStorage.AddFileAsync(bannerImage, file.OpenReadStream(), new { ideaId = id });
+
+                addedFiles.Add(uploadedFileId);
+            }
+
+            return Json(addedFiles);
         }
     }
 }
