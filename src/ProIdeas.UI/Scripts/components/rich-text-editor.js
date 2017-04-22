@@ -14,7 +14,7 @@ ko.components.register('rich-text-editor', {
 
             var viewModel = new RichTextEditorViewModel(params);
 
-            var editor = new Quill(element.querySelector('rich-text-editor'), {
+            var editor = new Quill(element.querySelector('.rich-text-editor'), {
                 theme: 'snow'
             });
 
@@ -22,10 +22,12 @@ ko.components.register('rich-text-editor', {
             editor.setText(params.value());
 
             viewModel.value.subscribe(newValue => {
+                if (params.value() == editor.getText())
+                { return; }
                 editor.setText(params.value());
             });
 
-            editor.on('text-change', () => {
+            editor.on('editor-change', () => {
                 viewModel.value(editor.getText());
             });
 
