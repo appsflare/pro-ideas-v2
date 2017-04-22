@@ -3454,7 +3454,7 @@ var CreatePage = function (_BasePage) {
             actions: {
                 save: function save(idea) {
                     return _this._client.createIdea(idea).then(function (data) {
-                        document.location.href = '/ideas/images/' + data.id;
+                        document.location.href = '/idea/images/' + data.id;
                     });
                 }
             }

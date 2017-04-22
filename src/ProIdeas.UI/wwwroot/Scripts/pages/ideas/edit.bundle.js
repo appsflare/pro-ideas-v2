@@ -3466,7 +3466,7 @@ var EditPage = function (_BasePage) {
                     actions: {
                         save: function save(idea) {
                             return _this2._client.updateIdea(idea).then(function (data) {
-                                document.location.href = '/ideas/images/' + data.id;
+                                document.location.href = '/idea/images/' + data.id;
                             });
                         }
                     }
