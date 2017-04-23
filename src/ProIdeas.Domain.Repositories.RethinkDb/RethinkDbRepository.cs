@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using RethinkDb.Driver.Ast;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.Repositories.RethinkDb
 {
@@ -13,12 +14,16 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
     {
         private readonly IConnection _connection;
         private readonly ConnectionOptions _connectionOptions;
+        private readonly IQueryTemplateFinder _queryTemplateProvider;
 
 
-        public RethinkDbRepository(IRethinkDbConnectionProvider connectionProvider, ConnectionOptions connectionOptions)
+        public RethinkDbRepository(IRethinkDbConnectionProvider connectionProvider,
+            ConnectionOptions connectionOptions,
+            IQueryTemplateFinder queryTemplateProvider)
         {
             _connectionOptions = connectionOptions;
             _connection = connectionProvider.GetConnection(_connectionOptions);
+            _queryTemplateProvider = queryTemplateProvider;
         }
 
         private static string GetTableName<TEntity>()
@@ -122,6 +127,15 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
         public TEntity GetOne<TEntity>(string id) where TEntity : class, IEntity, new()
         {
             return RethinkDB.R.Table(GetTableName<TEntity>()).Get(id).RunResult<TEntity>(_connection);
+        }
+
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity, TQueryParam>(TQueryParam queryParam)
+            where TEntity : class, IEntity, new()
+            where TQueryParam : class
+        {
+            var queryTemplate = _queryTemplateProvider.Find<TEntity, TQueryParam>();
+
+            return queryTemplate.ExecuteAsync(_connection, queryParam);
         }
     }
 }

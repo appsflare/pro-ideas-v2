@@ -23,7 +23,7 @@ namespace ProIdeas.Logic
         private readonly IRepository _repository;
         private readonly IDataMapper _dataMapper;
         private readonly IBus _bus;
-        
+
         public IdeaLogic(IRepository repository, IDataMapper dataMapper, IBus bus)
         {
             _repository = repository;
@@ -38,22 +38,32 @@ namespace ProIdeas.Logic
             return Task.Factory.StartNew(() => _dataMapper.Map<IdeaDto>(_repository.GetOne<Idea>(ideaId)));
         }
 
-        public Task<IEnumerable<IdeaDto>> GetIdeas(int pageSize, int page, string keyword)
+        async public Task<IEnumerable<IdeaDto>> GetIdeas(int pageSize, int page, string keyword)
         {
-
-            return Task.Factory.StartNew(() =>
+            var result = await _repository.QueryAsync<Idea, FilterIdeaQueryTemplateParameter>(new FilterIdeaQueryTemplateParameter
             {
-                var query = new QueryBuilder<Idea>()
-                //.WithCondition(i => i.Title.Contains(keyword) || i.Description.Contains(keyword) || i.FundingRequirement.Contains(keyword))
-                .WithCondition(i => i.Status == Status.Published.ToString())
-                .OrderBy(i => i.OrderBy(j => j.Title))
-                .Skip(Math.Max(page, 0) * pageSize)
-                .Take(pageSize)
-                .Build();
-
-
-                return _dataMapper.Map<IEnumerable<IdeaDto>>(_repository.Query(query));
+                Take = pageSize,
+                Skip = Math.Max(page, 0) * pageSize,
+                Keyword = keyword,
+                Status = Status.Published.ToString(),
+                OrderBy = "title"
             });
+
+            return _dataMapper.Map<IEnumerable<IdeaDto>>(result);
+
+            //return Task.Factory.StartNew(() =>
+            //{
+            //    var query = new QueryBuilder<Idea>()
+            //    //.WithCondition(i => i.Status == Status.Published.ToString() || i.Title.Contains(keyword) || i.Description.Contains(keyword) || i.FundingRequirement.Contains(keyword))
+            //    .WithCondition(i=> i.Title.Contains(keyword))
+            //    .OrderBy(i => i.OrderBy(j => j.Title))
+            //    .Skip(Math.Max(page, 0) * pageSize)
+            //    .Take(pageSize)
+            //    .Build();
+
+
+            //    return _dataMapper.Map<IEnumerable<IdeaDto>>(_repository.Query(query));
+            //});
         }
 
 
@@ -94,7 +104,7 @@ namespace ProIdeas.Logic
 
             var newIdea = _dataMapper.Map<Idea>(message.Idea);
             newIdea.Status = Status.Draft.ToString();
-            
+
 
             var result = _repository.Add(newIdea);
 
@@ -109,7 +119,7 @@ namespace ProIdeas.Logic
         public void Handle(UpdateIdeaCommand message)
         {
             if (!message.IsValid())
-            { throw new ArgumentException("invalid command message", nameof(message)); }            
+            { throw new ArgumentException("invalid command message", nameof(message)); }
 
             var ideaTobeUpdated = _dataMapper.Map<Idea>(message.Idea);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.Repositories
 {
@@ -22,6 +23,10 @@ namespace ProIdeas.Domain.Repositories
 
 
         IEnumerable<TEntity> Query<TEntity>(IQuery<TEntity> query) where TEntity : class, IEntity, new();
+
+        Task<IEnumerable<TEntity>> QueryAsync<TEntity, TQueryParam>(TQueryParam queryParam)
+            where TEntity : class, IEntity, new()
+            where TQueryParam : class;
 
         IEnumerable<TEntity> All<TEntity>(int page, int pageSize) where TEntity : class, IEntity, new();
 

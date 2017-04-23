@@ -26,6 +26,9 @@ using ProIdeas.Authentication.Contracts;
 using ProIdeas.UI.Authentication;
 using ProIdeas.Logic.Filters;
 using ProIdeas.Files.Contracts;
+using System.Reflection;
+using System.Linq;
+using ProIdeas.Domain.RehtinkDb.QueryTemplates;
 
 namespace ProIdeas.UI
 {
@@ -49,6 +52,28 @@ namespace ProIdeas.UI
         }
 
         public IConfigurationRoot Configuration { get; }
+
+        private static void RegisterQueryTemplates(IServiceCollection services)
+        {
+            var queryTemplateInterface = typeof(IQueryTemplate);
+            var type1 = typeof(FilterIdeaQueryTemplate);
+
+            var queryTemplateTypes = Assembly.GetEntryAssembly()
+                .GetReferencedAssemblies()
+                .Select(i => Assembly.Load(i))
+                .SelectMany(i => i.GetTypes())
+                 .Where(i => !i.GetTypeInfo().IsAbstract)
+                 .Where(i => queryTemplateInterface.IsAssignableFrom(i))
+                 .ToList();
+
+            queryTemplateTypes.ForEach(template =>
+            {
+                services.AddTransient(queryTemplateInterface, template);
+            });
+
+            services.AddSingleton<IQueryTemplateFinder, DefaultQueryTemplateFinder>();
+
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -106,6 +131,9 @@ namespace ProIdeas.UI
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            RegisterQueryTemplates(services);
+
 
 
             using (var scope = services.BuildServiceProvider().CreateScope())
