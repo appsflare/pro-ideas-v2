@@ -26,20 +26,26 @@
                     @if (Model.IsOwner(UserManager.GetUserId(User)))
                     {
 
-                        @if (Model.IsPublished)
-                        {
-                            <form class="form-inline" method="post" asp-action="Unpublish" asp-route-id="@Model.Id">
-                                <button class="btn btn-warning">Unpublish</button>
+                        <div class="col-sm-2">
+                            <form class="form-inline" method="get" asp-action="Edit" asp-route-id="@Model.Id">
+                                <button class="btn btn-default">Edit</button>
                             </form>
-                        }
-                        else
-                        {
-                            <form class="form-inline" method="post" asp-action="Publish" asp-route-id="@Model.Id">
-                                <button class="btn btn-success">Publish</button>
-                            </form>
-                        }
+                        </div>
+                        <div class="col-sm-2">
+                            @if (Model.IsPublished)
+                            {
+                                <form class="form-inline" method="post" asp-action="Unpublish" asp-route-id="@Model.Id">
+                                    <button class="btn btn-warning">Unpublish</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form class="form-inline" method="post" asp-action="Publish" asp-route-id="@Model.Id">
+                                    <button class="btn btn-success">Publish</button>
+                                </form>
+                            }
 
-
+                        </div>
                     }
 
                 </div>

@@ -6,6 +6,7 @@ using ProIdeas.Files.Contracts;
 using ProIdeas.Services.Contracts;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ProIdeas.UI.Controllers
@@ -68,6 +69,12 @@ namespace ProIdeas.UI.Controllers
         async public Task<IActionResult> GetBannerImage(string id)
         {
             var stream = await _fileStorage.GetFileStreamAsync($"{id}.png");
+
+            if (stream == Stream.Null)
+            {
+                return File("~/images/sample-image.png", "image/png");
+            }
+
             return new FileStreamResult(stream, "image/png");
         }
 

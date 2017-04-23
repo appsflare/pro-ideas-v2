@@ -1,17 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProIdeas.Authentication.Contracts;
 using ProIdeas.Services.Contracts;
 using ProIdeas.UI.Models.IdeaViewModels;
 using System.Threading.Tasks;
+
 
 namespace ProIdeas.UI.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IIdeaService _ideaService;
+        private readonly IUserIdentityProvider _userIdentityProvider;
 
-        public HomeController(IIdeaService ideaService)
+        public HomeController(IIdeaService ideaService, IUserIdentityProvider userIdentityProvider)
         {
             _ideaService = ideaService;
+            _userIdentityProvider = userIdentityProvider;
         }
 
 
@@ -21,10 +25,14 @@ namespace ProIdeas.UI.Controllers
 
 
 
-            return View(new IndexIdeasViewModel
-            {
-                Ideas = ideas
-            });
+            return View(IndexIdeasViewModel.MapFrom(ideas));
+        }
+
+        async public Task<IActionResult> MyIdeas()
+        {
+            var ideas = await _ideaService.GetUserIdeas(_userIdentityProvider.GetUserId(), 10, 1, string.Empty);
+
+            return View(IndexIdeasViewModel.MapFrom(ideas));
         }
 
         public IActionResult About()

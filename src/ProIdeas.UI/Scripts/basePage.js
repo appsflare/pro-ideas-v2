@@ -3,6 +3,7 @@
 import Turbolinks from 'turbolinks';
 Turbolinks.start();
 Turbolinks.controller.adapter.showProgressBar()
+$.material.init();
 
 export default class BasePage {
 

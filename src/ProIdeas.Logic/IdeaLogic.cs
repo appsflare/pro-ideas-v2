@@ -11,6 +11,7 @@ using ProIdeas.Infra.Commands.Idea;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Events;
 using System.Threading.Tasks;
+using ProIdeas.Authentication.Contracts;
 
 namespace ProIdeas.Logic
 {
@@ -24,12 +25,14 @@ namespace ProIdeas.Logic
         private readonly IRepository _repository;
         private readonly IDataMapper _dataMapper;
         private readonly IBus _bus;
+        private readonly IUserIdentityProvider _userIdentityProvider;
 
-        public IdeaLogic(IRepository repository, IDataMapper dataMapper, IBus bus)
+        public IdeaLogic(IRepository repository, IDataMapper dataMapper, IBus bus, IUserIdentityProvider userIdentityProvider)
         {
             _repository = repository;
             _dataMapper = dataMapper;
             _bus = bus;
+            _userIdentityProvider = userIdentityProvider;
         }
 
 
@@ -47,7 +50,7 @@ namespace ProIdeas.Logic
                 Skip = Math.Max(page, 0) * pageSize,
                 Keyword = keyword,
                 Status = Status.Published.ToString(),
-                OrderBy = "title"
+                OrderBy = nameof(Idea.Title)
             });
 
             return _dataMapper.Map<IEnumerable<IdeaDto>>(result);
@@ -156,6 +159,20 @@ namespace ProIdeas.Logic
             _repository.Update(idea);
 
             _bus.RaiseEvent(new IdeaPublishedEvent(idea.Id));
+        }
+
+        async public Task<IEnumerable<IdeaDto>> GetUserIdeas(string userId, int pageSize, int page, string keyword)
+        {
+            var result = await _repository.QueryAsync<Idea, FilterIdeaQueryTemplateParameter>(new FilterIdeaQueryTemplateParameter
+            {
+                Take = pageSize,
+                Skip = Math.Max(page, 0) * pageSize,
+                Keyword = keyword,                
+                OrderBy = nameof(Idea.Title),
+                OwnerId = userId
+            });
+
+            return _dataMapper.Map<IEnumerable<IdeaDto>>(result);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using ProIdeas.DTO;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProIdeas.UI.Models.IdeaViewModels
 {
@@ -22,6 +24,11 @@ namespace ProIdeas.UI.Models.IdeaViewModels
 
     public class IdeaInfoViewModel
     {
+        private IdeaInfoViewModel()
+        {
+
+        }
+
         public string Id { get; set; }
 
         public string Title { get; set; }
@@ -44,6 +51,37 @@ namespace ProIdeas.UI.Models.IdeaViewModels
         }
 
         public bool IsPublished => Status == "Published";
+
+        private static IdeaInfoViewModel GetIdeaInfoViewModel(IdeaDto idea)
+        {
+            return new IdeaInfoViewModel
+            {
+                Id = idea.Id,
+                Title = idea.Title,
+                Description = idea.Description,
+                IsFundingRequired = idea.IsFundingRequired,
+                FundingRequirement = idea.FundingRequirement,
+                OwnerId = idea.OwnerId,
+                Status = idea.Status,
+                Pages = idea.Pages.Select(i => new IdeaPageInfo
+                {
+                    Name = i.Name,
+                    Content = i.Content
+                }).ToList()
+            };
+        }
+
+
+        public static IdeaInfoViewModel MapFrom(IdeaDto idea)
+        {
+            return GetIdeaInfoViewModel(idea);
+        }
+
+
+        public static IdeaInfoViewModel CreateEmpty()
+        {
+            return new IdeaInfoViewModel();
+        }
 
 
 

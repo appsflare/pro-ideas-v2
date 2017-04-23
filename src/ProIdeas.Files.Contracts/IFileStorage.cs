@@ -10,6 +10,8 @@ namespace ProIdeas.Files.Contracts
     {
         Task<bool> CheckIfExistsAsync(Guid fileId);
 
+        Task<bool> CheckIfExistsAsync(string fileName);
+
         Task<Guid> AddFileAsync(string fileName, Stream fileStream, object metadata);
 
         Task<IFileInfo> GetFileInfoAsync(Guid fileId);

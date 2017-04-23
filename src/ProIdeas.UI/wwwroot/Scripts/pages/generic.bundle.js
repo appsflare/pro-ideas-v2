@@ -92,6 +92,7 @@ var possibleConstructorReturn = function (self, call) {
 //import FadeTransition from './transitions/fade';
 turbolinks.start();
 turbolinks.controller.adapter.showProgressBar();
+$.material.init();
 
 var BasePage = function () {
     function BasePage() {

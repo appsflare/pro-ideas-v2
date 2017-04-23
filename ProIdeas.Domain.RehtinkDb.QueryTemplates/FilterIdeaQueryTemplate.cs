@@ -21,13 +21,22 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
             //      return idea.title.indexOf('{queryParam.Keyword}') >-1 ||idea.description.indexOf('{queryParam.Keyword}') > -1;
             //  }})");
 
+
+
             var query = table
-             .Filter(x => x[nameof(Idea.Status)].Eq(queryParam.Status)
-             .And(x[nameof(Idea.Title)].Match(queryParam.Keyword)
+             .Filter(x => x[nameof(Idea.Title)].Match(queryParam.Keyword)
              .Or(x[nameof(Idea.Description)].Match(queryParam.Keyword)
-             .Or(x[nameof(Idea.FundingRequirement)].Match(queryParam.Keyword)))));
+             .Or(x[nameof(Idea.FundingRequirement)].Match(queryParam.Keyword))));
 
+            if (!string.IsNullOrEmpty(queryParam.Status))
+            {
+                query = query.Filter(x => x[nameof(Idea.Status)].Eq(queryParam.Status));
+            }
 
+            if (!string.IsNullOrEmpty(queryParam.OwnerId))
+            {
+                query = query.Filter(x => x[nameof(Idea.OwnerId)].Eq(queryParam.OwnerId));
+            }
 
             if (queryParam.Skip.HasValue)
             {

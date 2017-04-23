@@ -18,6 +18,8 @@ namespace ProIdeas.Services.Contracts
 
         void Unpublish(string ideaId);
 
+        Task<IEnumerable<IdeaDto>> GetUserIdeas(string userId, int pageSize, int page, string keyword);
+
         Task<IEnumerable<IdeaDto>> GetIdeasAsync(int pageSize, int page);
 
         Task<IEnumerable<IdeaDto>> SearchIdeasAsync(string keyword, int pageSize, int page);

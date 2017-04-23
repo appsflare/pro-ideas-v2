@@ -3499,6 +3499,7 @@ var o,i,s,a,u;return i=null!=n?n:{},a=i.restorationIdentifier,s=i.restorationDat
 //import FadeTransition from './transitions/fade';
 turbolinks.start();
 turbolinks.controller.adapter.showProgressBar();
+$.material.init();
 
 var BasePage = function () {
     function BasePage() {

@@ -35,10 +35,35 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
         async public Task<bool> CheckIfExistsAsync(Guid fileId)
         {
-            var file = await _bucket.GetFileInfoAsync(fileId);
 
-            return file != null;
+            try
+            {
+                var file = await _bucket.GetFileInfoAsync(fileId);
 
+                return file != null;
+            }
+            catch
+            {
+
+                return false;
+            }
+
+        }
+
+        async public Task<bool> CheckIfExistsAsync(string fileName)
+        {
+            try
+            {
+                var file = await _bucket.GetFileInfoByNameAsync(fileName);
+
+                return file != null;
+
+            }
+            catch
+            {
+
+                return false;
+            }
         }
 
         async public Task<IEnumerable<IFileInfo>> GetAllRevisionsAsync(string fileName)
@@ -97,6 +122,12 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
         async public Task<Stream> GetFileStreamAsync(string fileName)
         {
+            if (!await CheckIfExistsAsync(fileName))
+            {
+                return Stream.Null;
+            }
+
+
             var stream = new MemoryStream();
             await _bucket.DownloadToStreamByNameAsync(fileName, stream);
             stream.Seek(0, SeekOrigin.Begin);

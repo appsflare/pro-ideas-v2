@@ -23,7 +23,7 @@ namespace ProIdeas.UI.Controllers
         {
             var idea = await _ideaService.GetIdeaAsync(id);
 
-            var model = GetIdeaInfoViewModel(idea);
+            var model = IdeaInfoViewModel.MapFrom(idea);
             if (model.Pages.Any())
             {
                 model.Pages.First().IsActive = true;
@@ -36,7 +36,7 @@ namespace ProIdeas.UI.Controllers
         // GET: Idea/Create
         public IActionResult Create()
         {
-            return View(new IdeaInfoViewModel());
+            return View(IdeaInfoViewModel.CreateEmpty());
         }
 
         [HttpGet, Route("{id}/edit")]
@@ -45,27 +45,9 @@ namespace ProIdeas.UI.Controllers
         {
             var idea = await _ideaService.GetIdeaAsync(id);
 
-            return View(GetIdeaInfoViewModel(idea));
+            return View(IdeaInfoViewModel.MapFrom(idea));
         }
 
-        private static IdeaInfoViewModel GetIdeaInfoViewModel(DTO.IdeaDto idea)
-        {
-            return new IdeaInfoViewModel
-            {
-                Id = idea.Id,
-                Title = idea.Title,
-                Description = idea.Description,
-                IsFundingRequired = idea.IsFundingRequired,
-                FundingRequirement = idea.FundingRequirement,
-                OwnerId = idea.OwnerId,
-                Status = idea.Status,
-                Pages = idea.Pages.Select(i => new IdeaPageInfo
-                {
-                    Name = i.Name,
-                    Content = i.Content
-                }).ToList()
-            };
-        }
 
         [HttpGet, Route("{id}/images")]
         // GET: Idea/Images
@@ -73,7 +55,7 @@ namespace ProIdeas.UI.Controllers
         {
             var idea = await _ideaService.GetIdeaAsync(id);
 
-            return View(GetIdeaInfoViewModel(idea));
+            return View(IdeaInfoViewModel.MapFrom(idea));
         }
 
         [HttpGet, Route("{id}/pages")]
@@ -82,19 +64,19 @@ namespace ProIdeas.UI.Controllers
         {
             var idea = await _ideaService.GetIdeaAsync(id);
 
-            return View(GetIdeaInfoViewModel(idea));
+            return View(IdeaInfoViewModel.MapFrom(idea));
         }
 
         [HttpGet, Route("index")]
         public IActionResult Index()
         {
-            return View("Search", new IdeaSearchViewModel { Keyword = string.Empty });
+            return View("Search", IdeaSearchViewModel.CreateWithKeyword(string.Empty));
         }
 
         [HttpGet, Route("search/{query}")]
         public IActionResult Search(string query)
         {
-            return View("Search", new IdeaSearchViewModel { Keyword = query });
+            return View("Search", IdeaSearchViewModel.CreateWithKeyword(query));
         }
 
         [HttpPost, Route("{id}/publish")]
