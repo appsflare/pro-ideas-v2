@@ -11,63 +11,69 @@
 @section Scripts{
     <script src="~/Scripts/pages/ideas/pages.bundle.js"></script>
 }
-<input id="IdeaId" type="hidden" value="@Model.Id" />
 
-<div class="container create-idea" id="idea-pages">
+<script id="pages-template">
+    <div>
+        <h4 class="common-page-header">Post your new idea</h4>
 
-    <h4 class="common-page-header">Post your new idea</h4>
-
-    <section class="row">
-        <ul class="nav nav-pills nav-pills-vertical" role="tablist">
-            <li class="complete"><a href="/ideas/@Model.Id/edit">Basic Information</a></li>
-            <li class="complete"><a href="/ideas/@Model.Id/images">Images</a></li>
-            <li class="active"><a href="/ideas/@Model.Id/pages">Pages</a></li>@*<li class=""><a href="#payments">Review</a></li>*@
-        </ul>
-        <div class="content">
-            <aside class="col-sm-3">
-                <ul class="nav nav-pills nav-stacked nav-pills-horizontal" data-bind="foreach: pages">
-                    <li class="active" data-bind="css:{ active: $parent.isCurrentPage($data) },click: function(){$parent.editPage($data)}">
-                        <a><span data-bind="text: name"></span></a>
-                    </li>
-                    @*<li>
-                            <a href="#">
-                                <div class="col-sm-12 input-group">
-                                    <div class="form-group is-empty">
-                                        <input class="form-control" value="" type="text" placeholder="Enter page name" autocomplete="off" data-bind="value: currentPage.name" />
-                                        <span class="material-icons form-control-feedback">clear</span>
-                                        <span class="material-input"></span>
-                                        <span class="help-block validation-message"></span>
+        <section class="row">
+            <ul class="nav nav-pills nav-pills-vertical" role="tablist">
+                <li class="complete"><a href="/ideas/@Model.Id/edit">Basic Information</a></li>
+                <li class="complete"><a href="/ideas/@Model.Id/images">Images</a></li>
+                <li class="active"><a href="/ideas/@Model.Id/pages">Pages</a></li>@*<li class=""><a href="#payments">Review</a></li>*@
+            </ul>
+            <div class="content">
+                <aside class="col-sm-3">
+                    <ul class="nav nav-pills nav-stacked nav-pills-horizontal" data-bind="foreach: pages">
+                        <li class="active" data-bind="css:{ active: $parent.isCurrentPage($data) },click: function(){$parent.editPage($data)}">
+                            <a><span data-bind="text: name"></span></a>
+                        </li>
+                        @*<li>
+                                <a href="#">
+                                    <div class="col-sm-12 input-group">
+                                        <div class="form-group is-empty">
+                                            <input class="form-control" value="" type="text" placeholder="Enter page name" autocomplete="off" data-bind="value: currentPage.name" />
+                                            <span class="material-icons form-control-feedback">clear</span>
+                                            <span class="material-input"></span>
+                                            <span class="help-block validation-message"></span>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        </li>*@
-                </ul>
-                <button class="btn btn-simple create-page" data-bind="if: canAddPage, click: addPage">
-                    <i class="material-icons">add</i><span>Create New Page</span>
-                </button>
-            </aside>
-            <content class="col-sm-9 tab-content" data-bind="if: currentPage">
-                <div class="col-sm-12 input-group" data-bind="with: currentPage()">
-                    <div class="col-sm-12 input-group">
-                        <div class="form-group is-empty">
-                            <input class="form-control" type="text" placeholder="Enter page name" autocomplete="off" data-bind="textInput: name" />
-                            <span class="material-icons form-control-feedback">clear</span>
-                            <span class="material-input"></span>
-                            <span class="help-block validation-message"></span>
+                                </a>
+                            </li>*@
+                    </ul>
+                    <button class="btn btn-simple create-page" data-bind="if: canAddPage, click: addPage">
+                        <i class="material-icons">add</i><span>Create New Page</span>
+                    </button>
+                </aside>
+                <content class="col-sm-9 tab-content" data-bind="if: currentPage">
+                    <div class="col-sm-12 input-group" data-bind="with: currentPage()">
+                        <div class="col-sm-12 input-group">
+                            <div class="form-group is-empty">
+                                <input class="form-control" type="text" placeholder="Enter page name" autocomplete="off" data-bind="textInput: name" />
+                                <span class="material-icons form-control-feedback">clear</span>
+                                <span class="material-input"></span>
+                                <span class="help-block validation-message"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 input-group">
+                            <rich-text-editor params="placeholder:'Page content *',value: content"></rich-text-editor>
                         </div>
                     </div>
-                    <div class="col-sm-12 input-group">
-                        <rich-text-editor params="placeholder:'Page content *',value: content"></rich-text-editor>
-                    </div>
-                </div>
-            </content>
-        </div>
-    </section>
-    <section class="row">
-        <button class="btn btn-primary pull-right" data-bind="click: finish">Review</button>
-        <a asp-controller="Idea" asp-action="Images" asp-route-id="@Model.Id" class="btn btn-secondary pull-right">Previous</a>
+                </content>
+            </div>
+        </section>
+        <section class="row">
+            <button class="btn btn-primary pull-right" data-bind="click: finish">Review</button>
+            <a asp-controller="Idea" asp-action="Images" asp-route-id="@Model.Id" class="btn btn-secondary pull-right">Previous</a>
 
-    </section>
+        </section>
+    </div>
+</script>
+
+<input id="IdeaId" type="hidden" value="@Model.Id" />
+
+<div class="container create-idea" id="idea-pages" data-bind="template:{name:'pages-template'}">
+    
 </div>
 
 
