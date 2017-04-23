@@ -33,15 +33,15 @@
 
                 @if (ViewBag.ErrorMessage != null)
                 {
-                    <div class="alert alert-danger">
-                        <div class="alert-icon">
-                            <i class="material-icons">error_outline</i>
-                        </div>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span><i class="material-icons">clear</i></span>
-                        </button>
-                        <div>@ViewBag.ErrorMessage</div>
+                <div class="alert alert-danger">
+                    <div class="alert-icon">
+                        <i class="material-icons">error_outline</i>
                     </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span><i class="material-icons">clear</i></span>
+                    </button>
+                    <div>@ViewBag.ErrorMessage</div>
+                </div>
                 }
 
                 <div class="content">
@@ -128,5 +128,6 @@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/Scripts/pages/generic.bundle.js"></script>
 }
 
