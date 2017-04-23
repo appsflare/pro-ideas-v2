@@ -13,6 +13,7 @@ namespace ProIdeas.UI.Controllers
 {
     [Produces("application/json")]
     [Route("api/ideas")]
+    [Authorize]
     public class IdeaApiController : Controller
     {
 
