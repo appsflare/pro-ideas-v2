@@ -6,6 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2372A970-DCA2-4FD7-B573-8243BBBDF7FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C298BC5C-DA23-4544-B48A-8194424984E2}"
+	ProjectSection(SolutionItems) = preProject
+		..\.dockerignore = ..\.dockerignore
+		..\.gitignore = ..\.gitignore
+		..\Dockerfile = ..\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProIdeas.Services", "ProIdeas.Services\ProIdeas.Services.csproj", "{71F17200-A3D1-459C-9744-FDC5D25A2309}"
 EndProject
