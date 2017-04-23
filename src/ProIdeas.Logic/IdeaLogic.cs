@@ -18,7 +18,7 @@ namespace ProIdeas.Logic
     public class IdeaLogic : IIdeaLogic,
         IHandler<CreateIdeaCommand>,
         IHandler<UpdateIdeaCommand>,
-        IHandler<DeleteIdeaCommand>
+        IHandler<DeleteIdeaCommand>        
     {
         private readonly IRepository _repository;
         private readonly IDataMapper _dataMapper;
@@ -50,20 +50,6 @@ namespace ProIdeas.Logic
             });
 
             return _dataMapper.Map<IEnumerable<IdeaDto>>(result);
-
-            //return Task.Factory.StartNew(() =>
-            //{
-            //    var query = new QueryBuilder<Idea>()
-            //    //.WithCondition(i => i.Status == Status.Published.ToString() || i.Title.Contains(keyword) || i.Description.Contains(keyword) || i.FundingRequirement.Contains(keyword))
-            //    .WithCondition(i=> i.Title.Contains(keyword))
-            //    .OrderBy(i => i.OrderBy(j => j.Title))
-            //    .Skip(Math.Max(page, 0) * pageSize)
-            //    .Take(pageSize)
-            //    .Build();
-
-
-            //    return _dataMapper.Map<IEnumerable<IdeaDto>>(_repository.Query(query));
-            //});
         }
 
 
@@ -98,9 +84,6 @@ namespace ProIdeas.Logic
 
         public void Handle(CreateIdeaCommand message)
         {
-            if (!message.IsValid())
-            { throw new ArgumentException("invalid command message", nameof(message)); }
-
 
             var newIdea = _dataMapper.Map<Idea>(message.Idea);
             newIdea.Status = Status.Draft.ToString();
@@ -118,9 +101,6 @@ namespace ProIdeas.Logic
 
         public void Handle(UpdateIdeaCommand message)
         {
-            if (!message.IsValid())
-            { throw new ArgumentException("invalid command message", nameof(message)); }
-
             var ideaTobeUpdated = _dataMapper.Map<Idea>(message.Idea);
 
             var existing = _repository.GetOne<Idea>(message.Idea.Id);
@@ -138,10 +118,6 @@ namespace ProIdeas.Logic
 
         public void Handle(DeleteIdeaCommand message)
         {
-            if (!message.IsValid())
-            { throw new ArgumentException("invalid command message", nameof(message)); }
-
-
             var idea = _repository.GetOne<Idea>(message.IdeaId);
 
             if (idea == null)

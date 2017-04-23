@@ -173,6 +173,16 @@ var ApiClient = function () {
             return utils.uploadFile('/api/ideas/' + id + '/banner', [file]);
         }
     }, {
+        key: 'saveIdeaPages',
+        value: function saveIdeaPages(id, pages) {
+            return utils.put('/api/ideas/' + id + '/pages', pages);
+        }
+    }, {
+        key: 'getIdeaPages',
+        value: function getIdeaPages(id) {
+            return utils.get('/api/ideas/' + id + '/pages');
+        }
+    }, {
         key: 'getIdeas',
         value: function getIdeas() {
             return Promise.resolve([]);
@@ -3528,6 +3538,21 @@ var BasePage = function () {
     return BasePage;
 }();
 
+var navigationHelper = {
+    toIdeaImages: function toIdeaImages(id) {
+        document.location.href = "/ideas/" + id + "/images";
+    },
+    toEditIdea: function toEditIdea(id) {
+        document.location.href = "/ideas/" + id + "/edit";
+    },
+    toIdeaPages: function toIdeaPages(id) {
+        document.location.href = "/ideas/" + id + "/pages";
+    },
+    toIdeaDetails: function toIdeaDetails(id) {
+        document.location.href = "/ideas/" + id + "/details";
+    }
+};
+
 var ImagesPage = function (_BasePage) {
     inherits(ImagesPage, _BasePage);
 
@@ -3550,12 +3575,14 @@ var ImagesPage = function (_BasePage) {
                 actions: {
                     next: function next(id, file) {
                         if (file) {
-                            return _this2._client.uploadIdeaBanner(id, file).then(function (data) {}).catch(function (e) {
+                            return _this2._client.uploadIdeaBanner(id, file).then(function (data) {
+                                navigationHelper.toIdeaPages(id);
+                            }).catch(function (e) {
                                 console.error(e);
                             });
                         }
 
-                        document.location.href = '/ideas/' + id + '/pages';
+                        navigationHelper.toIdeaPages(id);
                         return Promise.resolve(true);
                     }
                 }

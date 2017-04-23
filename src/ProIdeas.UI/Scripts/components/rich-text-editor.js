@@ -12,23 +12,23 @@ ko.components.register('rich-text-editor', {
     viewModel: {
         createViewModel(params, { element }) {
 
-            var viewModel = new RichTextEditorViewModel(params);
+            const viewModel = new RichTextEditorViewModel(params);
 
-            var editor = new Quill(element.querySelector('.rich-text-editor'), {
+            const editorElement = element.querySelector('.rich-text-editor');
+            editorElement.innerHTML = params.value();
+
+            const editor = new Quill(editorElement, {
                 theme: 'snow'
-            });
-
-
-            editor.setText(params.value());
+            });            
 
             viewModel.value.subscribe(newValue => {
-                if (params.value() == editor.getText())
+                if (params.value() == editor.container.firstChild.innerHTML)
                 { return; }
-                editor.setText(params.value());
+                editor.container.firstChild.innerHTML = params.value();
             });
 
-            editor.on('editor-change', () => {
-                viewModel.value(editor.getText());
+            editor.on('text-change', () => {                
+                viewModel.value(editor.container.firstChild.innerHTML);
             });
 
             return viewModel;

@@ -34,7 +34,7 @@ namespace ProIdeas.Services
         {
             var command = new UpdateIdeaCommand(idea);
 
-            _bus.SendCommand(command);            
+            _bus.SendCommand(command);
         }
 
         public Task<IdeaDto> GetIdeaAsync(string ideaId)
@@ -45,6 +45,16 @@ namespace ProIdeas.Services
         public Task<IEnumerable<IdeaDto>> GetIdeasAsync(int pageSize, int page)
         {
             return _ideaLogic.GetIdeas(pageSize, page, string.Empty);
+        }
+
+        public Task<IEnumerable<IdeaDto>> SearchIdeasAsync(string keyword, int pageSize, int page)
+        {
+            return _ideaLogic.GetIdeas(pageSize, page, keyword);
+        }
+
+        public void SavePages(string ideaId, IEnumerable<PageDto> pages)
+        {
+            _bus.SendCommand(new SaveIdeaPagesCommand(ideaId, pages));
         }
     }
 }

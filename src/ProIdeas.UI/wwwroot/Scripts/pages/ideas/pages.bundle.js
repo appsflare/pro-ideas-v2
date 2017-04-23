@@ -173,6 +173,16 @@ var ApiClient = function () {
             return utils.uploadFile('/api/ideas/' + id + '/banner', [file]);
         }
     }, {
+        key: 'saveIdeaPages',
+        value: function saveIdeaPages(id, pages) {
+            return utils.put('/api/ideas/' + id + '/pages', pages);
+        }
+    }, {
+        key: 'getIdeaPages',
+        value: function getIdeaPages(id) {
+            return utils.get('/api/ideas/' + id + '/pages');
+        }
+    }, {
         key: 'getIdeas',
         value: function getIdeas() {
             return Promise.resolve([]);
@@ -12816,21 +12826,22 @@ knockout.components.register('rich-text-editor', {
 
             var viewModel = new RichTextEditorViewModel(params);
 
-            var editor = new Quill(element.querySelector('.rich-text-editor'), {
+            var editorElement = element.querySelector('.rich-text-editor');
+            editorElement.innerHTML = params.value();
+
+            var editor = new Quill(editorElement, {
                 theme: 'snow'
             });
 
-            editor.setText(params.value());
-
             viewModel.value.subscribe(function (newValue) {
-                if (params.value() == editor.getText()) {
+                if (params.value() == editor.container.firstChild.innerHTML) {
                     return;
                 }
-                editor.setText(params.value());
+                editor.container.firstChild.innerHTML = params.value();
             });
 
-            editor.on('editor-change', function () {
-                viewModel.value(editor.getText());
+            editor.on('text-change', function () {
+                viewModel.value(editor.container.firstChild.innerHTML);
             });
 
             return viewModel;
@@ -14380,9 +14391,11 @@ var PagesViewModel = function () {
     function PagesViewModel(_ref2) {
         var _this = this;
 
-        var _ref2$idea = _ref2.idea,
-            idea = _ref2$idea === undefined ? {} : _ref2$idea,
-            save = _ref2.actions.save;
+        var _ref2$pages = _ref2.pages,
+            pages = _ref2$pages === undefined ? [] : _ref2$pages,
+            _ref2$actions = _ref2.actions,
+            savePages = _ref2$actions.savePages,
+            finish = _ref2$actions.finish;
         classCallCheck(this, PagesViewModel);
 
 
@@ -14392,9 +14405,9 @@ var PagesViewModel = function () {
             decorateInputElement: true
         });
 
-        this.actions = { save: save };
+        this.actions = { savePages: savePages, finish: finish };
         this.isSaving = knockout.observable(false);
-        this._initForm(idea);
+        this._init(pages);
 
         this.canAddPage = knockout.computed(function () {
             return _this.pages().length < 4;
@@ -14402,15 +14415,15 @@ var PagesViewModel = function () {
     }
 
     createClass(PagesViewModel, [{
-        key: '_initForm',
-        value: function _initForm(_ref3) {
-            var _ref3$pages = _ref3.pages,
-                pages = _ref3$pages === undefined ? [] : _ref3$pages;
-
+        key: '_init',
+        value: function _init(pages) {
             this.currentPage = knockout.observable(false);
             this.pages = knockout.observableArray(pages.map(function (p) {
                 return new PageViewModel(p);
             }));
+            if (this.pages().length) {
+                this.currentPage(this.pages()[0]);
+            }
         }
     }, {
         key: '_validate',
@@ -14445,6 +14458,17 @@ var PagesViewModel = function () {
             });
         }
     }, {
+        key: 'getPages',
+        value: function getPages() {
+            return this.pages().map(function (i) {
+                var _ko$toJS = knockout.toJS(i),
+                    name = _ko$toJS.name,
+                    content = _ko$toJS.content;
+
+                return { name: name, content: content };
+            });
+        }
+    }, {
         key: 'savePages',
         value: function savePages() {
             var _this2 = this;
@@ -14452,7 +14476,7 @@ var PagesViewModel = function () {
             var savePages = this.actions.savePages;
 
             this.isSaving(true);
-            savePages(this.pages()).then(function (res) {
+            return savePages(this.getPages()).then(function (res) {
                 _this2.isSaving(false);
             }).catch(function (e) {
                 _this2.isSaving(false);
@@ -14463,7 +14487,9 @@ var PagesViewModel = function () {
         value: function finish() {
             var finish = this.actions.finish;
 
-            return finish(form);
+            return this.savePages().then(function () {
+                return finish();
+            });
         }
     }]);
     return PagesViewModel;
@@ -14521,6 +14547,21 @@ var BasePage = function () {
     return BasePage;
 }();
 
+var navigationHelper = {
+    toIdeaImages: function toIdeaImages(id) {
+        document.location.href = "/ideas/" + id + "/images";
+    },
+    toEditIdea: function toEditIdea(id) {
+        document.location.href = "/ideas/" + id + "/edit";
+    },
+    toIdeaPages: function toIdeaPages(id) {
+        document.location.href = "/ideas/" + id + "/pages";
+    },
+    toIdeaDetails: function toIdeaDetails(id) {
+        document.location.href = "/ideas/" + id + "/details";
+    }
+};
+
 var IdeaPagesPage = function (_BasePage) {
     inherits(IdeaPagesPage, _BasePage);
 
@@ -14536,18 +14577,23 @@ var IdeaPagesPage = function (_BasePage) {
     createClass(IdeaPagesPage, [{
         key: 'onReady',
         value: function onReady() {
+            var _this2 = this;
+
             console.log('edit page ready');
-            this._client.getIdea($('#IdeaId').val()).then(function (ideaDetails) {
+            this._client.getIdea($('#IdeaId').val()).then(function (_ref) {
+                var id = _ref.id,
+                    pages = _ref.pages;
+
 
                 var viewModel = new PagesViewModel({
-                    idea: ideaDetails,
+                    pages: pages,
                     actions: {
-                        savePages: function savePages(pages) {
+                        savePages: function savePages(pagestoSave) {
                             //TODO: call api
-                            return Promise.resolve(pages);
+                            return _this2._client.saveIdeaPages(id, pagestoSave);
                         },
                         finish: function finish() {
-                            document.location.href = '/ideas/' + ideaDetails.id + '/details';
+                            navigationHelper.toIdeaDetails(id);
                         }
                     }
                 });

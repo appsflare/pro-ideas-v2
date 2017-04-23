@@ -3,6 +3,7 @@ import ko from 'knockout';
 
 import IdeaBasicInfoViewModel from '../../modules/ideas/ideaBasicInfoViewModel';
 import BasePage from '../../basePage';
+import navigate from '../../modules/navigationHelper';
 
 class EditPage extends BasePage {
     constructor(client) {
@@ -20,8 +21,8 @@ class EditPage extends BasePage {
                 actions: {
                     save: (idea) => {
                         return this._client.updateIdea(idea)
-                            .then(data => {
-                                document.location.href = `/ideas/${idea.id}/images`;
+                            .then(data => {                                
+                                navigate.toIdeaImages(idea.id)
                             });
                     }
                 }

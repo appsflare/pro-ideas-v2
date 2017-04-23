@@ -83,6 +83,14 @@ export default class ApiClient {
         return utils.uploadFile(`/api/ideas/${id}/banner`, [file]);
     }
 
+    saveIdeaPages(id, pages) {
+        return utils.put(`/api/ideas/${id}/pages`, pages);
+    }
+
+    getIdeaPages(id) {
+        return utils.get(`/api/ideas/${id}/pages`);
+    }
+
     getIdeas() {
         return Promise.resolve([]);
     }

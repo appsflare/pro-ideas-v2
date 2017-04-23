@@ -16,7 +16,7 @@ class PageViewModel {
 
 export default class PagesViewModel {
 
-    constructor({ idea = {}, actions: {save} }) {
+    constructor({ pages = [], actions: {savePages, finish} }) {
 
         ko.validation.init({
             errorElementClass: 'has-error',
@@ -24,17 +24,20 @@ export default class PagesViewModel {
             decorateInputElement: true
         });
 
-        this.actions = { save };
+        this.actions = { savePages, finish };
         this.isSaving = ko.observable(false);
-        this._initForm(idea);
+        this._init(pages);
 
         this.canAddPage = ko.computed(() => this.pages().length < 4);
 
     }
 
-    _initForm({pages = []}) {
+    _init(pages) {
         this.currentPage = ko.observable(false);
         this.pages = ko.observableArray(pages.map(p => new PageViewModel(p)));
+        if (this.pages().length) {
+            this.currentPage(this.pages()[0]);
+        }
 
     }
 
@@ -62,10 +65,18 @@ export default class PagesViewModel {
         this.pages.remove(p => p.name == page.name);
     }
 
+    getPages() {
+        return this.pages()
+            .map(i => {
+                const { name, content } = ko.toJS(i);
+                return { name, content };
+            });
+    }
+
     savePages() {
         const { savePages} = this.actions;
         this.isSaving(true);
-        savePages(this.pages())
+        return savePages(this.getPages())
             .then(res => {
                 this.isSaving(false);
             }).catch(e => {
@@ -75,7 +86,7 @@ export default class PagesViewModel {
 
     finish() {
         const { finish } = this.actions;
-        return finish(form);
+        return this.savePages().then(() => finish());
     }
 
 

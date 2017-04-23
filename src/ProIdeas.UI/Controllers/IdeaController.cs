@@ -16,13 +16,6 @@ namespace ProIdeas.UI.Controllers
             _ideaService = ideaService;
         }
 
-        [HttpGet, Route("index")]
-        // GET: Idea
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         // GET: Idea/Details/5
         [HttpGet, Route("{id}/details")]
         public ActionResult Details(int id)
@@ -73,6 +66,18 @@ namespace ProIdeas.UI.Controllers
 
             return View(GetIdeaInfoViewModel(idea));
         }
-        
+
+        [HttpGet, Route("index")]
+        public IActionResult Index()
+        {
+            return View("Search", new IdeaSearchViewModel { Keyword = string.Empty });
+        }
+
+        [HttpGet, Route("search/{query}")]
+        public IActionResult Search(string query)
+        {
+            return View("Search", new IdeaSearchViewModel { Keyword = query });
+        }
+
     }
 }

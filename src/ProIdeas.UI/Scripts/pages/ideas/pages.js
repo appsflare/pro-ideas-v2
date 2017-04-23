@@ -4,6 +4,7 @@ import '../../components/rich-text-editor';
 
 import PagesViewModel from '../../modules/ideas/pagesViewModel';
 import BasePage from '../../basePage';
+import navigate from '../../modules/navigationHelper';
 
 class IdeaPagesPage extends BasePage {
     constructor(client) {
@@ -13,24 +14,25 @@ class IdeaPagesPage extends BasePage {
 
     onReady() {
         console.log('edit page ready');
-        this._client.getIdea($('#IdeaId').val()).then(ideaDetails => {
+        this._client.getIdea($('#IdeaId').val())
+            .then(({id, pages}) => {
 
 
-            var viewModel = new PagesViewModel({
-                idea: ideaDetails,
-                actions: {
-                    savePages: pages => {
-                        //TODO: call api
-                        return Promise.resolve(pages);
-                    },
-                    finish: () => {
-                        document.location.href = `/ideas/${ideaDetails.id}/details`;
+                var viewModel = new PagesViewModel({
+                    pages,
+                    actions: {
+                        savePages: pagestoSave => {
+                            //TODO: call api
+                            return this._client.saveIdeaPages(id, pagestoSave);
+                        },
+                        finish: () => {                            
+                            navigate.toIdeaDetails(id);
+                        }
                     }
-                }
-            });
+                });
 
-            ko.applyBindings(viewModel, document.getElementById('idea-pages'));
-        });
+                ko.applyBindings(viewModel, document.getElementById('idea-pages'));
+            });
 
     }
 }

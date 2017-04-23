@@ -173,6 +173,16 @@ var ApiClient = function () {
             return utils.uploadFile('/api/ideas/' + id + '/banner', [file]);
         }
     }, {
+        key: 'saveIdeaPages',
+        value: function saveIdeaPages(id, pages) {
+            return utils.put('/api/ideas/' + id + '/pages', pages);
+        }
+    }, {
+        key: 'getIdeaPages',
+        value: function getIdeaPages(id) {
+            return utils.get('/api/ideas/' + id + '/pages');
+        }
+    }, {
         key: 'getIdeas',
         value: function getIdeas() {
             return Promise.resolve([]);
@@ -3465,6 +3475,21 @@ var BasePage = function () {
     return BasePage;
 }();
 
+var navigationHelper = {
+    toIdeaImages: function toIdeaImages(id) {
+        document.location.href = "/ideas/" + id + "/images";
+    },
+    toEditIdea: function toEditIdea(id) {
+        document.location.href = "/ideas/" + id + "/edit";
+    },
+    toIdeaPages: function toIdeaPages(id) {
+        document.location.href = "/ideas/" + id + "/pages";
+    },
+    toIdeaDetails: function toIdeaDetails(id) {
+        document.location.href = "/ideas/" + id + "/details";
+    }
+};
+
 var EditPage = function (_BasePage) {
     inherits(EditPage, _BasePage);
 
@@ -3490,7 +3515,7 @@ var EditPage = function (_BasePage) {
                     actions: {
                         save: function save(idea) {
                             return _this2._client.updateIdea(idea).then(function (data) {
-                                document.location.href = '/ideas/' + idea.id + '/images';
+                                navigationHelper.toIdeaImages(idea.id);
                             });
                         }
                     }

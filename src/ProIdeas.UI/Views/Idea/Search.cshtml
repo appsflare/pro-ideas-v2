@@ -1,0 +1,48 @@
+@model IdeaInfoViewModel
+@{
+    ViewData["Title"] = "Creat your idea";
+}
+
+@section Styles{
+    <link href="~/css/quill.core.css" rel="stylesheet" />
+    <link href="~/css/quill.snow.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    <script src="~/Scripts/pages/ideas/pages.bundle.js"></script>
+}
+
+<div class="container create-idea" id="search-container">
+
+    <section class="row">
+        <div class="col-sm-12 input-group">
+            <input type="text" class="form-control" placeholder="Search for ideas" data-bind="textInput: keyword" />
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default" data-bind="click: search">
+                    <span class="material-icons">search</span>
+                </button>
+            </div>
+        </div>
+    </section>
+    <section class="row">
+        <div class="content" data-bind="foreach: results">
+            <div class="col-sm-4 idea-card-wrap">
+                <div class="idea-card">
+                    <div class="card-image"><img data-bind="attr:{src:banner}" /></div>
+                    <div class="card-content-container">
+                        <h3 class="card-header" data-bind="text: title"></h3>
+                        <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
+                        <p class="card-content" data-bind="description: title">
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span data-bind="text: likes">12</span></button>
+                        <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span data-bind="text: comments">25</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</div>

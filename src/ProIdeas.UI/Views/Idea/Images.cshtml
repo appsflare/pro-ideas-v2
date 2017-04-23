@@ -6,7 +6,7 @@
 @section Scripts{
     <script src="~/Scripts/pages/ideas/images.bundle.js"></script>
 }
-
+<input id="IdeaId" type="hidden" value="@Model.Id" />
 <div class="container create-idea">
     <div class="row">
         <h4 class="common-page-header">Post your new idea</h4>
@@ -18,7 +18,6 @@
             </ul>
             <div class="content" id="idea-image-upload-form">
                 <div data-bind="with: form" class="row">
-                    <input id="IdeaId" type="hidden" value="@Model.Id" />
                     <file-uploader params="icon: file.icon, value: file.value"></file-uploader>
                     <div data-bind="if: file.selectedFile" class="card card-profile card-plain">
                         <div class="card-image">

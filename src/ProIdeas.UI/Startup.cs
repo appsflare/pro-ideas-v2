@@ -104,10 +104,14 @@ namespace ProIdeas.UI
             services.AddScoped<IMessageFilter<CreateIdeaCommand>, CreateIdeaCommandValidationFilter>();
             services.AddScoped<IMessageFilter<UpdateIdeaCommand>, UpdateIdeaCommandValidationFilter>();
             services.AddScoped<IMessageFilter<DeleteIdeaCommand>, DeleteIdeaCommandValidationFilter>();
+            services.AddScoped<IMessageFilter<SaveIdeaPagesCommand>, SaveIdeaPagesCommandValidationFilter>();
+
 
             services.AddScoped<IHandler<CreateIdeaCommand>, IdeaLogic>();
             services.AddScoped<IHandler<UpdateIdeaCommand>, IdeaLogic>();
             services.AddScoped<IHandler<DeleteIdeaCommand>, IdeaLogic>();
+            services.AddScoped<IHandler<SaveIdeaPagesCommand>, IdeaPagesLogic>();
+
 
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IIdeaService, IdeaService>();

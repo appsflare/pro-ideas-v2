@@ -86,5 +86,24 @@ namespace ProIdeas.UI.Controllers
 
             return Json(addedFiles);
         }
+
+        [HttpGet]
+        [Route("{id}/pages")]
+        async public Task<IActionResult> GetPages([FromRoute]string id)
+        {
+            var idea = await _ideaService.GetIdeaAsync(id);
+
+            return Json(idea.Pages);
+        }
+
+
+        [HttpPut]
+        [Route("{id}/pages")]
+        async public Task<IActionResult> SavePages([FromRoute]string id, [FromBody]IEnumerable<PageDto> pages)
+        {
+            _ideaService.SavePages(id, pages);
+
+            return Json(new { message = "Pages saved successfully" });
+        }
     }
 }

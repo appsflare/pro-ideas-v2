@@ -5,6 +5,7 @@ import '../../components/file-uploader';
 import IdeaImagesViewModel from '../../modules/ideas/ideaImagesViewModel';
 
 import BasePage from '../../basePage';
+import navigate from '../../modules/navigationHelper';
 
 class ImagesPage extends BasePage {
     constructor(client) {
@@ -21,14 +22,14 @@ class ImagesPage extends BasePage {
                     if (file) {
                         return this._client.uploadIdeaBanner(id, file)
                             .then(data => {
-
+                                navigate.toIdeaPages(id);
                             })
                             .catch(e => {
                                 console.error(e);
                             });
                     }
 
-                    document.location.href = `/ideas/${id}/pages`;
+                    navigate.toIdeaPages(id);
                     return Promise.resolve(true);
                 }
             }
