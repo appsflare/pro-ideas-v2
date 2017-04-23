@@ -110,6 +110,8 @@ namespace ProIdeas.UI
             services.AddScoped<IHandler<CreateIdeaCommand>, IdeaLogic>();
             services.AddScoped<IHandler<UpdateIdeaCommand>, IdeaLogic>();
             services.AddScoped<IHandler<DeleteIdeaCommand>, IdeaLogic>();
+            services.AddScoped<IHandler<PublishIdeaCommand>, IdeaLogic>();
+            services.AddScoped<IHandler<UnpublishIdeaCommand>, IdeaLogic>();
             services.AddScoped<IHandler<SaveIdeaPagesCommand>, IdeaPagesLogic>();
 
 

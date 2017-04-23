@@ -14,6 +14,10 @@ namespace ProIdeas.Services.Contracts
 
         void SavePages(string ideaId, IEnumerable<PageDto> pages);
 
+        void Publish(string ideaId);
+
+        void Unpublish(string ideaId);
+
         Task<IEnumerable<IdeaDto>> GetIdeasAsync(int pageSize, int page);
 
         Task<IEnumerable<IdeaDto>> SearchIdeasAsync(string keyword, int pageSize, int page);

@@ -6,156 +6,80 @@
     <script src="~/Scripts/pages/generic.bundle.js"></script>
 }
 
-@if (Model.Ideas.Any())
-{
-    var index = 0;
-    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
-        <ol class="carousel-indicators">
+@*@if (Model.Ideas.Any())
+    {
+        var index = 0;
+        <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+            <ol class="carousel-indicators">
 
-            @foreach (var idea in Model.Ideas)
-            {
-            <li data-target="#myCarousel" data-slide-to="@index" @(index == 0 ? Html.Raw(@"class=""active""") : Html.Raw(string.Empty))></li>
-                index++;
-            }
-        </ol>
+                @foreach (var idea in Model.Ideas)
+                {
+                <li data-target="#myCarousel" data-slide-to="@index" @(index == 0 ? Html.Raw(@"class=""active""") : Html.Raw(string.Empty))></li>
+                    index++;
+                }
+            </ol>
 
 
 
-        <div class="carousel-inner" role="listbox">
+            <div class="carousel-inner" role="listbox">
 
-            @foreach (var idea in Model.Ideas)
-            {
-            <div class="item active">
-                <img src="/api/ideas/@idea.Id/banner" alt="ASP.NET" class="img-responsive" />
-                <div class="carousel-caption" role="option">
-                    <p>
-                        @idea.Title
-                        <a class="btn btn-default" href="/idea/@idea.Id">
-                            Learn More
-                        </a>
-                    </p>
+                @foreach (var idea in Model.Ideas)
+                {
+                <div class="item active">
+                    <img src="/api/ideas/@idea.Id/banner" alt="ASP.NET" class="img-responsive" />
+                    <div class="carousel-caption" role="option">
+                        <p>
+                            @idea.Title
+                            <a class="btn btn-default" href="/idea/@idea.Id">
+                                Learn More
+                            </a>
+                        </p>
+                    </div>
                 </div>
+
+                }
+
             </div>
 
-            }
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
 
         </div>
-
-        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-
-    </div>
-}
+    }*@
 
 <div class="row">
     <div class="container create-idea">
         <div class="row">
             <h4 class="common-page-header">Explore Ideas</h4>
             <div class="content">
-                <div class="col-sm-4 idea-card-wrap">
-                    <div class="idea-card">
-                        <div class="card-image"><img src="~/images/sample-image.png" /></div>
-                        <div class="card-content-container">
-                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
-                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
-                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
+                @foreach (var idea in Model.Ideas)
+                {
+                    <div class="col-sm-4 idea-card-wrap">
+                        <div class="idea-card">
+                            <div class="card-image"><img src="/api/ideas/@idea.Id/banner" /></div>
+                            <div class="card-content-container">
+                                <h3 class="card-header">
+                                    <a asp-controller="Idea" asp-action="Details" asp-route-id="@idea.Id">
+                                        @idea.Title
+                                    </a>
+                                </h3>
+                                <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
+                                <p class="card-content">@idea.Description</p>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
+                                <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
-                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
-                        </div>
+
                     </div>
-                </div>
-                <div class="col-sm-4 idea-card-wrap">
-                    <div class="idea-card">
-                        <div class="card-image"><img src="~/images/sample-image.png" /></div>
-                        <div class="card-content-container">
-                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
-                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
-                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
-                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 idea-card-wrap">
-                    <div class="idea-card">
-                        <div class="card-image"><img src="~/images/sample-image.png" /></div>
-                        <div class="card-content-container">
-                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
-                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
-                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
-                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 idea-card-wrap">
-                    <div class="idea-card">
-                        <div class="card-image"><img src="~/images/sample-image.png" /></div>
-                        <div class="card-content-container">
-                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
-                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
-                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
-                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 idea-card-wrap">
-                    <div class="idea-card">
-                        <div class="card-image"><img src="~/images/sample-image.png" /></div>
-                        <div class="card-content-container">
-                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
-                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
-                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
-                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 idea-card-wrap">
-                    <div class="idea-card">
-                        <div class="card-image"><img src="~/images/sample-image.png" /></div>
-                        <div class="card-content-container">
-                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
-                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
-                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
-                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 idea-card-wrap">
-                    <div class="idea-card">
-                        <div class="card-image"><img src="~/images/sample-image.png" /></div>
-                        <div class="card-content-container">
-                            <h3 class="card-header">Web Application for tracking reimbursements</h3>
-                            <span class="author-wrap">Share by <span class="author">Gopi Krishna J</span></span>
-                            <p class="card-content">The will improve our fun quotient, the foosball table breaks very often and this is a very promising substitute....</p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>12</span></button>
-                            <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>25</span></button>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>

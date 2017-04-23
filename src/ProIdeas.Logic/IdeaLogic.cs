@@ -1,7 +1,6 @@
 ﻿using ProIdeas.Logic.Contracts;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ProIdeas.DTO;
 using ProIdeas.Domain.Repositories;
 using ProIdeas.Domain.Entities;
@@ -18,7 +17,9 @@ namespace ProIdeas.Logic
     public class IdeaLogic : IIdeaLogic,
         IHandler<CreateIdeaCommand>,
         IHandler<UpdateIdeaCommand>,
-        IHandler<DeleteIdeaCommand>        
+        IHandler<DeleteIdeaCommand>,
+        IHandler<PublishIdeaCommand>,
+        IHandler<UnpublishIdeaCommand>
     {
         private readonly IRepository _repository;
         private readonly IDataMapper _dataMapper;
@@ -127,6 +128,34 @@ namespace ProIdeas.Logic
 
             _bus.RaiseEvent(new IdeaDeletedEvent(_dataMapper.Map<IdeaDto>(idea)));
 
+        }
+
+        public void Handle(UnpublishIdeaCommand message)
+        {
+            var idea = _repository.GetOne<Idea>(message.IdeaId);
+
+            if (idea == null)
+            { return; }
+
+            idea.Status = Status.Unpublished.ToString();
+
+            _repository.Update(idea);
+
+            _bus.RaiseEvent(new IdeaUnpublishedEvent(idea.Id));
+        }
+
+        public void Handle(PublishIdeaCommand message)
+        {
+            var idea = _repository.GetOne<Idea>(message.IdeaId);
+
+            if (idea == null)
+            { return; }
+
+            idea.Status = Status.Published.ToString();
+
+            _repository.Update(idea);
+
+            _bus.RaiseEvent(new IdeaPublishedEvent(idea.Id));
         }
     }
 }

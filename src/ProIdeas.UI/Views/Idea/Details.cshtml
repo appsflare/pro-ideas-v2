@@ -1,0 +1,84 @@
+@model IdeaInfoViewModel
+@{
+    ViewData["Title"] = "Creat your idea";
+}
+
+@section Scripts{
+    <script src="~/Scripts/pages/generic.bundle.js"></script>
+}
+
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="profile-content">
+    <div class="container">
+        <div class="row">
+            <div class="profile">
+                <div class="avatar col-sm-6">
+                    <img src="/api/ideas/@Model.Id/banner" alt="Circle Image" class="img-responsive img-raised">
+                </div>
+                <div class="name col-sm-6">
+                    <h3 class="title">@Model.Title</h3>
+                    @*<h6>Designer</h6>*@
+                    <h6 class="description">
+                        <p>@Model.Description</p>
+                    </h6>
+
+                    @if (Model.IsOwner(UserManager.GetUserId(User)))
+                    {
+
+                        @if (Model.IsPublished)
+                        {
+                            <form class="form-inline" method="post" asp-action="Unpublish" asp-route-id="@Model.Id">
+                                <button class="btn btn-warning">Unpublish</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form class="form-inline" method="post" asp-action="Publish" asp-route-id="@Model.Id">
+                                <button class="btn btn-success">Publish</button>
+                            </form>
+                        }
+
+
+                    }
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="profile-tabs">
+                    <div class="nav-align-center">
+                        <ul class="nav nav-pills" role="tablist">
+                            @foreach (var page in Model.Pages)
+                            {
+                                <li class="@(page.IsActive ? "active" : string.Empty)">
+                                    <a href="#@page.Id" role="tab" data-toggle="tab" aria-expanded="true">
+                                        @page.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+
+                        <div class="tab-content gallery">
+                            @foreach (var page in Model.Pages)
+                            {
+                                <div class="tab-pane @(page.IsActive ? "active" : string.Empty)" id="@page.Id">
+                                    <div class="row">
+                                        @Html.Raw(page.Content)
+                                    </div>
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+                <!-- End Profile Tabs -->
+            </div>
+        </div>
+
+    </div>
+</div>

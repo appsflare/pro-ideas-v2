@@ -56,5 +56,15 @@ namespace ProIdeas.Services
         {
             _bus.SendCommand(new SaveIdeaPagesCommand(ideaId, pages));
         }
+
+        public void Publish(string ideaId)
+        {
+            _bus.SendCommand(new PublishIdeaCommand(ideaId));
+        }
+
+        public void Unpublish(string ideaId)
+        {
+            _bus.SendCommand(new UnpublishIdeaCommand(ideaId));
+        }
     }
 }

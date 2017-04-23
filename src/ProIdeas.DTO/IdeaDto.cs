@@ -5,6 +5,10 @@ namespace ProIdeas.DTO
 {
     public class IdeaDto : BaseDto<string>
     {
+        public IdeaDto()
+        {
+            Pages = new List<PageDto>();
+        }
 
         public string OwnerId { get; set; }
 
@@ -24,5 +28,6 @@ namespace ProIdeas.DTO
 
         public DateTime? ModifiedOn { get; set; }
 
+        public string Status { get; set; }
     }
 }

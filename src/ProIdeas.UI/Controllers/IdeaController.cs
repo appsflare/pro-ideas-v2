@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Services.Contracts;
 using ProIdeas.UI.Models.IdeaViewModels;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ProIdeas.UI.Controllers
 {
@@ -18,14 +19,22 @@ namespace ProIdeas.UI.Controllers
 
         // GET: Idea/Details/5
         [HttpGet, Route("{id}/details")]
-        public ActionResult Details(int id)
+        async public Task<IActionResult> Details(string id)
         {
-            return View();
+            var idea = await _ideaService.GetIdeaAsync(id);
+
+            var model = GetIdeaInfoViewModel(idea);
+            if (model.Pages.Any())
+            {
+                model.Pages.First().IsActive = true;
+            }
+
+            return View(model);
         }
 
         [HttpGet, Route("create")]
         // GET: Idea/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View(new IdeaInfoViewModel());
         }
@@ -45,7 +54,16 @@ namespace ProIdeas.UI.Controllers
             {
                 Id = idea.Id,
                 Title = idea.Title,
-                Description = idea.Description
+                Description = idea.Description,
+                IsFundingRequired = idea.IsFundingRequired,
+                FundingRequirement = idea.FundingRequirement,
+                OwnerId = idea.OwnerId,
+                Status = idea.Status,
+                Pages = idea.Pages.Select(i => new IdeaPageInfo
+                {
+                    Name = i.Name,
+                    Content = i.Content
+                }).ToList()
             };
         }
 
@@ -77,6 +95,20 @@ namespace ProIdeas.UI.Controllers
         public IActionResult Search(string query)
         {
             return View("Search", new IdeaSearchViewModel { Keyword = query });
+        }
+
+        [HttpPost, Route("{id}/publish")]
+        public IActionResult Publish(string id)
+        {
+            _ideaService.Publish(id);
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost, Route("{id}/unpublish")]
+        public IActionResult Unpublish(string id)
+        {
+            _ideaService.Unpublish(id);
+            return RedirectToAction(nameof(Details), new { id });
         }
 
     }
