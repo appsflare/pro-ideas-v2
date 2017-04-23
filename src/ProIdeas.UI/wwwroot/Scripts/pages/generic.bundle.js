@@ -91,7 +91,9 @@ var possibleConstructorReturn = function (self, call) {
 //import Barba from 'barba.js';
 //import FadeTransition from './transitions/fade';
 turbolinks.start();
-turbolinks.controller.adapter.showProgressBar();
+//Turbolinks would show progress bar automatically when page takes longer than 500ms to load
+//Turbolinks.controller.adapter.hideProgressBar()
+//Turbolinks.controller.adapter.showProgressBar()
 $.material.init();
 
 var BasePage = function () {

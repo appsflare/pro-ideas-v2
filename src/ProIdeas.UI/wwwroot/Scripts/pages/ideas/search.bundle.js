@@ -1895,7 +1895,9 @@ var o,i,s,a,u;return i=null!=n?n:{},a=i.restorationIdentifier,s=i.restorationDat
 //import Barba from 'barba.js';
 //import FadeTransition from './transitions/fade';
 turbolinks.start();
-turbolinks.controller.adapter.showProgressBar();
+//Turbolinks would show progress bar automatically when page takes longer than 500ms to load
+//Turbolinks.controller.adapter.hideProgressBar()
+//Turbolinks.controller.adapter.showProgressBar()
 $.material.init();
 
 var BasePage = function () {
