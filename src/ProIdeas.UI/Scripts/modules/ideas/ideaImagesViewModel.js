@@ -63,6 +63,7 @@ export default class IdeaImagesViewModel {
             if (!file) {
                 return new Promise((resolve, reject) => {
                     $.ajax({ type: 'GET', url: fileUrl, contentType: false, processData: false })
+                        .then(() => resolve(fileUrl))
                         .fail(e => e.statusText.toLowerCase() == 'ok' ? resolve(fileUrl) : resolve(false));
                 });
             }

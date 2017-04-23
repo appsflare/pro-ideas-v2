@@ -1,7 +1,8 @@
 ﻿//import Barba from 'barba.js';
 //import FadeTransition from './transitions/fade';
 import Turbolinks from 'turbolinks';
-Turbolinks.start();
+$(function () { Turbolinks.start(); });
+
 //Turbolinks would show progress bar automatically when page takes longer than 500ms to load
 //https://github.com/turbolinks/turbolinks/issues/17#issuecomment-186635946
 //Turbolinks.controller.adapter.hideProgressBar()

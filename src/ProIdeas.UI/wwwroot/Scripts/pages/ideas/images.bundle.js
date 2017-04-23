@@ -3453,7 +3453,9 @@ var IdeaImagesViewModel = function () {
                 var file = this.value();
                 if (!file) {
                     return new Promise(function (resolve, reject) {
-                        $.ajax({ type: 'GET', url: fileUrl, contentType: false, processData: false }).fail(function (e) {
+                        $.ajax({ type: 'GET', url: fileUrl, contentType: false, processData: false }).then(function () {
+                            return resolve(fileUrl);
+                        }).fail(function (e) {
                             return e.statusText.toLowerCase() == 'ok' ? resolve(fileUrl) : resolve(false);
                         });
                     });
@@ -3497,8 +3499,12 @@ var o,i,s,a,u;return i=null!=n?n:{},a=i.restorationIdentifier,s=i.restorationDat
 
 //import Barba from 'barba.js';
 //import FadeTransition from './transitions/fade';
-turbolinks.start();
+$(function () {
+    turbolinks.start();
+});
+
 //Turbolinks would show progress bar automatically when page takes longer than 500ms to load
+//https://github.com/turbolinks/turbolinks/issues/17#issuecomment-186635946
 //Turbolinks.controller.adapter.hideProgressBar()
 //Turbolinks.controller.adapter.showProgressBar()
 $.material.init();
