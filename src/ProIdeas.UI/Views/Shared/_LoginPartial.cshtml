@@ -28,11 +28,12 @@
                     @*<li><a href="/profile">Profile</a></li>*@
                     <li>
                         <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">
-                            <i class="material-icons">account_circle</i>
+                            @*<i class="material-icons">account_circle</i>*@
                             Account
                             <div class="ripple-container"></div>
                         </a>
                     </li>
+                    <li role="separator" class="divider"></li>
                     <li><a href="#" onclick="$(this).closest('form').submit()">Log out</a></li>
                 </ul>
             </li>
