@@ -3,6 +3,7 @@ RUN mkdir /build -p && \
 	mkdir /app -p
 ADD src /build/src
 RUN cd /build/src/ProIdeas.UI && \
+	dotnet restore && \
 	dotnet publish -o /app && \
 	rm /build -rf 
 
