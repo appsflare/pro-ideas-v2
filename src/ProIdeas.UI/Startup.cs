@@ -29,6 +29,7 @@ using ProIdeas.Files.Contracts;
 using System.Reflection;
 using System.Linq;
 using ProIdeas.Domain.RehtinkDb.QueryTemplates;
+using System;
 
 namespace ProIdeas.UI
 {
@@ -85,10 +86,11 @@ namespace ProIdeas.UI
             services.AddSingleton<IJsonSerializer, JsonSerializer>();
             services.AddMultitenancy<TenantSettingsDto, CachingTenantResolver>();
 
+            var dbHost = Environment.GetEnvironmentVariable("DB_HOSTS");
             services.AddSingleton(new ConnectionOptions
             {
                 DBName = "ideas",
-                HostNames = new[] { "localhost" },
+                HostNames = string.IsNullOrEmpty(dbHost) ? new[] { "localhost" } : Environment.GetEnvironmentVariable("DB_HOSTS").Split(';'),
                 Port = 28015
             });
 
