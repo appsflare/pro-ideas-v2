@@ -7,5 +7,5 @@ RUN cd /build/src/ProIdeas.UI && \
 	rm /build -rf 
 
 WORKDIR /app
-EXPOSE 80
+EXPOSE 5000
 ENTRYPOINT ["dotnet", "ProIdeas.UI.dll"]
