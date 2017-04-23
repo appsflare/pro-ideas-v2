@@ -3549,16 +3549,16 @@ var BasePage = function () {
 
 var navigationHelper = {
     toIdeaImages: function toIdeaImages(id) {
-        document.location.href = "/ideas/" + id + "/images";
+        turbolinks.visit('/ideas/' + id + '/images');
     },
     toEditIdea: function toEditIdea(id) {
-        document.location.href = "/ideas/" + id + "/edit";
+        turbolinks.visit('/ideas/' + id + '/edit');
     },
     toIdeaPages: function toIdeaPages(id) {
-        document.location.href = "/ideas/" + id + "/pages";
+        turbolinks.visit('/ideas/' + id + '/pages');
     },
     toIdeaDetails: function toIdeaDetails(id) {
-        document.location.href = "/ideas/" + id + "/details";
+        turbolinks.visit('/ideas/' + id + '/details');
     }
 };
 

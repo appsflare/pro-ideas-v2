@@ -1,19 +1,21 @@
-﻿const navigationHelper = {
+﻿import Turbolinks from 'turbolinks';
+
+const navigationHelper = {
 
     toIdeaImages(id) {
-        document.location.href = `/ideas/${id}/images`;
+        Turbolinks.visit(`/ideas/${id}/images`);
     },
 
     toEditIdea(id) {
-        document.location.href = `/ideas/${id}/edit`;
+        Turbolinks.visit(`/ideas/${id}/edit`);
     },
 
     toIdeaPages(id) {
-        document.location.href = `/ideas/${id}/pages`;
+        Turbolinks.visit(`/ideas/${id}/pages`);
     },
 
     toIdeaDetails(id) {
-        document.location.href = `/ideas/${id}/details`;
+        Turbolinks.visit(`/ideas/${id}/details`);
     }
 
 };
