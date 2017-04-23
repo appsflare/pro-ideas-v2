@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RethinkDb.Driver" Version="2.3.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProIdeas.Domain.Entities\ProIdeas.Domain.Entities.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Queries\ProIdeas.Domain.Queries.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Repositories.RethinkDb\ProIdeas.Domain.Repositories.RethinkDb.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.Repositories\ProIdeas.Domain.Repositories.csproj" />
+  </ItemGroup>
+
+</Project>

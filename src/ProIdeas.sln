@@ -59,7 +59,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.Identity.Repository"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProIdeas.Authentication.Contracts", "ProIdeas.Authentication.Contracts\ProIdeas.Authentication.Contracts.csproj", "{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProIdeas.Domain.RehtinkDb.QueryTemplates", "..\ProIdeas.Domain.RehtinkDb.QueryTemplates\ProIdeas.Domain.RehtinkDb.QueryTemplates.csproj", "{0E3F02C8-79E5-4BEA-BB75-AD4829DB8472}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProIdeas.Domain.RehtinkDb.QueryTemplates", "ProIdeas.Domain.RehtinkDb.QueryTemplates\ProIdeas.Domain.RehtinkDb.QueryTemplates.csproj", "{9E9A9428-AAA9-410B-A7EA-2CB766B83924}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -151,10 +151,10 @@ Global
 		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E3F02C8-79E5-4BEA-BB75-AD4829DB8472}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E3F02C8-79E5-4BEA-BB75-AD4829DB8472}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E3F02C8-79E5-4BEA-BB75-AD4829DB8472}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E3F02C8-79E5-4BEA-BB75-AD4829DB8472}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E9A9428-AAA9-410B-A7EA-2CB766B83924}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E9A9428-AAA9-410B-A7EA-2CB766B83924}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E9A9428-AAA9-410B-A7EA-2CB766B83924}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E9A9428-AAA9-410B-A7EA-2CB766B83924}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,6 +186,6 @@ Global
 		{B24EA95C-C64D-4168-9E4A-474F070F5137} = {232AEF7D-469F-4383-A9F3-F7AFC433B1C8}
 		{CF12F244-6E0D-46BB-8299-B16533D59D20} = {232AEF7D-469F-4383-A9F3-F7AFC433B1C8}
 		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A} = {E5D0F62B-29C9-41FC-9177-699CAC883629}
-		{0E3F02C8-79E5-4BEA-BB75-AD4829DB8472} = {16ABF993-D20E-4BD0-9BD4-7AE38C0659E4}
+		{9E9A9428-AAA9-410B-A7EA-2CB766B83924} = {16ABF993-D20E-4BD0-9BD4-7AE38C0659E4}
 	EndGlobalSection
 EndGlobal

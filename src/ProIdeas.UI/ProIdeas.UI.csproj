@@ -38,9 +38,6 @@
     <Content Include="wwwroot\logos\ideaboard-logo-white-nocap.png" />
     <Content Include="wwwroot\logos\ideaboard-logo-white.png" />
     <Content Include="wwwroot\logos\new-logo.png" />
-    <Content Include="wwwroot\Scripts\pages\common\index - Copy.bundle.js.map">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
@@ -208,7 +205,6 @@
     <None Include="wwwroot\js\nouislider.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ProIdeas.Domain.RehtinkDb.QueryTemplates\ProIdeas.Domain.RehtinkDb.QueryTemplates.csproj" />
     <ProjectReference Include="..\AspNet.Identity.Repository\AspNet.Identity.Repository.csproj" />
     <ProjectReference Include="..\ProIdeas.Authentication.Contracts\ProIdeas.Authentication.Contracts.csproj" />
     <ProjectReference Include="..\ProIdeas.Data.Mappings\ProIdeas.Data.Mappings.csproj" />
@@ -216,6 +212,7 @@
     <ProjectReference Include="..\ProIdeas.Domain.Core\ProIdeas.Domain.Core.csproj" />
     <ProjectReference Include="..\ProIdeas.Domain.Entities\ProIdeas.Domain.Entities.csproj" />
     <ProjectReference Include="..\ProIdeas.Domain.Queries\ProIdeas.Domain.Queries.csproj" />
+    <ProjectReference Include="..\ProIdeas.Domain.RehtinkDb.QueryTemplates\ProIdeas.Domain.RehtinkDb.QueryTemplates.csproj" />
     <ProjectReference Include="..\ProIdeas.Domain.Repositories.RethinkDb\ProIdeas.Domain.Repositories.RethinkDb.csproj" />
     <ProjectReference Include="..\ProIdeas.Domain.Repositories\ProIdeas.Domain.Repositories.csproj" />
     <ProjectReference Include="..\ProIdeas.DTO\ProIdeas.DTO.csproj" />

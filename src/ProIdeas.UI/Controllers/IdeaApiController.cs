@@ -106,7 +106,7 @@ namespace ProIdeas.UI.Controllers
 
         [HttpPut]
         [Route("{id}/pages")]
-        async public Task<IActionResult> SavePages([FromRoute]string id, [FromBody]IEnumerable<PageDto> pages)
+        public IActionResult SavePages([FromRoute]string id, [FromBody]IEnumerable<PageDto> pages)
         {
             _ideaService.SavePages(id, pages);
 
