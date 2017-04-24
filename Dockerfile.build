@@ -1,0 +1,7 @@
+FROM microsoft/dotnet:1.1-sdk
+RUN mkdir /build -p && \
+	mkdir /out -p
+ADD src /build/src
+RUN cd /build/src/ProIdeas.UI && \
+	dotnet restore && \
+	dotnet publish -o /out
