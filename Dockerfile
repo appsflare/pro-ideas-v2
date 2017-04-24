@@ -4,7 +4,6 @@ EXPOSE 5000
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV ASPNETCORE_ENVIRONMENT=Production
-RUN ls
-ADD ./dist /app/
+ADD dist /app/
 WORKDIR /app
 CMD ["dotnet", "ProIdeas.UI.dll"]

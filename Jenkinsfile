@@ -20,8 +20,9 @@ node('swarm') {
 		// docker rm build-container
 		// docker rmi build-image
 		// '''
+		sh 'ls'
 	}
-	
+
 	stage('build image'){
 		sh 'ls'
 		docker.withRegistry('https://registry.hub.docker.com/v2/', 'docker-hub') {    
