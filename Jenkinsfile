@@ -15,6 +15,8 @@ node('swarm') {
 		'''
 
 	stage "build optimized image"
+	docker.withRegistry('https://registry.hub.docker.com/v2/', 'docker-hub') {    
 		def app = docker.build 'appsflare/pro-ideas-v2:latest'
 		app.push()    
+	}
 }
