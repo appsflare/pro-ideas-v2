@@ -3453,11 +3453,7 @@ var IdeaImagesViewModel = function () {
                 var file = this.value();
                 if (!file) {
                     return new Promise(function (resolve, reject) {
-                        $.ajax({ type: 'GET', url: fileUrl, contentType: false, processData: false }).then(function () {
-                            return resolve(fileUrl);
-                        }).fail(function (e) {
-                            return ["ok", "parsererror"].indexOf(e.statusText.toLowerCase()) > -1 ? resolve(fileUrl) : resolve(false);
-                        });
+                        resolve(fileUrl + '?' + new Date().getTime());
                     });
                 }
                 return readURL(file);
