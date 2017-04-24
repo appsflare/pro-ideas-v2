@@ -3,7 +3,7 @@ node('swarm') {
 	checkout scm	
     
 	stage "build artifacts"
-
+		sh 'ls'
 		def sdk = docker.image('microsoft/dotnet:1.1-sdk')
 		sdk.pull()
 		sdk.inside{
@@ -21,8 +21,7 @@ node('swarm') {
 		// docker rmi build-image
 		// '''
 
-	stage "build image"
-		sh 'ls'
+	stage "build image"		
 		docker.withRegistry('https://registry.hub.docker.com/v2/', 'docker-hub') {    
 			def app = docker.build 'appsflare/pro-ideas-v2:latest'
 			app.push()    
