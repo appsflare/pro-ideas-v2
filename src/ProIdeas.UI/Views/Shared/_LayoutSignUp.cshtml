@@ -23,8 +23,7 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body>
-    @await Html.PartialAsync("_CommonLibImports")
+<body>    
     @RenderSection("Styles", required: false)
     <div class="signup-page">
 
@@ -77,6 +76,7 @@
             </div>
         </div>
     </div>
+    @await Html.PartialAsync("_CommonLibImports")
     @await Html.PartialAsync("_CommonImports")
     @RenderSection("Scripts", required: false)    
 </body>
