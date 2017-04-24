@@ -3456,7 +3456,7 @@ var IdeaImagesViewModel = function () {
                         $.ajax({ type: 'GET', url: fileUrl, contentType: false, processData: false }).then(function () {
                             return resolve(fileUrl);
                         }).fail(function (e) {
-                            return e.statusText.toLowerCase() == 'ok' ? resolve(fileUrl) : resolve(false);
+                            return ["ok", "parsererror"].indexOf(e.statusText.toLowerCase()) > -1 ? resolve(fileUrl) : resolve(false);
                         });
                     });
                 }
