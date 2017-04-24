@@ -1,9 +1,6 @@
 node('swarm') {
 
-	checkout scm
-	sh "git rev-parse HEAD > .git/commit-id"
-	def commit_id = readFile('.git/commit-id').trim()
-	println commit_id
+	checkout scm	
     
 	stage "build artifacts"
 
@@ -25,8 +22,12 @@ node('swarm') {
 		// '''
 
 	stage "build image"
-	docker.withRegistry('https://registry.hub.docker.com/v2/', 'docker-hub') {    
-		def app = docker.build 'appsflare/pro-ideas-v2:latest'
-		app.push()    
-	}
+		sh 'ls'
+		docker.withRegistry('https://registry.hub.docker.com/v2/', 'docker-hub') {    
+			def app = docker.build 'appsflare/pro-ideas-v2:latest'
+			app.push()    
+		}
+
+	stage "cleanup"
+		deleteDir()
 }
