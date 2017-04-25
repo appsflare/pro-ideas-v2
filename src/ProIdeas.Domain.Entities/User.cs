@@ -1,27 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ProIdeas.Domain.Entities
+﻿namespace ProIdeas.Domain.Entities
 {
 
-    public class UserEmail
+    public class User : BaseEntity
     {
-        public string Type { get; set; }
+        public virtual string UserName { get; set; }
 
-        public string Value { get; set; }
-    }
+        public virtual string Email { get; set; }
 
-    public class User:BaseEntity
-    {
-        public string UserName { get; set; }
-
-        public string PrimaryEmail { get; set; }
-
-        public IList<UserEmail> Emails { get; set; }
-
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
+        public virtual string FullName { get; set; }
     }
 }

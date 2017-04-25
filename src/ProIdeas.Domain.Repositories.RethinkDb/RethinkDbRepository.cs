@@ -137,5 +137,15 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
             return queryTemplate.ExecuteAsync(_connection, queryParam);
         }
+
+
+        async public Task<TEntity> QueryOneAsync<TEntity, TQueryParam>(TQueryParam queryParam)
+                where TEntity : class, IEntity, new()
+                where TQueryParam : class
+        {
+            var queryTemplate = _queryTemplateProvider.Find<TEntity, TQueryParam>();
+
+            return (await queryTemplate.ExecuteAsync(_connection, queryParam)).FirstOrDefault();
+        }
     }
 }

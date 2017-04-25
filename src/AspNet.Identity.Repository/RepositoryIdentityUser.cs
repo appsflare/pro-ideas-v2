@@ -8,116 +8,119 @@ using ProIdeas.Domain.Entities;
 
 namespace AspNet.Identity.Repository
 {
-	[DataContract]
-	public class RepositoryIdentityUser : BaseEntity
-	{
-		public RepositoryIdentityUser()
-		{			
-			Roles = new List<string>();
-			LoginsWrapper = new List<UserLoginInfoWrapper>();
-			Claims = new List<IdentityUserClaim>();
-		}		
-
-		[DataMember]
-		public string UserName { get; set; }
+    [DataContract]
+    public class RepositoryIdentityUser : User
+    {
+        public RepositoryIdentityUser()
+        {
+            Roles = new List<string>();
+            LoginsWrapper = new List<UserLoginInfoWrapper>();
+            Claims = new List<IdentityUserClaim>();
+        }
 
         [DataMember]
-        public string FullName { get; set; }
+        public override string UserName { get; set; }
 
         [DataMember]
-		public virtual string SecurityStamp { get; set; }
+        public override string Email { get; set; }
 
-		[DataMember]
-		public virtual string Email { get; set; }
+        [DataMember]
+        public override string FullName { get; set; }
 
-		[DataMember]
-		public virtual bool EmailConfirmed { get; set; }
 
-		[DataMember]
-		public virtual string PhoneNumber { get; set; }
 
-		[DataMember]
-		public virtual bool PhoneNumberConfirmed { get; set; }
+        [DataMember]
+        public virtual string SecurityStamp { get; set; }
+        
 
-		[DataMember]
-		public virtual bool TwoFactorEnabled { get; set; }
+        [DataMember]
+        public virtual bool EmailConfirmed { get; set; }
 
-		[DataMember]
-		public virtual DateTime? LockoutEndDateUtc { get; set; }
+        [DataMember]
+        public virtual string PhoneNumber { get; set; }
 
-		[DataMember]
-		public virtual bool LockoutEnabled { get; set; }
+        [DataMember]
+        public virtual bool PhoneNumberConfirmed { get; set; }
 
-		[DataMember]
-		public virtual int AccessFailedCount { get; set; }
+        [DataMember]
+        public virtual bool TwoFactorEnabled { get; set; }
 
-		[DataMember]
-		public List<string> Roles { get; set; }
+        [DataMember]
+        public virtual DateTime? LockoutEndDateUtc { get; set; }
 
-		public virtual void AddRole(string role)
-		{
-			Roles.Add(role);
-		}
+        [DataMember]
+        public virtual bool LockoutEnabled { get; set; }
 
-		public virtual void RemoveRole(string role)
-		{
-			Roles.Remove(role);
-		}
+        [DataMember]
+        public virtual int AccessFailedCount { get; set; }
 
-		[DataMember]
-		public virtual string PasswordHash { get; set; }
+        [DataMember]
+        public List<string> Roles { get; set; }
 
-		public List<UserLoginInfo> Logins
-		{
-			get
-			{
-				return LoginsWrapper.Select(l => l.UserLoginInfo).ToList();
-			}
-		}
+        public virtual void AddRole(string role)
+        {
+            Roles.Add(role);
+        }
 
-		/// <summary>
-		/// This wraps the Logins property because UserLoginInfo is sealed and cannot be changed. But we need to decorate that class with DataContract and DataMember.
-		/// TODO: Possibly there is a more elegant solution that could be used for this.
-		/// TODO: Also this should not be visible outside this lib (not public). But this collides with the need for auto serialization/deserialization.
-		/// </summary>
-		[DataMember(Name = "Logins")]
-		public List<UserLoginInfoWrapper> LoginsWrapper { get; set; }
+        public virtual void RemoveRole(string role)
+        {
+            Roles.Remove(role);
+        }
 
-		public virtual void AddLogin(UserLoginInfo login)
-		{
-			LoginsWrapper.Add(new UserLoginInfoWrapper(login.LoginProvider, login.ProviderKey));
-			//Logins.Add(login);
-		}
+        [DataMember]
+        public virtual string PasswordHash { get; set; }
 
-		public virtual void RemoveLogin(UserLoginInfo login)
-		{
-			var loginsToRemove = LoginsWrapper
-				.Where(l => l.LoginProvider == login.LoginProvider)
-				.Where(l => l.ProviderKey == login.ProviderKey);
+        public List<UserLoginInfo> Logins
+        {
+            get
+            {
+                return LoginsWrapper.Select(l => l.UserLoginInfo).ToList();
+            }
+        }
 
-			LoginsWrapper = LoginsWrapper.Except(loginsToRemove).ToList();
-		}
+        /// <summary>
+        /// This wraps the Logins property because UserLoginInfo is sealed and cannot be changed. But we need to decorate that class with DataContract and DataMember.
+        /// TODO: Possibly there is a more elegant solution that could be used for this.
+        /// TODO: Also this should not be visible outside this lib (not public). But this collides with the need for auto serialization/deserialization.
+        /// </summary>
+        [DataMember(Name = "Logins")]
+        public List<UserLoginInfoWrapper> LoginsWrapper { get; set; }
 
-		public virtual bool HasPassword()
-		{
-			return !string.IsNullOrEmpty(PasswordHash);
-		}
+        public virtual void AddLogin(UserLoginInfo login)
+        {
+            LoginsWrapper.Add(new UserLoginInfoWrapper(login.LoginProvider, login.ProviderKey));
+            //Logins.Add(login);
+        }
 
-		[DataMember]
-		public List<IdentityUserClaim> Claims { get; set; }
+        public virtual void RemoveLogin(UserLoginInfo login)
+        {
+            var loginsToRemove = LoginsWrapper
+                .Where(l => l.LoginProvider == login.LoginProvider)
+                .Where(l => l.ProviderKey == login.ProviderKey);
 
-		public virtual void AddClaim(Claim claim)
-		{
-			Claims.Add(new IdentityUserClaim(claim));
-		}
+            LoginsWrapper = LoginsWrapper.Except(loginsToRemove).ToList();
+        }
 
-		public virtual void RemoveClaim(Claim claim)
-		{
-			var claimsToRemove = Claims
-				.Where(c => c.Type == claim.Type)
-				.Where(c => c.Value == claim.Value);
+        public virtual bool HasPassword()
+        {
+            return !string.IsNullOrEmpty(PasswordHash);
+        }
 
-			Claims = Claims.Except(claimsToRemove).ToList();
-		}
-	}
+        [DataMember]
+        public List<IdentityUserClaim> Claims { get; set; }
+
+        public virtual void AddClaim(Claim claim)
+        {
+            Claims.Add(new IdentityUserClaim(claim));
+        }
+
+        public virtual void RemoveClaim(Claim claim)
+        {
+            var claimsToRemove = Claims
+                .Where(c => c.Type == claim.Type)
+                .Where(c => c.Value == claim.Value);
+
+            Claims = Claims.Except(claimsToRemove).ToList();
+        }
+    }
 }

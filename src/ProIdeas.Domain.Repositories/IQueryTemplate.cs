@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.Repositories
 {
-    public interface IQueryTemplate : IDisposable
+    public interface IQueryTemplate
     {
         string Name { get; }
     }
@@ -16,4 +16,11 @@ namespace ProIdeas.Domain.Repositories
     {
         Task<IEnumerable<TEntity>> ExecuteAsync(dynamic connection, TQueryParam queryParam);
     }
+
+    //public interface IQueryOneTemplate<TEntity, TQueryParam> : IQueryTemplate
+    //    where TQueryParam : class
+    //    where TEntity : class, new()
+    //{
+    //    Task<TEntity> ExecuteAsync(dynamic connection, TQueryParam queryParam);
+    //}
 }

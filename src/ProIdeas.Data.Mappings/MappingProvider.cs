@@ -16,8 +16,7 @@ namespace ProIdeas.Data.Mappings
 
                 cfg.CreateMap<Idea, IdeaDto>().ReverseMap();
                 cfg.CreateMap<Page, PageDto>().ReverseMap();
-                cfg.CreateMap<User, UserDto>().ReverseMap();
-                cfg.CreateMap<UserEmail, UserEmailDto>().ReverseMap();                
+                cfg.CreateMap<User, UserDto>().ReverseMap();                
                 
                 cfg.CreateMap<IdeaLike, IdeaLikeDto>();
                 cfg.CreateMap<IdeaComment, IdeaCommentDto>();

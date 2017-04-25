@@ -37,9 +37,12 @@ namespace ProIdeas.Logic
 
 
 
-        public Task<IdeaDto> GetIdea(string ideaId)
+        async public Task<IdeaDto> GetIdea(string ideaId)
         {
-            return Task.Factory.StartNew(() => _dataMapper.Map<IdeaDto>(_repository.GetOne<Idea>(ideaId)));
+            return _dataMapper.Map<IdeaDto>(await _repository.QueryOneAsync<Idea, GetSingleIdeaByIdQueryTemplateParameter>(new GetSingleIdeaByIdQueryTemplateParameter
+            {
+                IdeaId = ideaId
+            }));
         }
 
         async public Task<IEnumerable<IdeaDto>> GetIdeas(int pageSize, int page, string keyword)
@@ -167,7 +170,7 @@ namespace ProIdeas.Logic
             {
                 Take = pageSize,
                 Skip = Math.Max(page, 0) * pageSize,
-                Keyword = keyword,                
+                Keyword = keyword,
                 OrderBy = nameof(Idea.Title),
                 OwnerId = userId
             });

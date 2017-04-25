@@ -16,6 +16,6 @@ namespace ProIdeas.Domain.Repositories
             where TQueryParam : class
         {
             return _queryTemplates.FirstOrDefault(i => i.Name == typeof(TQueryParam).Name) as IQueryTemplate<TEntity, TQueryParam>;
-        }
+        }       
     }
 }

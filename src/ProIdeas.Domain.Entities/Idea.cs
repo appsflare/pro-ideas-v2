@@ -30,6 +30,8 @@ namespace ProIdeas.Domain.Entities
 
         public int DisLikes { get; set; }
 
+        public int Comments { get; set; }
+
         public IList<Page> Pages { get; set; }
 
         public DateTime CreatedOn { get; set; }
@@ -37,6 +39,8 @@ namespace ProIdeas.Domain.Entities
         public DateTime? ModifiedOn { get; set; }
 
         public string Status { get; set; }
+
+        public User Owner { get; set; }
 
     }
 }

@@ -22,6 +22,24 @@ namespace ProIdeas.UI.Models.IdeaViewModels
         public string Content { get; set; }
     }
 
+    public class IdeaOwnerInfo
+    {
+        private IdeaOwnerInfo()
+        {
+        }
+
+        public string FullName { get; set; }
+
+        public static IdeaOwnerInfo CreateFrom(UserDto user)
+        {
+            return new IdeaOwnerInfo
+            {
+                FullName = user?.FullName
+            };
+
+        }
+    }
+
     public class IdeaInfoViewModel
     {
         private IdeaInfoViewModel()
@@ -50,7 +68,15 @@ namespace ProIdeas.UI.Models.IdeaViewModels
             return OwnerId == userId;
         }
 
+        public IdeaOwnerInfo Owner { get; set; }
+
         public bool IsPublished => Status == "Published";
+
+        public int Likes { get; set; }
+
+        public int DisLikes { get; set; }
+
+        public int Comments { get; set; }
 
         private static IdeaInfoViewModel GetIdeaInfoViewModel(IdeaDto idea)
         {
@@ -63,10 +89,14 @@ namespace ProIdeas.UI.Models.IdeaViewModels
                 FundingRequirement = idea.FundingRequirement,
                 OwnerId = idea.OwnerId,
                 Status = idea.Status,
+                Owner = IdeaOwnerInfo.CreateFrom(idea.Owner),
+                Likes = idea.Likes,
+                DisLikes = idea.DisLikes,
+                Comments = idea.Comments,
                 Pages = idea.Pages.Select(i => new IdeaPageInfo
                 {
                     Name = i.Name,
-                    Content = i.Content
+                    Content = i.Content,                    
                 }).ToList()
             };
         }

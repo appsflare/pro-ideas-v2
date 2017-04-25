@@ -28,6 +28,10 @@ namespace ProIdeas.Domain.Repositories
             where TEntity : class, IEntity, new()
             where TQueryParam : class;
 
+        Task<TEntity> QueryOneAsync<TEntity, TQueryParam>(TQueryParam queryParam)
+            where TEntity : class, IEntity, new()
+            where TQueryParam : class;
+
         IEnumerable<TEntity> All<TEntity>(int page, int pageSize) where TEntity : class, IEntity, new();
 
         TEntity Add<TEntity>(TEntity item) where TEntity : class, IEntity, new();
