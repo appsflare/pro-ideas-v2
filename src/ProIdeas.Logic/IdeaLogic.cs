@@ -22,21 +22,24 @@ namespace ProIdeas.Logic
         IHandler<PublishIdeaCommand>,
         IHandler<UnpublishIdeaCommand>
     {
+        #region Private readonly fields
         private readonly IRepository _repository;
         private readonly IDataMapper _dataMapper;
         private readonly IBus _bus;
         private readonly IUserIdentityProvider _userIdentityProvider;
+        #endregion
 
+        #region Ctors
         public IdeaLogic(IRepository repository, IDataMapper dataMapper, IBus bus, IUserIdentityProvider userIdentityProvider)
         {
             _repository = repository;
             _dataMapper = dataMapper;
             _bus = bus;
             _userIdentityProvider = userIdentityProvider;
-        }
+        } 
+        #endregion
 
-
-
+        #region IIdeaLogic Implementation
         async public Task<IdeaDto> GetIdea(string ideaId)
         {
             return _dataMapper.Map<IdeaDto>(await _repository.QueryOneAsync<Idea, GetSingleIdeaByIdQueryTemplateParameter>(new GetSingleIdeaByIdQueryTemplateParameter
@@ -86,9 +89,24 @@ namespace ProIdeas.Logic
 
                 return _dataMapper.Map<IEnumerable<IdeaLikeDto>>(_repository.Query(query));
             });
+        }        
+
+        async public Task<IEnumerable<IdeaDto>> GetUserIdeas(string userId, int pageSize, int page, string keyword)
+        {
+            var result = await _repository.QueryAsync<Idea, FilterIdeaQueryTemplateParameter>(new FilterIdeaQueryTemplateParameter
+            {
+                Take = pageSize,
+                Skip = Math.Max(page, 0) * pageSize,
+                Keyword = keyword,
+                OrderBy = nameof(Idea.Title),
+                OwnerId = userId
+            });
+
+            return _dataMapper.Map<IEnumerable<IdeaDto>>(result);
         }
+        #endregion
 
-
+        #region CreateIdeaCommand Implementation
         public void Handle(CreateIdeaCommand message)
         {
 
@@ -104,8 +122,10 @@ namespace ProIdeas.Logic
 
 
             _bus.RaiseEvent(new IdeaCreatedEvent(_dataMapper.Map<IdeaDto>(result)));
-        }
+        } 
+        #endregion
 
+        #region UpdateIdeaCommand Implementation
         public void Handle(UpdateIdeaCommand message)
         {
             var ideaTobeUpdated = _dataMapper.Map<Idea>(message.Idea);
@@ -122,6 +142,9 @@ namespace ProIdeas.Logic
 
             _bus.RaiseEvent(new IdeaUpdatedEvent(_dataMapper.Map<IdeaDto>(result)));
         }
+        #endregion
+
+        #region DeleteIdeaCommand Implementation
 
         public void Handle(DeleteIdeaCommand message)
         {
@@ -136,6 +159,9 @@ namespace ProIdeas.Logic
 
         }
 
+        #endregion
+
+        #region UnpublishIdeaCommand Implementation
         public void Handle(UnpublishIdeaCommand message)
         {
             var idea = _repository.GetOne<Idea>(message.IdeaId);
@@ -148,8 +174,10 @@ namespace ProIdeas.Logic
             _repository.Update(idea);
 
             _bus.RaiseEvent(new IdeaUnpublishedEvent(idea.Id));
-        }
+        } 
+        #endregion
 
+        #region PublishIdeaCommand
         public void Handle(PublishIdeaCommand message)
         {
             var idea = _repository.GetOne<Idea>(message.IdeaId);
@@ -162,20 +190,9 @@ namespace ProIdeas.Logic
             _repository.Update(idea);
 
             _bus.RaiseEvent(new IdeaPublishedEvent(idea.Id));
-        }
+        } 
+        #endregion
 
-        async public Task<IEnumerable<IdeaDto>> GetUserIdeas(string userId, int pageSize, int page, string keyword)
-        {
-            var result = await _repository.QueryAsync<Idea, FilterIdeaQueryTemplateParameter>(new FilterIdeaQueryTemplateParameter
-            {
-                Take = pageSize,
-                Skip = Math.Max(page, 0) * pageSize,
-                Keyword = keyword,
-                OrderBy = nameof(Idea.Title),
-                OwnerId = userId
-            });
-
-            return _dataMapper.Map<IEnumerable<IdeaDto>>(result);
-        }
+        
     }
 }

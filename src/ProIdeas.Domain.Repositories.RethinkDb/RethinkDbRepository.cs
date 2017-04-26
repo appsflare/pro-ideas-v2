@@ -36,8 +36,6 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             return RethinkDB.R.Table(GetTableName<TEntity>());
         }
 
-
-
         public TEntity Add<TEntity>(TEntity item) where TEntity : class, IEntity, new()
         {
             var result = GetTable<TEntity>().Insert(item).RunResult(_connection);

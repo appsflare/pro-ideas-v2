@@ -30,6 +30,8 @@ using System.Reflection;
 using System.Linq;
 using ProIdeas.Domain.RehtinkDb.QueryTemplates;
 using System;
+using System.Collections.Generic;
+using ProIdeas.Domain.Core.Commands;
 
 namespace ProIdeas.UI
 {
@@ -54,15 +56,11 @@ namespace ProIdeas.UI
 
         public IConfigurationRoot Configuration { get; }
 
-        private static void RegisterQueryTemplates(IServiceCollection services)
+        private static void RegisterQueryTemplates(IServiceCollection services, IList<Type> exportedTypes)
         {
-            var queryTemplateInterface = typeof(IQueryTemplate);
-            var type1 = typeof(FilterIdeaQueryTemplate);
+            var queryTemplateInterface = typeof(IQueryTemplate);            
 
-            var queryTemplateTypes = Assembly.GetEntryAssembly()
-                .GetReferencedAssemblies()
-                .Select(i => Assembly.Load(i))
-                .SelectMany(i => i.GetTypes())
+            var queryTemplateTypes = exportedTypes
                  .Where(i => !i.GetTypeInfo().IsAbstract)
                  .Where(i => queryTemplateInterface.IsAssignableFrom(i))
                  .ToList();
@@ -73,6 +71,28 @@ namespace ProIdeas.UI
             });
 
             services.AddSingleton<IQueryTemplateFinder, DefaultQueryTemplateFinder>();
+
+        }
+
+        private static void RegisterAllGenericTypeImplementations(IServiceCollection services, IList<Type> exportedTypes, Type baseGenericType, Type genericInterfaceType)
+        {
+
+            var possibleGenericTypes = exportedTypes
+                .Where(baseGenericType.IsAssignableFrom)
+                .Select(i => genericInterfaceType.MakeGenericType(i));
+
+
+
+            foreach (var possibleGenericType in possibleGenericTypes)
+            {
+                var implementedTypes = exportedTypes.Where(i => possibleGenericType.IsAssignableFrom(i)).ToList();
+
+
+                foreach (var implementedType in implementedTypes)
+                {
+                    services.AddScoped(possibleGenericType, implementedType);
+                }
+            }
 
         }
 
@@ -96,26 +116,14 @@ namespace ProIdeas.UI
 
             services.AddScoped<ITenantLogic, TenantLogic>();
             services.AddScoped<IIdeaLogic, IdeaLogic>();
+            services.AddScoped<IIdeaCommentLogic, IdeaCommentLogic>();
             services.AddScoped<IEventStore, DefaultEventStore>();
 
             services.AddScoped<IBus, InMemoryBus>();
 
-
             services.AddScoped<ITenantStore, LocalJsonTenantStore>();
 
             services.AddScoped<IMessageFilter<CreateIdeaCommand>, CreateIdeaCommandValidationFilter>();
-            services.AddScoped<IMessageFilter<UpdateIdeaCommand>, UpdateIdeaCommandValidationFilter>();
-            services.AddScoped<IMessageFilter<DeleteIdeaCommand>, DeleteIdeaCommandValidationFilter>();
-            services.AddScoped<IMessageFilter<SaveIdeaPagesCommand>, SaveIdeaPagesCommandValidationFilter>();
-
-
-            services.AddScoped<IHandler<CreateIdeaCommand>, IdeaLogic>();
-            services.AddScoped<IHandler<UpdateIdeaCommand>, IdeaLogic>();
-            services.AddScoped<IHandler<DeleteIdeaCommand>, IdeaLogic>();
-            services.AddScoped<IHandler<PublishIdeaCommand>, IdeaLogic>();
-            services.AddScoped<IHandler<UnpublishIdeaCommand>, IdeaLogic>();
-            services.AddScoped<IHandler<SaveIdeaPagesCommand>, IdeaPagesLogic>();
-
 
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IIdeaService, IdeaService>();
@@ -140,7 +148,21 @@ namespace ProIdeas.UI
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
-            RegisterQueryTemplates(services);
+
+            var type1 = typeof(FilterIdeaQueryTemplate);
+
+            var allExportedTypes = Assembly.GetEntryAssembly()
+                  .GetReferencedAssemblies()
+                  .Select(i => Assembly.Load(i))
+                  .SelectMany(i => i.GetTypes())
+                  .ToList();
+
+            RegisterAllGenericTypeImplementations(services, allExportedTypes, typeof(Message), typeof(IMessageFilter<>));
+            RegisterAllGenericTypeImplementations(services, allExportedTypes, typeof(Command), typeof(IHandler<>));                        
+            RegisterAllGenericTypeImplementations(services, allExportedTypes, typeof(Event), typeof(IHandler<>));
+            
+
+            RegisterQueryTemplates(services, allExportedTypes);
 
 
 
