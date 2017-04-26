@@ -1,5 +1,4 @@
 ﻿using ProIdeas.Logic.Contracts;
-using System;
 using System.Collections.Generic;
 using ProIdeas.DTO;
 using ProIdeas.Domain.Repositories;
@@ -7,12 +6,12 @@ using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Queries;
 using ProIdeas.DataMappings.Data.Mappings.Contracts;
 using ProIdeas.Domain.Core.Events;
-using ProIdeas.Infra.Commands.Ideas;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Events;
 using System.Threading.Tasks;
 using ProIdeas.Authentication.Contracts;
 using ProIdeas.Infra.Commands.Collaboration;
+using ProIdeas.Domain.Entities.Model;
 
 namespace ProIdeas.Logic
 {
@@ -20,7 +19,8 @@ namespace ProIdeas.Logic
         IHandler<CreateIdeaCommentCommand>,
         IHandler<UpdateIdeaCommentCommand>,
         IHandler<DeleteIdeaCommentCommand>,
-        IHandler<LikeIdeaCommand>
+        IHandler<LikeIdeaCommand>,
+        IHandler<IdeaLikeChangedEvent>
     {
         #region Private readonly fields
         private readonly IRepository _repository;
@@ -120,6 +120,29 @@ namespace ProIdeas.Logic
             { return; }
 
             _bus.RaiseEvent(new IdeaLikeChangedEvent(message.IdeaId, message.UserId, message.Like));
+        }
+        #endregion
+
+
+        #region IdeaLikeChangedEvent Implementation
+        async public void Handle(IdeaLikeChangedEvent message)
+        {
+            var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQueryParameter>(new GetIdeaCollaborationStatsQueryParameter
+            {
+                IdeaId = message.IdeaId
+            });
+
+            if (stats == null)
+            { return; }
+
+            var idea = await _repository.GetOneAsync<Idea>(message.IdeaId);
+
+            idea.Likes = stats.Likes;
+            idea.DisLikes = stats.DisLikes;
+            idea.Comments = stats.Comments;
+
+            _repository.Update(idea);
+
         }
         #endregion
 

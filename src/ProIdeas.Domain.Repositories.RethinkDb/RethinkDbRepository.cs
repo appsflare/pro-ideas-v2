@@ -127,8 +127,13 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             return RethinkDB.R.Table(GetTableName<TEntity>()).Get(id).RunResult<TEntity>(_connection);
         }
 
+        public Task<TEntity> GetOneAsync<TEntity>(string id) where TEntity : class, IEntity, new()
+        {
+            return RethinkDB.R.Table(GetTableName<TEntity>()).Get(id).RunResultAsync<TEntity>(_connection);
+        }
+
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity, TQueryParam>(TQueryParam queryParam)
-            where TEntity : class, IEntity, new()
+            where TEntity : class, new()
             where TQueryParam : class
         {
             var queryTemplate = _queryTemplateProvider.Find<TEntity, TQueryParam>();
@@ -138,7 +143,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
 
         async public Task<TEntity> QueryOneAsync<TEntity, TQueryParam>(TQueryParam queryParam)
-                where TEntity : class, IEntity, new()
+                where TEntity : class, new()
                 where TQueryParam : class
         {
             var queryTemplate = _queryTemplateProvider.Find<TEntity, TQueryParam>();

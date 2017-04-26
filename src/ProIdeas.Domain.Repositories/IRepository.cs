@@ -19,17 +19,19 @@ namespace ProIdeas.Domain.Repositories
 
         TEntity GetOne<TEntity>(string id) where TEntity : class, IEntity, new();
 
+        Task<TEntity> GetOneAsync<TEntity>(string id) where TEntity : class, IEntity, new();
+
         IEnumerable<TEntity> All<TEntity>() where TEntity : class, IEntity, new();
 
 
         IEnumerable<TEntity> Query<TEntity>(IQuery<TEntity> query) where TEntity : class, IEntity, new();
 
         Task<IEnumerable<TEntity>> QueryAsync<TEntity, TQueryParam>(TQueryParam queryParam)
-            where TEntity : class, IEntity, new()
+            where TEntity : class, new()
             where TQueryParam : class;
 
         Task<TEntity> QueryOneAsync<TEntity, TQueryParam>(TQueryParam queryParam)
-            where TEntity : class, IEntity, new()
+            where TEntity : class, new()
             where TQueryParam : class;
 
         IEnumerable<TEntity> All<TEntity>(int page, int pageSize) where TEntity : class, IEntity, new();
