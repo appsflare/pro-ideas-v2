@@ -23,10 +23,10 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 
             var query = table
              .Get(queryParam.IdeaId)
-             .Merge(idea => RethinkDB.R.HashMap("Owner", RethinkDB.R
+             .Merge(idea => RethinkDB.R.HashMap(nameof(Idea.Owner), RethinkDB.R
             .Table("ApplicationUser")
-            .Get(idea.GetField("OwnerId"))
-            .Pluck("FullName")));
+            .Get(idea.GetField(nameof(Idea.OwnerId)))
+            .Pluck(nameof(User.FullName))));
 
             return new[] { await query.RunAtomAsync<Idea>(context.Connection) };
         }

@@ -48,10 +48,10 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
                 query.Limit(queryParam.Skip.Value);
             }
 
-            var finalQuery = query.Merge(idea => RethinkDB.R.HashMap("Owner", RethinkDB.R
+            var finalQuery = query.Merge(idea => RethinkDB.R.HashMap(nameof(Idea.Owner), RethinkDB.R
             .Table("ApplicationUser")
-            .Get(idea.GetField("OwnerId"))
-            .Pluck("FullName")));
+            .Get(idea.GetField(nameof(Idea.OwnerId)))
+            .Pluck(nameof(User.FullName))));
 
             var result = await finalQuery.RunCursorAsync<Idea>(context.Connection);
 

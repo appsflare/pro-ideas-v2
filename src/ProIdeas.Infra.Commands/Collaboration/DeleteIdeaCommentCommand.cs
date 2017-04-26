@@ -1,6 +1,6 @@
 ﻿using ProIdeas.Domain.Core.Commands;
 
-namespace ProIdeas.Infra.Commands.Comments
+namespace ProIdeas.Infra.Commands.Collaboration
 {
     public class DeleteIdeaCommentCommand : Command
     {

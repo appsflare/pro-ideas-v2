@@ -9446,7 +9446,9 @@ textarea {
     color: #7e8bda; }
 
 .card-footer {
-  padding: 5px 20px; }
+  padding: 5px 20px;
+  position: absolute;
+  bottom: 27px; }
 
 .btn.btn-simple.idea-like {
   padding: 0 20px 0 0;

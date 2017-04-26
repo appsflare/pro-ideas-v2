@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Logic.Contracts
 {
-    public interface IIdeaCommentLogic
+    public interface IIdeaCollaborationLogic
     {
         Task<IEnumerable<IdeaCommentDto>> GetComments(string ideaId);
 
-        Task<IdeaCommentDto> GetComment(string commentId);        
+        Task<IdeaCommentDto> GetComment(string commentId);
+        
     }
 }

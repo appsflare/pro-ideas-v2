@@ -1,15 +1,20 @@
 ﻿using ProIdeas.Domain.Core.Commands;
 using ProIdeas.DTO;
 
-namespace ProIdeas.Infra.Commands.Comments
+namespace ProIdeas.Infra.Commands.Collaboration
 {
-    public class UpdateIdeaCommentCommand : Command
+    public class CreateIdeaCommentCommand : Command
     {
         public IdeaCommentDto Comment { get; private set; }
 
-        public UpdateIdeaCommentCommand(IdeaCommentDto comment)
+        public CreateIdeaCommentCommand(IdeaCommentDto comment)
         {
             Comment= comment;
+        }
+
+        public void SetCommentId(string id)
+        {
+            Comment.Id = id;
         }
 
         public override bool IsValid()

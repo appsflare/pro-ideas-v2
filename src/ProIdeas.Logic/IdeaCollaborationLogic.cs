@@ -12,14 +12,15 @@ using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Events;
 using System.Threading.Tasks;
 using ProIdeas.Authentication.Contracts;
-using ProIdeas.Infra.Commands.Comments;
+using ProIdeas.Infra.Commands.Collaboration;
 
 namespace ProIdeas.Logic
 {
-    public class IdeaCommentLogic : IIdeaCommentLogic,
+    public class IdeaCollaborationLogic : IIdeaCollaborationLogic,
         IHandler<CreateIdeaCommentCommand>,
         IHandler<UpdateIdeaCommentCommand>,
-        IHandler<DeleteIdeaCommentCommand>
+        IHandler<DeleteIdeaCommentCommand>,
+        IHandler<LikeIdeaCommand>
     {
         #region Private readonly fields
         private readonly IRepository _repository;
@@ -29,7 +30,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region Ctors
-        public IdeaCommentLogic(IRepository repository, IDataMapper dataMapper, IBus bus, IUserIdentityProvider userIdentityProvider)
+        public IdeaCollaborationLogic(IRepository repository, IDataMapper dataMapper, IBus bus, IUserIdentityProvider userIdentityProvider)
         {
             _repository = repository;
             _dataMapper = dataMapper;
@@ -56,6 +57,7 @@ namespace ProIdeas.Logic
             });
             return _dataMapper.Map<IEnumerable<IdeaCommentDto>>(comments);
         }
+
         #endregion
 
         #region CreateIdeaCommentCommand Implementation
@@ -65,7 +67,7 @@ namespace ProIdeas.Logic
 
             message.SetCommentId(createdComment.Id);
 
-           _bus.RaiseEvent(new IdeaCommentCreatedEvent( _dataMapper.Map<IdeaCommentDto>(createdComment)));
+            _bus.RaiseEvent(new IdeaCommentCreatedEvent(_dataMapper.Map<IdeaCommentDto>(createdComment)));
 
 
         }
@@ -86,6 +88,38 @@ namespace ProIdeas.Logic
             var ideaComment = _repository.GetOne<IdeaComment>(message.CommentId);
             _repository.Delete(ideaComment);
             _bus.RaiseEvent(new IdeaCommentDeletedEvent(_dataMapper.Map<IdeaCommentDto>(ideaComment)));
+        }
+        #endregion
+
+        #region LikeIdeaCommand Implementation
+        async public void Handle(LikeIdeaCommand message)
+        {
+            var likeData = await _repository.QueryOneAsync<IdeaLike, GetIdeaLikeByUserIdQueryParameter>(new GetIdeaLikeByUserIdQueryParameter
+            {
+                IdeaId = message.IdeaId,
+                UserId = message.UserId
+            });
+
+            var hasChanged = false;
+
+            if (likeData == null)
+            {
+                _repository.Add(likeData);
+                hasChanged = true;
+            }
+            else
+            {
+                hasChanged = likeData.IsLike == message.Like;
+
+                likeData.IsLike = message.Like;
+                _repository.Update(likeData);
+
+            }
+
+            if (!hasChanged)
+            { return; }
+
+            _bus.RaiseEvent(new IdeaLikeChangedEvent(message.IdeaId, message.UserId, message.Like));
         }
         #endregion
 

@@ -6,12 +6,14 @@ namespace ProIdeas.Domain.Entities
     {
         public string IdeaId { get; set; }
 
-        public string UserId { get; set; }
+        public string OwnerId { get; set; }
 
         public bool IsLike { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }
+
+        public User Owner { get; set; }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using ProIdeas.Domain.Core.Events;
-using ProIdeas.Infra.Commands.Comments;
+using ProIdeas.Infra.Commands.Collaboration;
 using System;
 
-namespace ProIdeas.Logic.Filters.Ideas
+namespace ProIdeas.Logic.Filters.Collaboration
+
 {
     public class CreateIdeaCommentCommandValidationFilter : BaseMessageValidationFilter<CreateIdeaCommentCommand>
     {

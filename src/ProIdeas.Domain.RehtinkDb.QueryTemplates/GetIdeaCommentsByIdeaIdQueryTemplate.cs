@@ -14,9 +14,9 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
             var queryParam = context.Parameter;
 
             var table = RethinkDB.R
-             .Table(typeof(IdeaComment).Name);            
+             .Table(typeof(IdeaComment).Name);
 
-            var query = table.Filter(comment => comment["IdeaId"] == queryParam.IdeaId);
+            var query = table.Filter(comment => comment[nameof(IdeaComment.IdeaId)] == queryParam.IdeaId);
             return (await query.RunCursorAsync<IdeaComment>(context.Connection)).ToList();
         }
     }

@@ -4,15 +4,15 @@ using ProIdeas.DTO;
 using ProIdeas.Logic.Contracts;
 using System.Threading.Tasks;
 using ProIdeas.Domain.Core.Bus;
-using ProIdeas.Infra.Commands.Comments;
+using ProIdeas.Infra.Commands.Collaboration;
 
 namespace ProIdeas.Services
 {
     public class IdeaCommentService : IIdeaCommentService
     {
-        private readonly IIdeaCommentLogic _ideaCommentLogic;
+        private readonly IIdeaCollaborationLogic _ideaCommentLogic;
         private readonly IBus _bus;
-        public IdeaCommentService(IIdeaCommentLogic ideaCommentLogic, IBus bus)
+        public IdeaCommentService(IIdeaCollaborationLogic ideaCommentLogic, IBus bus)
         {
             _ideaCommentLogic = ideaCommentLogic;
             _bus = bus;

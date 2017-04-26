@@ -50,13 +50,15 @@
 
 .card-footer {
     padding: 5px 20px;
+    position: absolute;
+    bottom: 27px;
 }
 
 .btn.btn-simple.idea-like {
     padding: 0 20px 0 0;
     color: #f48d8d;
 
-    span{
+    span {
         padding-left: 6px;
     }
 }

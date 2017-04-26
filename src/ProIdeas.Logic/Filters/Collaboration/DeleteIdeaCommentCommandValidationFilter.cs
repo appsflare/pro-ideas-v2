@@ -2,11 +2,11 @@
 using ProIdeas.Domain.Core.Events;
 using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Repositories;
-using ProIdeas.Infra.Commands.Comments;
+using ProIdeas.Infra.Commands.Collaboration;
 using ProIdeas.Infra.Commands.Ideas;
 using System;
 
-namespace ProIdeas.Logic.Filters.Comments
+namespace ProIdeas.Logic.Filters.Collaboration
 {
     public class DeleteIdeaCommentCommandValidationFilter : BaseMessageValidationFilter<DeleteIdeaCommentCommand>
     {

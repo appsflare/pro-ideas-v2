@@ -116,7 +116,7 @@ namespace ProIdeas.UI
 
             services.AddScoped<ITenantLogic, TenantLogic>();
             services.AddScoped<IIdeaLogic, IdeaLogic>();
-            services.AddScoped<IIdeaCommentLogic, IdeaCommentLogic>();
+            services.AddScoped<IIdeaCollaborationLogic, IdeaCollaborationLogic>();
             services.AddScoped<IEventStore, DefaultEventStore>();
 
             services.AddScoped<IBus, InMemoryBus>();

@@ -2,10 +2,10 @@
 using ProIdeas.Domain.Core.Events;
 using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Repositories;
-using ProIdeas.Infra.Commands.Comments;
+using ProIdeas.Infra.Commands.Collaboration;
 using System;
 
-namespace ProIdeas.Logic.Filters.Comments
+namespace ProIdeas.Logic.Filters.Collaboration
 {
     public class UpdateIdeaCommentCommandValidationFilter : BaseMessageValidationFilter<UpdateIdeaCommentCommand>
     {
