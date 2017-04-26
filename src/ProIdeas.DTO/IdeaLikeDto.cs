@@ -6,7 +6,9 @@ namespace ProIdeas.DTO
     {
         public string IdeaId { get; set; }
 
-        public string UserId { get; set; }
+        public string OwnerId { get; set; }
+
+        public UserDto User { get; set; }
 
         public string IsLike { get; set; }
 

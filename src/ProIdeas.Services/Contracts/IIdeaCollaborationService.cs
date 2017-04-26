@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Services.Contracts
 {
-    public interface IIdeaCommentService
+    public interface IIdeaCollaborationService
     {
         Task<IdeaCommentDto> GetCommentAsync(string commentId);
 
@@ -12,7 +12,9 @@ namespace ProIdeas.Services.Contracts
 
         Task<IdeaCommentDto> CreateAsync(IdeaCommentDto comment);
 
-        void Update(IdeaCommentDto comment);      
+        void Update(IdeaCommentDto comment);
+
+        void Update(string ideaId, string userId, bool like);
 
     }
 }

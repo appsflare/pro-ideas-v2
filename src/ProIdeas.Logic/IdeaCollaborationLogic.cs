@@ -76,7 +76,14 @@ namespace ProIdeas.Logic
         #region UpdateIdeaCommentCommand Implementation
         public void Handle(UpdateIdeaCommentCommand message)
         {
-            var updatedComment = _repository.Update(_dataMapper.Map<IdeaComment>(message.Comment));
+            var existingComment = _repository.GetOne<IdeaComment>(message.Comment.Id);
+
+            if (existingComment == null)
+            { return; }
+
+            existingComment.Content = message.Comment.Content;
+
+            var updatedComment = _repository.Update(existingComment);
 
             _bus.RaiseEvent(new IdeaCommentUpdatedEvent(_dataMapper.Map<IdeaCommentDto>(updatedComment)));
         }
@@ -104,6 +111,11 @@ namespace ProIdeas.Logic
 
             if (likeData == null)
             {
+                likeData = new IdeaLike {
+                    IdeaId = message.IdeaId,
+                    OwnerId = message.UserId,
+                    IsLike = message.Like
+                };
                 _repository.Add(likeData);
                 hasChanged = true;
             }

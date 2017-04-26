@@ -39,7 +39,28 @@
                 &:focus,
                 &:hover {
                     background-color: $brand-info;
-                    @include shadow-big-color($brand-info);
+                    //@include shadow-big-color($brand-info);
+                }
+            }
+        }
+    }
+
+
+    &.nav-pills-grey {
+        background-color: $grey-100;
+
+        > li {
+            > a {
+                color: $black-color;
+            }
+
+            &.active > a {
+                &,
+                &:focus,
+                &:hover {
+                    background-color: $white;
+                    color: $black-color;
+                    //@include shadow-big-color($brand-info);
                 }
             }
         }
@@ -52,7 +73,7 @@
                 &:focus,
                 &:hover {
                     background-color: $brand-success;
-                    @include shadow-big-color($brand-success);
+                    //@include shadow-big-color($brand-success);
                 }
             }
         }
@@ -65,7 +86,7 @@
                 &:focus,
                 &:hover {
                     background-color: $brand-warning;
-                    @include shadow-big-color($brand-warning);
+                    //@include shadow-big-color($brand-warning);
                 }
             }
         }
@@ -78,7 +99,7 @@
                 &:focus,
                 &:hover {
                     background-color: $brand-danger;
-                    @include shadow-big-color($brand-danger);
+                    //@include shadow-big-color($brand-danger);
                 }
             }
         }

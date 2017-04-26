@@ -16,12 +16,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 
             var table = RethinkDB.R
              .Table(typeof(Idea).Name);
-
-            //var filter =  RethinkDB.R.Js($@"(function(idea){{
-            //      return idea.title.indexOf('{queryParam.Keyword}') >-1 ||idea.description.indexOf('{queryParam.Keyword}') > -1;
-            //  }})");
-
-
+    
 
             var query = table
              .Filter(x => x[nameof(Idea.Title)].Match(queryParam.Keyword)

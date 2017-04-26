@@ -32,6 +32,8 @@ using ProIdeas.Domain.RehtinkDb.QueryTemplates;
 using System;
 using System.Collections.Generic;
 using ProIdeas.Domain.Core.Commands;
+using ProIdeas.Infra.Commands.Collaboration;
+using ProIdeas.Infra.Events;
 
 namespace ProIdeas.UI
 {
@@ -126,7 +128,7 @@ namespace ProIdeas.UI
 
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IIdeaService, IdeaService>();
-            services.AddScoped<IIdeaCommentService, IdeaCommentService>();
+            services.AddScoped<IIdeaCollaborationService, IdeaCollaborationService>();
 
             services.AddScoped<IRethinkDbConnectionProvider, DefaultRethinkDbConnectionProvider>();
 
@@ -150,6 +152,8 @@ namespace ProIdeas.UI
 
 
             var type1 = typeof(FilterIdeaQueryTemplate);
+            var type2 = typeof(LikeIdeaCommand);
+            var type3 = typeof(IdeaLikeChangedEvent);
 
             var allExportedTypes = Assembly.GetEntryAssembly()
                   .GetReferencedAssemblies()

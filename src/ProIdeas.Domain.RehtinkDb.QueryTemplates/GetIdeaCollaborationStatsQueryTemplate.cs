@@ -28,7 +28,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
             var getStatsTask = ideaTable.Get(queryParam.IdeaId)
                 .Pluck(nameof(IdeaLike.IdeaId))
                 .Merge(idea => RethinkDB.R.HashMap(nameof(IdeaCollaborationStats.Likes), ideaLikesQuery))
-                .Merge(idea => RethinkDB.R.HashMap(nameof(IdeaCollaborationStats.DisLikes), ideaLikesQuery))
+                .Merge(idea => RethinkDB.R.HashMap(nameof(IdeaCollaborationStats.DisLikes), ideaDisLikesQuery))
                 .Merge(idea => RethinkDB.R.HashMap(nameof(IdeaCollaborationStats.Comments), ideaCommentsQuery))
                 .RunAtomAsync<IdeaCollaborationStats>(context.Connection);
 

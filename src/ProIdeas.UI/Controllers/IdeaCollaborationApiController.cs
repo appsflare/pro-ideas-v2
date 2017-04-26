@@ -3,17 +3,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Services.Contracts;
 using ProIdeas.DTO;
+using ProIdeas.Authentication.Contracts;
 
 namespace ProIdeas.UI.Controllers
 {
     [Produces("application/json")]
     [Route("api")]
-    public class IdeaCommentApiController : Controller
+    public class IdeaCollaborationApiController : Controller
     {
-        private readonly IIdeaCommentService _ideaCommentService;
-        public IdeaCommentApiController(IIdeaCommentService ideaCommentService)
+        private readonly IIdeaCollaborationService _ideaCommentService;
+        private readonly IUserIdentityProvider _userIdentityProvider;
+        public IdeaCollaborationApiController(IIdeaCollaborationService ideaCommentService, IUserIdentityProvider userIdentityProvider)
         {
             _ideaCommentService = ideaCommentService;
+            _userIdentityProvider = userIdentityProvider;
         }
 
         [HttpGet, Route("comments/{id}")]
@@ -35,9 +38,17 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpPut, Route("ideas/{ideaId}/comments")]
-        public IActionResult  UpdateComment(string ideaId, [FromBody] IdeaCommentDto comment)
+        public IActionResult UpdateComment(string ideaId, [FromBody] IdeaCommentDto comment)
         {
-             _ideaCommentService.Update(comment);
+            comment.UserId = _userIdentityProvider.GetUserId();
+            _ideaCommentService.Update(comment);
+            return Json(new { message = "Comment updated successfully" });
+        }
+
+        [HttpPut, Route("ideas/{ideaId}/likes/{like}")]
+        public IActionResult Update(string ideaId, bool like)
+        {
+            _ideaCommentService.Update(ideaId, _userIdentityProvider.GetUserId(), like);
             return Json(new { message = "Comment updated successfully" });
         }
     }

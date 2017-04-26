@@ -5,16 +5,17 @@ using ProIdeas.Logic.Contracts;
 using System.Threading.Tasks;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Commands.Collaboration;
+using System;
 
 namespace ProIdeas.Services
 {
-    public class IdeaCommentService : IIdeaCommentService
+    public class IdeaCollaborationService : IIdeaCollaborationService
     {
-        private readonly IIdeaCollaborationLogic _ideaCommentLogic;
+        private readonly IIdeaCollaborationLogic _ideaCollaborationLogic;
         private readonly IBus _bus;
-        public IdeaCommentService(IIdeaCollaborationLogic ideaCommentLogic, IBus bus)
+        public IdeaCollaborationService(IIdeaCollaborationLogic ideaCommentLogic, IBus bus)
         {
-            _ideaCommentLogic = ideaCommentLogic;
+            _ideaCollaborationLogic = ideaCommentLogic;
             _bus = bus;
 
         }
@@ -30,12 +31,12 @@ namespace ProIdeas.Services
 
         public Task<IdeaCommentDto> GetCommentAsync(string commentId)
         {
-            return _ideaCommentLogic.GetComment(commentId);
+            return _ideaCollaborationLogic.GetComment(commentId);
         }
 
         public Task<IEnumerable<IdeaCommentDto>> GetCommentsAsync(string ideaId)
         {
-            return _ideaCommentLogic.GetComments(ideaId);
+            return _ideaCollaborationLogic.GetComments(ideaId);
         }
 
         public void Update(IdeaCommentDto comment)
@@ -43,6 +44,11 @@ namespace ProIdeas.Services
             var command = new UpdateIdeaCommentCommand(comment);
 
             _bus.SendCommand(command);
+        }
+
+        public void Update(string ideaId, string userId, bool like)
+        {
+            _bus.SendCommand(new LikeIdeaCommand(ideaId, userId, like));
         }
     }
 }
