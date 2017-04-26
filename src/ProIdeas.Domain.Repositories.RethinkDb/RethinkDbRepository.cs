@@ -133,7 +133,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
         {
             var queryTemplate = _queryTemplateProvider.Find<TEntity, TQueryParam>();
 
-            return queryTemplate.ExecuteAsync(_connection, queryParam);
+            return queryTemplate?.ExecuteAsync(_connection, queryParam);
         }
 
 
@@ -143,7 +143,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
         {
             var queryTemplate = _queryTemplateProvider.Find<TEntity, TQueryParam>();
 
-            return (await queryTemplate.ExecuteAsync(_connection, queryParam)).FirstOrDefault();
+            return (await queryTemplate?.ExecuteAsync(_connection, queryParam)).FirstOrDefault();
         }
     }
 }

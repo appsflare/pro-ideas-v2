@@ -15,10 +15,6 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
             var table = RethinkDB.R
              .Table(typeof(IdeaComment).Name);
 
-            //var filter =  RethinkDB.R.Js($@"(function(idea){{
-            //      return idea.title.indexOf('{queryParam.Keyword}') >-1 ||idea.description.indexOf('{queryParam.Keyword}') > -1;
-            //  }})");
-
             var query = table.Get(queryParam.CommentId);
             return new[] { await query.RunAtomAsync<IdeaComment>(context.Connection) };
         }
