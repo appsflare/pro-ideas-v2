@@ -2,22 +2,22 @@
 using ProIdeas.Domain.Core.Events;
 using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Repositories;
-using ProIdeas.Infra.Commands.Idea;
+using ProIdeas.Infra.Commands.Ideas;
 using System;
 
-namespace ProIdeas.Logic.Filters
+namespace ProIdeas.Logic.Filters.Ideas
 {
-    public class SaveIdeaPagesCommandValidationFilter : BaseMessageValidationFilter<SaveIdeaPagesCommand>
+    public class PublishIdeaCommandValidationFilter : BaseMessageValidationFilter<PublishIdeaCommand>
     {
         private readonly IUserIdentityProvider _userIdentityProvider;
         private readonly IRepository _repository;
-        public SaveIdeaPagesCommandValidationFilter(IUserIdentityProvider userIdentityProvider, IRepository repository)
+        public PublishIdeaCommandValidationFilter(IUserIdentityProvider userIdentityProvider, IRepository repository)
         {
             _userIdentityProvider = userIdentityProvider;
             _repository = repository;
         }
 
-        protected override void Validate(FilterContext<SaveIdeaPagesCommand> context)
+        protected override void Validate(FilterContext<PublishIdeaCommand> context)
         {
             if (!context.Message.IsValid())
             {

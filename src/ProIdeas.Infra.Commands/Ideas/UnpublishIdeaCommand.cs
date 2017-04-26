@@ -1,12 +1,12 @@
 ﻿using ProIdeas.Domain.Core.Commands;
 
-namespace ProIdeas.Infra.Commands.Idea
+namespace ProIdeas.Infra.Commands.Ideas
 {
-    public class PublishIdeaCommand : Command
+    public class UnpublishIdeaCommand : Command
     {
         public string IdeaId { get; private set; }
 
-        public PublishIdeaCommand(string ideaId)
+        public UnpublishIdeaCommand(string ideaId)
         {
             IdeaId = ideaId;
         }

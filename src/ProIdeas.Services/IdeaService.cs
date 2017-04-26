@@ -6,7 +6,7 @@ using ProIdeas.DTO;
 using ProIdeas.Logic.Contracts;
 using System.Threading.Tasks;
 using ProIdeas.Domain.Core.Bus;
-using ProIdeas.Infra.Commands.Idea;
+using ProIdeas.Infra.Commands.Ideas;
 
 namespace ProIdeas.Services
 {

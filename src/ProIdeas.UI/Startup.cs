@@ -15,7 +15,7 @@ using ProIdeas.Services.Contracts;
 using ProIdeas.Logic.Contracts;
 using ProIdeas.Logic;
 using ProIdeas.Domain.Core.Events;
-using ProIdeas.Infra.Commands.Idea;
+using ProIdeas.Infra.Commands.Ideas;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Bus;
 using ProIdeas.Infra.EventSourcing;
@@ -122,11 +122,11 @@ namespace ProIdeas.UI
             services.AddScoped<IBus, InMemoryBus>();
 
             services.AddScoped<ITenantStore, LocalJsonTenantStore>();
-
-            services.AddScoped<IMessageFilter<CreateIdeaCommand>, CreateIdeaCommandValidationFilter>();
+            
 
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IIdeaService, IdeaService>();
+            services.AddScoped<IIdeaCommentService, IdeaCommentService>();
 
             services.AddScoped<IRethinkDbConnectionProvider, DefaultRethinkDbConnectionProvider>();
 

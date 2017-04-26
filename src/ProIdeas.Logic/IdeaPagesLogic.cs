@@ -2,7 +2,7 @@
 using ProIdeas.Domain.Core.Events;
 using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Repositories;
-using ProIdeas.Infra.Commands.Idea;
+using ProIdeas.Infra.Commands.Ideas;
 using ProIdeas.Logic.Contracts;
 using System.Collections.Generic;
 

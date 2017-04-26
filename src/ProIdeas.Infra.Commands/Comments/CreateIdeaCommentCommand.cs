@@ -1,7 +1,7 @@
 ﻿using ProIdeas.Domain.Core.Commands;
 using ProIdeas.DTO;
 
-namespace ProIdeas.Infra.Commands.Comment
+namespace ProIdeas.Infra.Commands.Comments
 {
     public class CreateIdeaCommentCommand : Command
     {

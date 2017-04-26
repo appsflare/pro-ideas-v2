@@ -7,7 +7,7 @@ using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Queries;
 using ProIdeas.DataMappings.Data.Mappings.Contracts;
 using ProIdeas.Domain.Core.Events;
-using ProIdeas.Infra.Commands.Idea;
+using ProIdeas.Infra.Commands.Ideas;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Events;
 using System.Threading.Tasks;

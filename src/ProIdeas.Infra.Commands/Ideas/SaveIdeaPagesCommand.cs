@@ -2,7 +2,7 @@
 using ProIdeas.DTO;
 using System.Collections.Generic;
 
-namespace ProIdeas.Infra.Commands.Idea
+namespace ProIdeas.Infra.Commands.Ideas
 {
     public class SaveIdeaPagesCommand : Command
     {

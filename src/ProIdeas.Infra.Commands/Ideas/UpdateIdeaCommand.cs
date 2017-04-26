@@ -1,7 +1,7 @@
 ﻿using ProIdeas.Domain.Core.Commands;
 using ProIdeas.DTO;
 
-namespace ProIdeas.Infra.Commands.Idea
+namespace ProIdeas.Infra.Commands.Ideas
 {
     public class UpdateIdeaCommand : Command
     {

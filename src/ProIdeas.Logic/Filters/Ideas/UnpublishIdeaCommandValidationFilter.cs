@@ -2,10 +2,10 @@
 using ProIdeas.Domain.Core.Events;
 using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Repositories;
-using ProIdeas.Infra.Commands.Idea;
+using ProIdeas.Infra.Commands.Ideas;
 using System;
 
-namespace ProIdeas.Logic.Filters
+namespace ProIdeas.Logic.Filters.Ideas
 {
     public class UnpublishIdeaCommandValidationFilter : BaseMessageValidationFilter<UnpublishIdeaCommand>
     {
