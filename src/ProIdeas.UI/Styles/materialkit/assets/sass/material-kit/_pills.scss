@@ -32,6 +32,26 @@
         }
     }
 
+    &.nav-pills-with-btn {
+
+        > li {
+            > a {
+                width: calc(100% - 40px);
+                display: inline-block;
+            }
+        }
+
+        .btn {
+            margin-top: 3px;
+            margin-bottom: 0px;
+            width: 20px;
+
+            i {
+                padding: 0;
+            }
+        }
+    }
+
     &.nav-pills-info {
         > li {
             &.active > a {

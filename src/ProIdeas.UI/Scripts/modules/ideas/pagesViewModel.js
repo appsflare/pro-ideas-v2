@@ -2,10 +2,10 @@
 import 'knockout.validation';
 
 class PageViewModel {
-    constructor({name = '', content = ''}) {
+    constructor({name = '', content = '', canDelete = true}) {
         this.name = ko.observable(name);
         this.content = ko.observable(content);
-
+        this.canDelete = ko.observable(canDelete);
         this.isEditing = ko.observable(false);
     }
 
@@ -28,6 +28,8 @@ export default class PagesViewModel {
         this.isSaving = ko.observable(false);
         this._init(pages);
 
+        this.details = ko.observable('');
+
         this.canAddPage = ko.computed(() => this.pages().length < 4);
 
     }
@@ -35,9 +37,11 @@ export default class PagesViewModel {
     _init(pages) {
         this.currentPage = ko.observable(false);
         this.pages = ko.observableArray(pages.map(p => new PageViewModel(p)));
-        if (this.pages().length) {
-            this.currentPage(this.pages()[0]);
+        if (!this.pages().length) {
+            this.pages.push(new PageViewModel({ name: 'Details', content: '', canDelete: false }));
         }
+        this.currentPage(this.pages()[0]);
+
 
     }
 
@@ -55,6 +59,13 @@ export default class PagesViewModel {
         const newPage = new PageViewModel({ name: `New Page (${this.pages().length + 1})`, content: '' });
         this.pages.push(newPage);
         this.editPage(newPage);
+    }
+
+    removePage(page) {
+        if (!page)
+        { return; }
+
+        this.pages.remove(page);
     }
 
     editPage(page) {

@@ -7788,6 +7788,17 @@ select.form-control {
   background-color: #ff9800;
   color: #FFFFFF; }
 
+.nav-pills.nav-pills-with-btn > li > a {
+  width: calc(100% - 40px);
+  display: inline-block; }
+
+.nav-pills.nav-pills-with-btn .btn {
+  margin-top: 3px;
+  margin-bottom: 0px;
+  width: 20px; }
+  .nav-pills.nav-pills-with-btn .btn i {
+    padding: 0; }
+
 .nav-pills.nav-pills-info > li.active > a, .nav-pills.nav-pills-info > li.active > a:focus, .nav-pills.nav-pills-info > li.active > a:hover {
   background-color: #03a9f4; }
 

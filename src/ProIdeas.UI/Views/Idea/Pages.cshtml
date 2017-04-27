@@ -12,12 +12,17 @@
     <script src="~/Scripts/pages/ideas/pages.bundle.js" asp-append-version="true"></script>
 }
 
-<script id="pages-template">
+<script id="pages-template" type="text/html">
     <div class="row">
         <aside class="col-sm-3">
-            <ul class="nav nav-pills nav-stacked nav-pills-horizontal" data-bind="foreach: pages">
-                <li class="active" data-bind="css:{ active: $parent.isCurrentPage($data) },click: function(){$parent.editPage($data)}">
-                    <a><span data-bind="text: name"></span></a>
+            <ul class="nav nav-pills nav-stacked nav-pills-horizontal nav-pills-success nav-pills-with-btn" data-bind="foreach: pages">
+                <li class="active" data-bind="css:{ active: $parent.isCurrentPage($data) },click: function(){$parent.editPage($data);}">
+                    <a>
+                        <span data-bind="text: name"></span>
+                    </a>
+                    <button class="btn btn-danger btn-xs btn-simple" data-bind="if: canDelete,click: function(){ $parent.removePage($data);}">
+                        <i class="material-icons pull-right">delete</i>
+                    </button>
                 </li>
             </ul>
             <button class="btn btn-simple create-page" data-bind="if: canAddPage, click: addPage">
@@ -28,7 +33,7 @@
             <div class="col-sm-12 input-group" data-bind="with: currentPage()">
                 <div class="col-sm-12 input-group">
                     <div class="form-group is-empty">
-                        <input class="form-control" type="text" placeholder="Enter page name" autocomplete="off" data-bind="textInput: name" />
+                        <input class="form-control" type="text" placeholder="Enter page name" autocomplete="off" data-bind="enable: canDelete, textInput: name" />
                         <span class="material-icons form-control-feedback">clear</span>
                         <span class="material-input"></span>
                         <span class="help-block validation-message"></span>

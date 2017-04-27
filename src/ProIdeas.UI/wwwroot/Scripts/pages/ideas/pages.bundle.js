@@ -14369,12 +14369,14 @@ var PageViewModel = function () {
         var _ref$name = _ref.name,
             name = _ref$name === undefined ? '' : _ref$name,
             _ref$content = _ref.content,
-            content = _ref$content === undefined ? '' : _ref$content;
+            content = _ref$content === undefined ? '' : _ref$content,
+            _ref$canDelete = _ref.canDelete,
+            canDelete = _ref$canDelete === undefined ? true : _ref$canDelete;
         classCallCheck(this, PageViewModel);
 
         this.name = knockout.observable(name);
         this.content = knockout.observable(content);
-
+        this.canDelete = knockout.observable(canDelete);
         this.isEditing = knockout.observable(false);
     }
 
@@ -14409,6 +14411,8 @@ var PagesViewModel = function () {
         this.isSaving = knockout.observable(false);
         this._init(pages);
 
+        this.details = knockout.observable('');
+
         this.canAddPage = knockout.computed(function () {
             return _this.pages().length < 4;
         });
@@ -14421,9 +14425,10 @@ var PagesViewModel = function () {
             this.pages = knockout.observableArray(pages.map(function (p) {
                 return new PageViewModel(p);
             }));
-            if (this.pages().length) {
-                this.currentPage(this.pages()[0]);
+            if (!this.pages().length) {
+                this.pages.push(new PageViewModel({ name: 'Details', content: '', canDelete: false }));
             }
+            this.currentPage(this.pages()[0]);
         }
     }, {
         key: '_validate',
@@ -14444,6 +14449,15 @@ var PagesViewModel = function () {
             var newPage = new PageViewModel({ name: 'New Page (' + (this.pages().length + 1) + ')', content: '' });
             this.pages.push(newPage);
             this.editPage(newPage);
+        }
+    }, {
+        key: 'removePage',
+        value: function removePage(page) {
+            if (!page) {
+                return;
+            }
+
+            this.pages.remove(page);
         }
     }, {
         key: 'editPage',
