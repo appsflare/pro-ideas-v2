@@ -37,7 +37,7 @@ class ImagesPage extends BasePage {
 
         ko.applyBindings(viewModel, document.getElementById('idea-image-upload-form'));
 
-
+        return Promise.resolve(true);
     }
 }
 

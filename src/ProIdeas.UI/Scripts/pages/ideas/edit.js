@@ -13,7 +13,7 @@ class EditPage extends BasePage {
 
     onReady() {
         console.log('edit page ready');
-        this._client.getIdea($('#IdeaId').val()).then(ideaDetails => {
+        return this._client.getIdea($('#IdeaId').val()).then(ideaDetails => {
 
 
             var viewModel = new IdeaBasicInfoViewModel({

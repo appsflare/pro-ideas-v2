@@ -67,7 +67,7 @@ namespace ProIdeas.Services
             _bus.SendCommand(new UnpublishIdeaCommand(ideaId));
         }
 
-        public Task<IEnumerable<IdeaDto>> GetUserIdeas(string userId, int pageSize, int page, string keyword)
+        public Task<IEnumerable<IdeaDto>> GetUserIdeasAsync(string userId, int pageSize, int page, string keyword)
         {
             return _ideaLogic.GetUserIdeas(userId, pageSize, page, keyword);
         }

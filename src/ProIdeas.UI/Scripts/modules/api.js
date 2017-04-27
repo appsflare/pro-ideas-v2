@@ -91,7 +91,16 @@ export default class ApiClient {
         return utils.get(`/api/ideas/${id}/pages`);
     }
 
-    getIdeas() {
-        return Promise.resolve([]);
+    getIdeas({keyword = "", page, pageSize}) {
+        let url = `/api/ideas?page=${page}&pageSize=${pageSize}`;
+        if (keyword) {
+            url = `/api/ideas/search?page=${page}&pageSize=${pageSize}&keyword=${keyword}`;
+        }
+        return utils.get(url);
+    }
+
+    getMyIdeas({keyword = "", page, pageSize}) {
+        const url = `/api/ideas/searchmyideas?page=${page}&pageSize=${pageSize}&keyword=${keyword}`;
+        return utils.get(url);
     }
 }

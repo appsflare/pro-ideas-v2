@@ -3,33 +3,53 @@
     ViewData["Title"] = "Home Page";
 }
 @section Scripts{
-    <script src="~/Scripts/pages/generic.bundle.js"></script>
+    <script src="~/Scripts/pages/ideas/searchMyIdeas.bundle.js"></script>
 }
 
-<div class="row">
-    <div class="container create-idea">
-        <div class="row">
-            <h2>Ideas flashed in my head</h2>
 
-            @*<div class="col-lg-12">
-                <form class="form">
-                    <div class="input-group input-group-sm">
-                        <input class="form-control" placeholder="Search for..." />
-                        <span class="input-group-btn input-group-addon">
-                            <button type="submit" class="btn btn-simple">
-                                <i class="material-icons">search</i>
-                            </button>
-                        </span>
-                    </div>
-                </form>
-            </div>*@
+<script type="text/html" id="search-page-template">
 
-            <div class="content">
-                @foreach (var idea in Model.Ideas)
-                {
-                    @await Html.PartialAsync("_IdeaCard", idea);
-                }
+    <div class="col-lg-12">
+        <form class="form" data-bind="submit: search">
+            <div class="input-group input-group-sm">
+                <input class="form-control" placeholder="Search your ideas..." data-bind="textInput: keyword" />
+                <span class="input-group-btn input-group-addon">
+                    <button type="submit" class="btn btn-simple">
+                        <i class="material-icons">search</i>
+                    </button>
+                </span>
             </div>
+        </form>
+    </div>
+
+    <div class="content" data-bind="foreach: {data: collection.data, afterRender: collection.afterRender, afterAdd: collection.afterAdd}">
+        <div class="col-sm-4 idea-card-wrap">
+            <div class="idea-card">
+                <div class="card-image"><img data-bind="attr:{src: banner}" /></div>
+                <div class="card-content-container">
+                    <h3 class="card-header">
+                        <a data-bind="attr:{href: editUrl}, text: title"></a>
+                    </h3>
+                    <span class="author-wrap">Share by <span class="author" data-bind="text: owner.fullName"></span></span>
+                    <p class="card-content" data-bind="text: description"></p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span data-bind="text: likes"></span></button>
+                    <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span data-bind="text: comments"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<div class="row">
+    <div class="container create-idea" id="ideas-search-container">
+        <div class="row">
+            <h2>Explore Your Ideas</h2>
+            <!-- ko template: {name:'search-page-template'} -->
+            <!-- /ko -->
+
         </div>
     </div>
 </div>

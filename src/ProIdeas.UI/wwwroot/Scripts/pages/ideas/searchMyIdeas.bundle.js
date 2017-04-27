@@ -1,5 +1,5 @@
 this[''] = this[''] || {};
-this['']['/Scripts/pages/ideas/search'] = this['']['/Scripts/pages/ideas/search'] || {};
+this['']['/Scripts/pages/ideas/searchMyIdeas'] = this['']['/Scripts/pages/ideas/searchMyIdeas'] || {};
 (function () {
 'use strict';
 
@@ -2290,19 +2290,19 @@ var BasePage = function () {
     return BasePage;
 }();
 
-var SearchIdeasPage = function (_BasePage) {
-    inherits(SearchIdeasPage, _BasePage);
+var SearchMyIdeasPage = function (_BasePage) {
+    inherits(SearchMyIdeasPage, _BasePage);
 
-    function SearchIdeasPage(client) {
-        classCallCheck(this, SearchIdeasPage);
+    function SearchMyIdeasPage(client) {
+        classCallCheck(this, SearchMyIdeasPage);
 
-        var _this = possibleConstructorReturn(this, (SearchIdeasPage.__proto__ || Object.getPrototypeOf(SearchIdeasPage)).apply(this, arguments));
+        var _this = possibleConstructorReturn(this, (SearchMyIdeasPage.__proto__ || Object.getPrototypeOf(SearchMyIdeasPage)).apply(this, arguments));
 
         _this._client = client;
         return _this;
     }
 
-    createClass(SearchIdeasPage, [{
+    createClass(SearchMyIdeasPage, [{
         key: 'onReady',
         value: function onReady() {
             var _this2 = this;
@@ -2317,7 +2317,7 @@ var SearchIdeasPage = function (_BasePage) {
                             pageSize = _ref.pageSize;
 
 
-                        return _this2._client.getIdeas({ keyword: keyword, page: page, pageSize: pageSize });
+                        return _this2._client.getMyIdeas({ keyword: keyword, page: page, pageSize: pageSize });
                     }
                 }
             });
@@ -2329,12 +2329,12 @@ var SearchIdeasPage = function (_BasePage) {
             return Promise.resolve(true);
         }
     }]);
-    return SearchIdeasPage;
+    return SearchMyIdeasPage;
 }(BasePage);
 
 var client = new ApiClient();
-var page = new SearchIdeasPage(client);
+var page = new SearchMyIdeasPage(client);
 page.init();
 
 }());
-//# sourceMappingURL=search.bundle.js.map
+//# sourceMappingURL=searchMyIdeas.bundle.js.map

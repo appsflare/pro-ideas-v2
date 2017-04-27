@@ -1,5 +1,6 @@
 ﻿import ko from 'knockout';
 import 'knockout.validation';
+import { asyncComputed } from '../utils';
 
 class PageViewModel {
     constructor({name = '', content = '', canDelete = true}) {

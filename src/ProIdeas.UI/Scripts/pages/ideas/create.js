@@ -23,6 +23,7 @@ class CreatePage extends BasePage {
 
     onReady() {
         ko.applyBindings(this._model, document.getElementById('create-idea-form'));
+        return Promise.resolve(true);
     }
 }
 

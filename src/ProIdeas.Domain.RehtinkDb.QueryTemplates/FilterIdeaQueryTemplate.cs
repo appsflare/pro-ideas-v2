@@ -16,12 +16,18 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 
             var table = RethinkDB.R
              .Table(typeof(Idea).Name);
-    
 
-            var query = table
-             .Filter(x => x[nameof(Idea.Title)].Match(queryParam.Keyword)
-             .Or(x[nameof(Idea.Description)].Match(queryParam.Keyword)
-             .Or(x[nameof(Idea.FundingRequirement)].Match(queryParam.Keyword))));
+            var query = table.Filter(x=>x.HasFields(nameof(Idea.Title)));
+
+            if (!string.IsNullOrEmpty(queryParam.Keyword))
+            {
+                var keyword = $"(?i){queryParam.Keyword}";
+
+                query = query.Filter(x => x[nameof(Idea.Title)].Match(keyword)
+                 .Or(x[nameof(Idea.Description)].Match(keyword)
+                 .Or(x[nameof(Idea.FundingRequirement)].Match(keyword))));
+            }
+
 
             if (!string.IsNullOrEmpty(queryParam.Status))
             {

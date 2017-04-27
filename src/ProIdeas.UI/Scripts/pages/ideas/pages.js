@@ -14,7 +14,7 @@ class IdeaPagesPage extends BasePage {
 
     onReady() {
         console.log('edit page ready');
-        this._client.getIdea($('#IdeaId').val())
+        return this._client.getIdea($('#IdeaId').val())
             .then(({id, pages}) => {
 
 

@@ -28,10 +28,24 @@ namespace ProIdeas.UI.Controllers
         }
 
         // GET: api/IdeaApi
-        [HttpGet("filter", Name = "Filter")]
-        public Task<IEnumerable<IdeaDto>> Filter(int pageSize = 10, int page = 1)
+        [HttpGet("")]
+        public Task<IEnumerable<IdeaDto>> Get(int pageSize = 10, int page = 1)
         {
             return _ideaService.GetIdeasAsync(pageSize, page);
+        }
+
+        // GET: api/IdeaApi
+        [HttpGet("search")]
+        public Task<IEnumerable<IdeaDto>> Filter(string keyword, int pageSize = 10, int page = 1)
+        {
+            return _ideaService.SearchIdeasAsync(keyword, pageSize, page);
+        }
+
+
+        [HttpGet("searchmyideas")]
+        public Task<IEnumerable<IdeaDto>> FilterMyIdeas(string keyword, int pageSize = 10, int page = 1)
+        {
+            return _ideaService.GetUserIdeasAsync(_userIdentityProvider.GetUserId(), pageSize, page, keyword);
         }
 
         // GET: api/IdeaApi/5

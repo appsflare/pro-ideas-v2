@@ -29,7 +29,10 @@ export default class BasePage {
     init() {
         this.configure();
 
-        this.onReady();
+        this.onReady()
+            .then(() => {
+                $.material.init();
+            });
 
         //Barba.Dispatcher.on('newPageReady', (currentStatus, oldStatus, container) => {
         //    debugger;

@@ -123,7 +123,9 @@ var BasePage = function () {
         value: function init() {
             this.configure();
 
-            this.onReady();
+            this.onReady().then(function () {
+                $.material.init();
+            });
 
             //Barba.Dispatcher.on('newPageReady', (currentStatus, oldStatus, container) => {
             //    debugger;

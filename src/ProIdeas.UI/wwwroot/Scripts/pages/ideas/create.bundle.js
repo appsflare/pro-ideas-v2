@@ -184,8 +184,28 @@ var ApiClient = function () {
         }
     }, {
         key: 'getIdeas',
-        value: function getIdeas() {
-            return Promise.resolve([]);
+        value: function getIdeas(_ref) {
+            var _ref$keyword = _ref.keyword,
+                keyword = _ref$keyword === undefined ? "" : _ref$keyword,
+                page = _ref.page,
+                pageSize = _ref.pageSize;
+
+            var url = '/api/ideas?page=' + page + '&pageSize=' + pageSize;
+            if (keyword) {
+                url = '/api/ideas/search?page=' + page + '&pageSize=' + pageSize + '&keyword=' + keyword;
+            }
+            return utils.get(url);
+        }
+    }, {
+        key: 'getMyIdeas',
+        value: function getMyIdeas(_ref2) {
+            var _ref2$keyword = _ref2.keyword,
+                keyword = _ref2$keyword === undefined ? "" : _ref2$keyword,
+                page = _ref2.page,
+                pageSize = _ref2.pageSize;
+
+            var url = '/api/ideas/searchmyideas?page=' + page + '&pageSize=' + pageSize + '&keyword=' + keyword;
+            return utils.get(url);
         }
     }]);
     return ApiClient;
@@ -3467,7 +3487,9 @@ var BasePage = function () {
         value: function init() {
             this.configure();
 
-            this.onReady();
+            this.onReady().then(function () {
+                $.material.init();
+            });
 
             //Barba.Dispatcher.on('newPageReady', (currentStatus, oldStatus, container) => {
             //    debugger;
@@ -3524,6 +3546,7 @@ var CreatePage = function (_BasePage) {
         key: 'onReady',
         value: function onReady() {
             knockout.applyBindings(this._model, document.getElementById('create-idea-form'));
+            return Promise.resolve(true);
         }
     }]);
     return CreatePage;

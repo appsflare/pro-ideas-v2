@@ -4,7 +4,7 @@ import ko from 'knockout';
 import SearchIdeasViewModel from '../../modules/ideas/searchIdeasViewModel';
 import BasePage from '../../basePage';
 
-class SearchIdeasPage extends BasePage {
+class SearchMyIdeasPage extends BasePage {
     constructor(client) {
         super(...arguments);
         this._client = client;
@@ -18,7 +18,7 @@ class SearchIdeasPage extends BasePage {
 
                 search: ({keyword, page, pageSize}) => {
 
-                    return this._client.getIdeas({ keyword, page, pageSize });
+                    return this._client.getMyIdeas({ keyword, page, pageSize });
 
                 }
             }
@@ -34,5 +34,5 @@ class SearchIdeasPage extends BasePage {
 
 
 const client = new ApiClient();
-const page = new SearchIdeasPage(client);
+const page = new SearchMyIdeasPage(client);
 page.init();

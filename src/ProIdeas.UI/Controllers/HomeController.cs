@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Authentication.Contracts;
+using ProIdeas.DTO;
 using ProIdeas.Services.Contracts;
 using ProIdeas.UI.Models.IdeaViewModels;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -21,18 +23,14 @@ namespace ProIdeas.UI.Controllers
         }
 
 
-        async public Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var ideas = await _ideaService.GetIdeasAsync(10, 1);
-
-
-
-            return View(IndexIdeasViewModel.MapFrom(ideas));
+            return View(IndexIdeasViewModel.MapFrom(Enumerable.Empty<IdeaDto>()));
         }
 
         async public Task<IActionResult> MyIdeas()
         {
-            var ideas = await _ideaService.GetUserIdeas(_userIdentityProvider.GetUserId(), 10, 1, string.Empty);
+            var ideas = await _ideaService.GetUserIdeasAsync(_userIdentityProvider.GetUserId(), 10, 1, string.Empty);
 
             return View(IndexIdeasViewModel.MapFrom(ideas));
         }
