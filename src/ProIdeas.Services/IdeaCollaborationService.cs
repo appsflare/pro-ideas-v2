@@ -39,6 +39,11 @@ namespace ProIdeas.Services
             return _ideaCollaborationLogic.GetComments(ideaId);
         }
 
+        public Task<IdeaCollaborationStatsDto> GetStats(string ideaId)
+        {
+            return _ideaCollaborationLogic.GetStats(ideaId);
+        }
+
         public void Update(IdeaCommentDto comment)
         {
             var command = new UpdateIdeaCommentCommand(comment);
@@ -50,5 +55,6 @@ namespace ProIdeas.Services
         {
             _bus.SendCommand(new LikeIdeaCommand(ideaId, userId, like));
         }
+        
     }
 }

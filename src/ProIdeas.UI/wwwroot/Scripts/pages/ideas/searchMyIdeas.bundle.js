@@ -207,6 +207,11 @@ var ApiClient = function () {
             var url = '/api/ideas/searchmyideas?page=' + page + '&pageSize=' + pageSize + '&keyword=' + keyword;
             return utils.get(url);
         }
+    }, {
+        key: 'like',
+        value: function like(ideaId, isLike) {
+            return utils.put('/api/ideas/' + ideaId + '/likes/' + isLike);
+        }
     }]);
     return ApiClient;
 }();
@@ -1850,123 +1855,6 @@ var knockout = createCommonjsModule(function (module, exports) {
   })();
 });
 
-var animations = ["bounce", "flash", "pulse", "rubberBand", "shake", "swing", "tada", "wobble", "bounceIn", "bounceInDown", "bounceInLeft", "bounceInRight", "bounceInUp", "bounceOut", "bounceOutDown", "bounceOutLeft", "bounceOutRight", "bounceOutUp", "fadeIn", "fadeInDown", "fadeInDownBig", "fadeInLeft", "fadeInLeftBig", "fadeInRight", "fadeInRightBig", "fadeInUp", "fadeInUpBig", "fadeOut", "fadeOutDown", "fadeOutDownBig", "fadeOutLeft", "fadeOutLeftBig", "fadeOutRight", "fadeOutRightBig", "fadeOutUp", "fadeOutUpBig", "flip", "flipInX", "flipInY", "flipOutX", "flipOutY", "lightSpeedIn", "lightSpeedOut", "rotateIn", "rotateInDownLeft", "rotateInDownRight", "rotateInUpLeft", "rotateInUpRight", "rotateOut", "rotateOutDownLeft", "rotateOutDownRight", "rotateOutUpLeft", "rotateOutUpRight", "hinge", "rollIn", "rollOut", "zoomIn", "zoomInDown", "zoomInLeft", "zoomInRight", "zoomInUp", "zoomOut", "zoomOutDown", "zoomOutLeft", "zoomOutRight", "zoomOutUp"];
-var baseAnimateClass = "animated";
-var pfx = ["webkit", "moz", "MS", "o", ""];
-
-function addPrefixedEvent(element, type, callback) {
-	for (var p = 0; p < pfx.length; p++) {
-		if (!pfx[p]) type = type.toLowerCase();
-		element.addEventListener(pfx[p] + type, callback, false);
-	}
-}
-
-function removePrefixedEvent(element, type, callback) {
-	for (var p = 0; p < pfx.length; p++) {
-		if (!pfx[p]) type = type.toLowerCase();
-		element.removeEventListener(pfx[p] + type, callback);
-	}
-}
-
-function hasClass(ele, cls) {
-	return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
-}
-
-function addClass(ele, cls) {
-	if (!hasClass(ele, cls)) {
-		ele.className = ele.className ? ele.className + " " + cls : cls;
-	}
-}
-
-function removeClass(ele, cls) {
-	if (hasClass(ele, cls)) {
-		var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
-		ele.className = ele.className.replace(reg, ' ').trim();
-	}
-}
-
-function doAnimationWork(element, animation, callback, state) {
-	addClass(element, baseAnimateClass);
-	addClass(element, animation);
-
-	var _eventSubscription = null;
-
-	_eventSubscription = function eventSubscription(event) {
-		removePrefixedEvent(element, "AnimationEnd", _eventSubscription);
-
-		removeClass(element, baseAnimateClass);
-		removeClass(element, animation);
-
-		if (typeof callback === 'function') {
-			callback(event, state);
-		}
-	};
-
-	addPrefixedEvent(element, "AnimationEnd", _eventSubscription);
-}
-
-knockout.bindingHandlers.animate = {
-	init: function init(element, valueAccessor) {
-		var data = knockout.unwrap(valueAccessor()),
-		    animation,
-		    state,
-		    toggle,
-		    animationOn,
-		    animationOff,
-		    handler;
-
-		if (!data.animation) {
-			throw new Error('Animation property must be defined');
-		}
-
-		if (!data.state) {
-			throw new Error('State property must be defined');
-		}
-
-		animation = knockout.unwrap(data.animation);
-		animationOn = (typeof animation === "undefined" ? "undefined" : _typeof(animation)) === 'object' ? animation[0] : animation;
-		animationOff = (typeof animation === "undefined" ? "undefined" : _typeof(animation)) === 'object' ? animation[1] : animation;
-
-		if (animationOn && animations.indexOf(animationOn) === -1) {
-			throw new Error('Invalid first animation');
-		}
-
-		if (animationOff && animations.indexOf(animationOff) === -1) {
-			throw new Error('Invalid second animation');
-		}
-	},
-	update: function update(element, valueAccessor) {
-		var data = knockout.unwrap(valueAccessor()),
-		    animation,
-		    state,
-		    toggle,
-		    animationOn,
-		    animationOff,
-		    handler;
-
-		if (!data.animation) {
-			throw new Error('Animation property must be defined');
-		}
-
-		if (!data.state) {
-			throw new Error('State property must be defined');
-		}
-
-		animation = knockout.unwrap(data.animation);
-		state = !!knockout.unwrap(data.state);
-		animationOn = (typeof animation === "undefined" ? "undefined" : _typeof(animation)) === 'object' ? animation[0] : animation;
-		animationOff = (typeof animation === "undefined" ? "undefined" : _typeof(animation)) === 'object' ? animation[1] : animation;
-		toggle = animationOn !== animationOff;
-		handler = knockout.unwrap(data.handler) || undefined;
-
-		if (state) {
-			doAnimationWork(element, animationOn, handler, state);
-		} else if (toggle) {
-			doAnimationWork(element, animationOff, handler, state);
-		}
-	}
-};
-
 function asyncComputed(evaluator, owner) {
     var result = knockout.observable();
 
@@ -2118,26 +2006,16 @@ var KnockoutForEachCssTransition = function (_BaseCssTransition) {
     return KnockoutForEachCssTransition;
 }(BaseCSSTransition);
 
-var SearchResultItemViewModel = function SearchResultItemViewModel(item) {
-    var _this = this;
-
-    classCallCheck(this, SearchResultItemViewModel);
-
-
-    Object.keys(item).forEach(function (key) {
-        _this[key] = knockout.observable(item[key]);
-    });
-
-    this.banner = '/api/ideas/' + item.id + '/banner';
-    this.editUrl = '/ideas/' + item.id + '/edit';
-};
-
+//import '../knockout.animate';
 var SearchIdeasViewModel = function () {
     function SearchIdeasViewModel(_ref) {
         var keyword = _ref.keyword,
             _ref$rateLimit = _ref.rateLimit,
             rateLimit = _ref$rateLimit === undefined ? 500 : _ref$rateLimit,
-            search = _ref.actions.search;
+            _ref$actions = _ref.actions,
+            search = _ref$actions.search,
+            like = _ref$actions.like,
+            viewComments = _ref$actions.viewComments;
         classCallCheck(this, SearchIdeasViewModel);
 
         this.keyword = knockout.observable(keyword).extend({ rateLimit: rateLimit, method: "notifyWhenChangesStop" });
@@ -2161,12 +2039,25 @@ var SearchIdeasViewModel = function () {
 
         this.loading = knockout.observable(false);
 
-        this.actions = { search: search };
+        this.actions = { search: search, like: like, viewComments: viewComments };
 
         this._setupAutoSearch();
+
+        this.like = this.like.bind(this);
+        this.viewComments = this.viewComments.bind(this);
     }
 
     createClass(SearchIdeasViewModel, [{
+        key: 'like',
+        value: function like(id, isLike) {
+            return this.actions.like(id, isLike);
+        }
+    }, {
+        key: 'viewComments',
+        value: function viewComments() {
+            return this.actions.viewComments(id);
+        }
+    }, {
         key: '_setupAutoSearch',
         value: function _setupAutoSearch() {
             asyncComputed(function () {
@@ -2181,10 +2072,10 @@ var SearchIdeasViewModel = function () {
     }, {
         key: '_populateResults',
         value: function _populateResults(results) {
-            var _this2 = this;
+            var _this = this;
 
             results.forEach(function (item) {
-                _this2.collection.add(new SearchResultItemViewModel(item));
+                _this.collection.add(item);
             });
         }
     }, {
@@ -2198,7 +2089,7 @@ var SearchIdeasViewModel = function () {
     }, {
         key: '_fetchResults',
         value: function _fetchResults(_ref2) {
-            var _this3 = this;
+            var _this2 = this;
 
             var keyword = _ref2.keyword,
                 _ref2$page = _ref2.page,
@@ -2211,11 +2102,11 @@ var SearchIdeasViewModel = function () {
 
             this.loading(true);
             return search({ keyword: this.keyword(), page: 1, pageSize: 10 }).then(function (results) {
-                _this3.loading(false);
-                clearExisting && _this3._clearResults();
-                _this3._populateResults(results);
+                _this2.loading(false);
+                clearExisting && _this2._clearResults();
+                _this2._populateResults(results);
             }).catch(function () {
-                _this3.loading(false);
+                _this2.loading(false);
             });
         }
     }, {

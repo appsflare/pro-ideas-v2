@@ -103,4 +103,8 @@ export default class ApiClient {
         const url = `/api/ideas/searchmyideas?page=${page}&pageSize=${pageSize}&keyword=${keyword}`;
         return utils.get(url);
     }
+
+    like(ideaId, isLike) {
+        return utils.put(`/api/ideas/${ideaId}/likes/${isLike}`);
+    }
 }

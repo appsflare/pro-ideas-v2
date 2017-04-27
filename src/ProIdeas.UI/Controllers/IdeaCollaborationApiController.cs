@@ -46,10 +46,10 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpPut, Route("ideas/{ideaId}/likes/{like}")]
-        public IActionResult Update(string ideaId, bool like)
+        public Task<IdeaCollaborationStatsDto> Update(string ideaId, bool like)
         {
             _ideaCommentService.Update(ideaId, _userIdentityProvider.GetUserId(), like);
-            return Json(new { message = "Comment updated successfully" });
+            return _ideaCommentService.GetStats(ideaId);
         }
     }
 }

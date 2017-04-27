@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ProIdeas.DataMappings.Data.Mappings.Contracts;
 using ProIdeas.Domain.Entities;
+using ProIdeas.Domain.Entities.Model;
 using ProIdeas.DTO;
 
 namespace ProIdeas.Data.Mappings
@@ -13,7 +14,7 @@ namespace ProIdeas.Data.Mappings
             {
 
                 cfg.CreateMap<TenantSettings, TenantSettingsDto>();
-
+                cfg.CreateMap<IdeaCollaborationStats, IdeaCollaborationStatsDto>();
                 cfg.CreateMap<Idea, IdeaDto>().ReverseMap();
                 cfg.CreateMap<Page, PageDto>().ReverseMap();
                 cfg.CreateMap<User, UserDto>().ReverseMap();                

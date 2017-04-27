@@ -9,6 +9,9 @@ namespace ProIdeas.Logic.Contracts
         Task<IEnumerable<IdeaCommentDto>> GetComments(string ideaId);
 
         Task<IdeaCommentDto> GetComment(string commentId);
-        
+
+        Task<IdeaCollaborationStatsDto> GetStats(string ideaId);
+
+
     }
 }

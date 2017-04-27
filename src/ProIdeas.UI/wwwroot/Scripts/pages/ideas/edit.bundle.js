@@ -207,6 +207,11 @@ var ApiClient = function () {
             var url = '/api/ideas/searchmyideas?page=' + page + '&pageSize=' + pageSize + '&keyword=' + keyword;
             return utils.get(url);
         }
+    }, {
+        key: 'like',
+        value: function like(ideaId, isLike) {
+            return utils.put('/api/ideas/' + ideaId + '/likes/' + isLike);
+        }
     }]);
     return ApiClient;
 }();

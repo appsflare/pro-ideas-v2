@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using ProIdeas.Authentication.Contracts;
 using ProIdeas.Infra.Commands.Collaboration;
 using ProIdeas.Domain.Entities.Model;
+using System;
 
 namespace ProIdeas.Logic
 {
@@ -39,7 +40,7 @@ namespace ProIdeas.Logic
         }
         #endregion
 
-        #region IIdeaCommentLogic Implementation
+        #region IIdeaCollaborationLogic Implementation
         async public Task<IdeaCommentDto> GetComment(string commentId)
         {
             var comment = await _repository.QueryOneAsync<IdeaComment, GetSingleCommentByIdQueryTemplateParameter>(new GetSingleCommentByIdQueryTemplateParameter
@@ -56,6 +57,16 @@ namespace ProIdeas.Logic
                 IdeaId = ideaId
             });
             return _dataMapper.Map<IEnumerable<IdeaCommentDto>>(comments);
+        }
+
+        async public Task<IdeaCollaborationStatsDto> GetStats(string ideaId)
+        {
+            var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQueryParameter>(new GetIdeaCollaborationStatsQueryParameter
+            {
+                IdeaId = ideaId
+            });
+
+            return _dataMapper.Map<IdeaCollaborationStatsDto>(stats);
         }
 
         #endregion
@@ -111,7 +122,8 @@ namespace ProIdeas.Logic
 
             if (likeData == null)
             {
-                likeData = new IdeaLike {
+                likeData = new IdeaLike
+                {
                     IdeaId = message.IdeaId,
                     OwnerId = message.UserId,
                     IsLike = message.Like

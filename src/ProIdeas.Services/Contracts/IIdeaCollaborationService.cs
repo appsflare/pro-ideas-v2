@@ -6,6 +6,9 @@ namespace ProIdeas.Services.Contracts
 {
     public interface IIdeaCollaborationService
     {
+
+        Task<IdeaCollaborationStatsDto> GetStats(string ideaId);
+
         Task<IdeaCommentDto> GetCommentAsync(string commentId);
 
         Task<IEnumerable<IdeaCommentDto>> GetCommentsAsync(string ideaId);

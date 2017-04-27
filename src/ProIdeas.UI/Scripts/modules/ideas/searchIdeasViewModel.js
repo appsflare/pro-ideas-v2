@@ -1,24 +1,12 @@
 ﻿import ko from 'knockout';
-import '../knockout.animate';
+//import '../knockout.animate';
 import { asyncComputed } from '../utils';
-
 import KnockoutForEachCssTransition from '../../transitions/KnockoutForEachCssTransition';
-export class SearchResultItemViewModel {
-    constructor(item) {
 
-        Object.keys(item).forEach(key => {
-            this[key] = ko.observable(item[key]);
-        });
-
-        this.banner = `/api/ideas/${item.id}/banner`;
-        this.editUrl = `/ideas/${item.id}/edit`;
-
-    }
-}
 
 export default class SearchIdeasViewModel {
 
-    constructor({keyword, rateLimit = 500, actions: { search }}) {
+    constructor({keyword, rateLimit = 500, actions: { search, like, viewComments }}) {
         this.keyword = ko.observable(keyword).extend({ rateLimit, method: "notifyWhenChangesStop" });
         this._currentPage = 1;
         const transition = new KnockoutForEachCssTransition({});
@@ -41,9 +29,20 @@ export default class SearchIdeasViewModel {
 
         this.loading = ko.observable(false);
 
-        this.actions = { search };
+        this.actions = { search, like, viewComments };
 
         this._setupAutoSearch();
+
+        this.like = this.like.bind(this);
+        this.viewComments = this.viewComments.bind(this);
+    }
+
+    like(id, isLike) {
+        return this.actions.like(id, isLike);
+    }
+
+    viewComments() {
+        return this.actions.viewComments(id);
     }
 
     _setupAutoSearch() {
@@ -58,7 +57,7 @@ export default class SearchIdeasViewModel {
 
     _populateResults(results) {
         results.forEach(item => {
-            this.collection.add(new SearchResultItemViewModel(item));
+            this.collection.add(item);
         });
     }
 
