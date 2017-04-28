@@ -12838,6 +12838,60 @@ module.exports = __webpack_require__(62);
 
 var Quill = unwrapExports(quill);
 
+var editorConfigs = {
+
+    all: {
+
+        modules: {
+            toolbar: [[{ 'header': [1, 2, false] }, { 'font': [] }], ['bold', 'italic', 'underline', 'strike', 'blockquote'], [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], ['link', 'image', 'video'], ['clean']]
+        },
+
+        formats: ['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image', 'video']
+
+    },
+
+    mediaOnly: {
+
+        modules: {
+            toolbar: [['image', 'video']]
+        },
+
+        formats: ['image', 'video']
+
+    },
+
+    videoOnly: {
+
+        modules: {
+            toolbar: [['video']]
+        },
+
+        formats: ['video']
+
+    },
+
+    imageOnly: {
+
+        modules: {
+            toolbar: [['image']]
+        },
+
+        formats: ['image']
+
+    },
+
+    shortText: {
+
+        modules: {
+            toolbar: [['bold', 'italic', 'underline', 'strike', 'blockquote'], ['link'], ['clean']]
+        },
+
+        formats: ['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'link']
+
+    }
+
+};
+
 var RichTextEditorViewModel = function RichTextEditorViewModel(_ref) {
     var value = _ref.value;
     classCallCheck(this, RichTextEditorViewModel);
@@ -12847,24 +12901,37 @@ var RichTextEditorViewModel = function RichTextEditorViewModel(_ref) {
 
 knockout.components.register('rich-text-editor', {
     viewModel: {
-        createViewModel: function createViewModel(params, _ref2) {
-            var element = _ref2.element;
+        createViewModel: function createViewModel(_ref2, _ref3) {
+            var value = _ref2.value,
+                _ref2$placeholder = _ref2.placeholder,
+                placeholder = _ref2$placeholder === undefined ? '' : _ref2$placeholder,
+                _ref2$mode = _ref2.mode,
+                mode = _ref2$mode === undefined ? "shortText" : _ref2$mode;
+            var element = _ref3.element;
 
 
-            var viewModel = new RichTextEditorViewModel(params);
+            var viewModel = new RichTextEditorViewModel({ value: value });
 
             var editorElement = element.querySelector('.rich-text-editor');
-            editorElement.innerHTML = params.value();
+            editorElement.innerHTML = value();
+
+            var _editorConfigs$mode = editorConfigs[mode],
+                toolbar = _editorConfigs$mode.modules.toolbar,
+                formats = _editorConfigs$mode.formats;
+
 
             var editor = new Quill(editorElement, {
-                theme: 'snow'
+                theme: 'snow',
+                placeholder: placeholder,
+                modules: { toolbar: toolbar },
+                formats: formats
             });
 
             viewModel.value.subscribe(function (newValue) {
-                if (params.value() == editor.container.firstChild.innerHTML) {
+                if (value() == editor.container.firstChild.innerHTML) {
                     return;
                 }
-                editor.container.firstChild.innerHTML = params.value();
+                editor.container.firstChild.innerHTML = value();
             });
 
             editor.on('text-change', function () {
