@@ -6,7 +6,7 @@ class GenericPage extends BasePage {
     }
 
     onReady() {
-        
+        return Promise.resolve(true);
     }
 }
 const page = new GenericPage();

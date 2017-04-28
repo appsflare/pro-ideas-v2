@@ -4,6 +4,6 @@
     {
         public string IdeaId { get; set; }
 
-        public string UserId { get; set; }
+        public string OwnerId { get; set; }
     }
 }

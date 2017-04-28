@@ -188,7 +188,8 @@ var ApiClient = function () {
             var _ref$keyword = _ref.keyword,
                 keyword = _ref$keyword === undefined ? "" : _ref$keyword,
                 page = _ref.page,
-                pageSize = _ref.pageSize;
+                _ref$pageSize = _ref.pageSize,
+                pageSize = _ref$pageSize === undefined ? 100 : _ref$pageSize;
 
             var url = '/api/ideas?page=' + page + '&pageSize=' + pageSize;
             if (keyword) {
@@ -202,7 +203,8 @@ var ApiClient = function () {
             var _ref2$keyword = _ref2.keyword,
                 keyword = _ref2$keyword === undefined ? "" : _ref2$keyword,
                 page = _ref2.page,
-                pageSize = _ref2.pageSize;
+                _ref2$pageSize = _ref2.pageSize,
+                pageSize = _ref2$pageSize === undefined ? 100 : _ref2$pageSize;
 
             var url = '/api/ideas/searchmyideas?page=' + page + '&pageSize=' + pageSize + '&keyword=' + keyword;
             return utils.get(url);
@@ -1855,6 +1857,65 @@ var knockout = createCommonjsModule(function (module, exports) {
   })();
 });
 
+var template = "﻿<div class=\"idea-card\">\r\n    <div class=\"card-image\"><img data-bind=\"attr:{src: banner}\" /></div>\r\n    <div class=\"card-content-container\">\r\n        <h3 class=\"card-header\">\r\n            <a data-bind=\"attr:{href: detailsUrl}, text: title\"></a>\r\n        </h3>\r\n        <span class=\"author-wrap\">Share by <span class=\"author\" data-bind=\"text: owner.fullName\"></span></span>\r\n        <p class=\"card-content\" data-bind=\"text: description\"></p>\r\n    </div>\r\n    <div class=\"card-footer\">\r\n        <button class=\"btn btn-simple idea-like\" data-bind=\"click: actions.like\"><i class=\"material-icons\">favorite</i><span data-bind=\"text: likes\"></span></button>\r\n        <a class=\"btn btn-simple idea-comment\" data-bind=\"attr:{href: detailsUrl}\"><i class=\"material-icons\">insert_comment</i><span data-bind=\"text: comments\"></span></a>\r\n    </div>\r\n</div>";
+
+var IdeaCardViewModel = function () {
+    function IdeaCardViewModel(_ref) {
+        var _this = this;
+
+        var idea = _ref.idea,
+            _like = _ref.like,
+            _viewComments = _ref.viewComments;
+        classCallCheck(this, IdeaCardViewModel);
+
+        Object.keys(idea).forEach(function (key) {
+            _this[key] = knockout.observable(idea[key]);
+        });
+
+        this.actions = {
+            like: function like() {
+                return _like(_this.id(), true).then(function (stats) {
+                    return _this.likes(stats.likes);
+                });
+            },
+            dislike: function dislike() {
+                return _like(_this.id(), false).then(function (stats) {
+                    return _this.likes(stats.disLikes);
+                });
+            },
+            viewComments: function viewComments() {
+                return _viewComments(_this.id());
+            }
+        };
+
+        this.banner = '/api/ideas/' + idea.id + '/banner';
+        this.detailsUrl = '/ideas/' + idea.id + '/details';
+    }
+
+    createClass(IdeaCardViewModel, [{
+        key: 'updateStats',
+        value: function updateStats(_ref2) {
+            var likes = _ref2.likes,
+                disLikes = _ref2.disLikes;
+
+            this.likes(likes);
+            this.disLikes(likes);
+        }
+    }]);
+    return IdeaCardViewModel;
+}();
+
+knockout.components.register('idea-card', {
+    viewModel: {
+        createViewModel: function createViewModel(params, _ref3) {
+            var element = _ref3.element;
+
+            return new IdeaCardViewModel(params);
+        }
+    },
+    template: template
+});
+
 function asyncComputed(evaluator, owner) {
     var result = knockout.observable();
 
@@ -1874,11 +1935,11 @@ var BaseCSSTransition = function () {
             return {
                 name: 'transition',
                 transitionDuration: 750,
-                staggerDelay: 100,
-                updateTransitionDuration: 750,
+                staggerDelay: 25,
+                updateTransitionDuration: 250,
                 transitionClass: 'animated',
                 prepareClass: 'start',
-                loadClass: "fadeInUp",
+                loadClass: "zoomInRight",
                 updateClass: "pulse"
             };
         }
@@ -1994,8 +2055,12 @@ var KnockoutForEachCssTransition = function (_BaseCssTransition) {
     }, {
         key: 'onAfterAdd',
         value: function onAfterAdd(element, index) {
+            var _this3 = this;
+
             this.onItemLoading({ element: element });
-            this.onItemLoaded({ element: element });
+            requestAnimationFrame(function () {
+                return _this3.onItemLoaded({ element: element });
+            });
         }
     }, {
         key: 'onBeforeRemove',
@@ -2181,6 +2246,21 @@ var BasePage = function () {
     return BasePage;
 }();
 
+var navigationHelper = {
+    toIdeaImages: function toIdeaImages(id) {
+        turbolinks.visit('/ideas/' + id + '/images');
+    },
+    toEditIdea: function toEditIdea(id) {
+        turbolinks.visit('/ideas/' + id + '/edit');
+    },
+    toIdeaPages: function toIdeaPages(id) {
+        turbolinks.visit('/ideas/' + id + '/pages');
+    },
+    toIdeaDetails: function toIdeaDetails(id) {
+        turbolinks.visit('/ideas/' + id + '/details');
+    }
+};
+
 var SearchMyIdeasPage = function (_BasePage) {
     inherits(SearchMyIdeasPage, _BasePage);
 
@@ -2202,6 +2282,15 @@ var SearchMyIdeasPage = function (_BasePage) {
                 keyword: '',
                 actions: {
 
+                    like: function like(id, isLike) {
+                        return _this2._client.like(id, isLike);
+                    },
+
+                    viewComments: function viewComments(id) {
+                        navigationHelper.toIdeaDetails(id);
+                        return Promise.resolve(true);
+                    },
+
                     search: function search(_ref) {
                         var keyword = _ref.keyword,
                             page = _ref.page,
@@ -2214,8 +2303,6 @@ var SearchMyIdeasPage = function (_BasePage) {
             });
 
             knockout.applyBindings(this._viewModel, document.getElementById('ideas-search-container'));
-
-            this._viewModel.search();
 
             return Promise.resolve(true);
         }

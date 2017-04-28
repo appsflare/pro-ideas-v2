@@ -35,9 +35,7 @@ class SearchIdeasPage extends BasePage {
             }
         });
 
-        ko.applyBindings(this._viewModel, document.getElementById('ideas-search-container'));
-
-        this._viewModel.search();
+        ko.applyBindings(this._viewModel, document.getElementById('ideas-search-container'));        
 
         return Promise.resolve(true);
     }

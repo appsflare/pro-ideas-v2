@@ -1,8 +1,10 @@
 ﻿import ApiClient from '../../modules/api';
 import ko from 'knockout';
+import '../../components/idea-card';
 
 import SearchIdeasViewModel from '../../modules/ideas/searchIdeasViewModel';
 import BasePage from '../../basePage';
+import navigate from '../../modules/navigationHelper';
 
 class SearchMyIdeasPage extends BasePage {
     constructor(client) {
@@ -12,9 +14,19 @@ class SearchMyIdeasPage extends BasePage {
 
     onReady() {      
         
+
         this._viewModel = new SearchIdeasViewModel({
             keyword: '',
             actions: {
+
+                like: (id, isLike) => {
+                    return this._client.like(id, isLike);
+                },
+
+                viewComments: (id) => {
+                    navigate.toIdeaDetails(id);
+                    return Promise.resolve(true);
+                },
 
                 search: ({keyword, page, pageSize}) => {
 
@@ -25,8 +37,6 @@ class SearchMyIdeasPage extends BasePage {
         });
 
         ko.applyBindings(this._viewModel, document.getElementById('ideas-search-container'));
-
-        this._viewModel.search();
 
         return Promise.resolve(true);
     }

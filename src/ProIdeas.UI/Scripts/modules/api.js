@@ -91,7 +91,7 @@ export default class ApiClient {
         return utils.get(`/api/ideas/${id}/pages`);
     }
 
-    getIdeas({keyword = "", page, pageSize}) {
+    getIdeas({keyword = "", page, pageSize = 100}) {
         let url = `/api/ideas?page=${page}&pageSize=${pageSize}`;
         if (keyword) {
             url = `/api/ideas/search?page=${page}&pageSize=${pageSize}&keyword=${keyword}`;
@@ -99,7 +99,7 @@ export default class ApiClient {
         return utils.get(url);
     }
 
-    getMyIdeas({keyword = "", page, pageSize}) {
+    getMyIdeas({keyword = "", page, pageSize = 100}) {
         const url = `/api/ideas/searchmyideas?page=${page}&pageSize=${pageSize}&keyword=${keyword}`;
         return utils.get(url);
     }

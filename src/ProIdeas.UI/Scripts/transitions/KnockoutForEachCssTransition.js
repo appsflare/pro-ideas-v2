@@ -16,7 +16,7 @@ export default class KnockoutForEachCssTransition extends BaseCssTransition {
 
     onAfterAdd(element, index) {
         this.onItemLoading({ element });
-        this.onItemLoaded({ element });
+        requestAnimationFrame(() => this.onItemLoaded({ element }));
 
     }
 

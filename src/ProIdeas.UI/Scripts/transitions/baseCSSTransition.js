@@ -3,11 +3,11 @@
         return {
             name: 'transition',
             transitionDuration: 750,
-            staggerDelay: 100,
-            updateTransitionDuration: 750,
+            staggerDelay: 25,
+            updateTransitionDuration: 250,
             transitionClass: 'animated',
             prepareClass: 'start',
-            loadClass: "fadeInUp",
+            loadClass: "zoomInRight",
             updateClass: "pulse"
         };
     }

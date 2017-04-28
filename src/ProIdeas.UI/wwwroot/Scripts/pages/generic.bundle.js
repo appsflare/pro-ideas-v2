@@ -150,7 +150,9 @@ var GenericPage = function (_BasePage) {
 
     createClass(GenericPage, [{
         key: 'onReady',
-        value: function onReady() {}
+        value: function onReady() {
+            return Promise.resolve(true);
+        }
     }]);
     return GenericPage;
 }(BasePage);

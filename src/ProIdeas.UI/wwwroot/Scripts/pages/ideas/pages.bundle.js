@@ -188,7 +188,8 @@ var ApiClient = function () {
             var _ref$keyword = _ref.keyword,
                 keyword = _ref$keyword === undefined ? "" : _ref$keyword,
                 page = _ref.page,
-                pageSize = _ref.pageSize;
+                _ref$pageSize = _ref.pageSize,
+                pageSize = _ref$pageSize === undefined ? 100 : _ref$pageSize;
 
             var url = '/api/ideas?page=' + page + '&pageSize=' + pageSize;
             if (keyword) {
@@ -202,7 +203,8 @@ var ApiClient = function () {
             var _ref2$keyword = _ref2.keyword,
                 keyword = _ref2$keyword === undefined ? "" : _ref2$keyword,
                 page = _ref2.page,
-                pageSize = _ref2.pageSize;
+                _ref2$pageSize = _ref2.pageSize,
+                pageSize = _ref2$pageSize === undefined ? 100 : _ref2$pageSize;
 
             var url = '/api/ideas/searchmyideas?page=' + page + '&pageSize=' + pageSize + '&keyword=' + keyword;
             return utils.get(url);

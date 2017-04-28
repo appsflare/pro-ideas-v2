@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using ProIdeas.Services.Contracts;
 using ProIdeas.DTO;
 using ProIdeas.Authentication.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProIdeas.UI.Controllers
 {
     [Produces("application/json")]
     [Route("api")]
+    [Authorize]
     public class IdeaCollaborationApiController : Controller
     {
         private readonly IIdeaCollaborationService _ideaCommentService;

@@ -115,7 +115,7 @@ namespace ProIdeas.Logic
             var likeData = await _repository.QueryOneAsync<IdeaLike, GetIdeaLikeByUserIdQueryParameter>(new GetIdeaLikeByUserIdQueryParameter
             {
                 IdeaId = message.IdeaId,
-                UserId = message.UserId
+                OwnerId = message.UserId
             });
 
             var hasChanged = false;

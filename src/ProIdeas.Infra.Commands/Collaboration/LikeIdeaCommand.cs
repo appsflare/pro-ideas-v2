@@ -14,7 +14,7 @@ namespace ProIdeas.Infra.Commands.Collaboration
         public LikeIdeaCommand(string ideaId, string userId, bool like)
         {
             IdeaId = ideaId;
-            UserId = ideaId;
+            UserId = userId;
             Like = like;
         }
 
