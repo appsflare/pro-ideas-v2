@@ -2198,7 +2198,7 @@ var o,i,s,a,u;return i=null!=n?n:{},a=i.restorationIdentifier,s=i.restorationDat
 //import FadeTransition from './transitions/fade';
 $(function () {
     turbolinks.start();
-    $(document).on('turbolinks:before-cache', function (e) {
+    $(document).off('turbolinks:before-cache').off('turbolinks:before-render').on('turbolinks:before-cache', function (e) {
         $('.custom-scrollable').mCustomScrollbar('destroy');
         $('body').addClass('animated fadeOut');
     }).on('turbolinks:before-render', function () {

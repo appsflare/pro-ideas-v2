@@ -92,7 +92,7 @@ var possibleConstructorReturn = function (self, call) {
 //import FadeTransition from './transitions/fade';
 $(function () {
     turbolinks.start();
-    $(document).on('turbolinks:before-cache', function (e) {
+    $(document).off('turbolinks:before-cache').off('turbolinks:before-render').on('turbolinks:before-cache', function (e) {
         $('.custom-scrollable').mCustomScrollbar('destroy');
         $('body').addClass('animated fadeOut');
     }).on('turbolinks:before-render', function () {

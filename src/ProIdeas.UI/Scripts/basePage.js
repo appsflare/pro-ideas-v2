@@ -3,7 +3,9 @@
 import Turbolinks from 'turbolinks';
 $(function () {
     Turbolinks.start();
-    $(document).on('turbolinks:before-cache', (e) => {
+    $(document).off('turbolinks:before-cache')
+        .off('turbolinks:before-render')
+        .on('turbolinks:before-cache', (e) => {
         $('.custom-scrollable').mCustomScrollbar('destroy');
         $('body').addClass('animated fadeOut');
     }).on('turbolinks:before-render', () => {
