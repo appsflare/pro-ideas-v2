@@ -2,18 +2,33 @@
 
 @import 'override/_override_pills.scss';
 
+@import '_custom-scroll.scss';
 @import '_transitions.scss';
 @import 'common.scss';
 
 @import 'pages/create.scss';
 @import 'pages/idea.scss';
 
+html, body {
+    height: 100%;
+}
+
 .logo img {
     height: 42px;
 }
 
 .app-page {
+    height: 100%;
     padding-top: 75px;
+}
+
+.container-wrap {
+    height: calc(100% - 60px);
+    overflow: auto;
+}
+
+.custom-scrollable {
+    overflow: auto;
 }
 
 footer {

@@ -21,6 +21,8 @@
     "gulp-rollup": "^2.11.0",
     "gulp-sass": "3.1.0",
     "gulp-sourcemaps": "^2.6.0",
+    "jquery-mousewheel": "^3.1.13",
+    "malihu-custom-scrollbar-plugin": "^3.1.5",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-bower-resolve": "^0.3.0",
     "rollup-plugin-commonjs": "^8.0.2",
@@ -35,6 +37,7 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
+    "install": "^0.8.9",
     "knockout.validation": "^2.0.3",
     "quill": "^1.2.4",
     "rollup-plugin-string": "^2.0.2",

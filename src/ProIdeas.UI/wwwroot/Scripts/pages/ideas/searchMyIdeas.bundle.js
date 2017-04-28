@@ -2198,6 +2198,12 @@ var o,i,s,a,u;return i=null!=n?n:{},a=i.restorationIdentifier,s=i.restorationDat
 //import FadeTransition from './transitions/fade';
 $(function () {
     turbolinks.start();
+    $(document).on('turbolinks:before-cache', function (e) {
+        $('.custom-scrollable').mCustomScrollbar('destroy');
+        $('body').addClass('animated fadeOut');
+    }).on('turbolinks:before-render', function () {
+        $(event.data.newBody).removeClass('fadeOut').addClass('animated fadeIn');
+    });
 });
 
 //Turbolinks would show progress bar automatically when page takes longer than 500ms to load
@@ -2228,6 +2234,8 @@ var BasePage = function () {
         key: 'init',
         value: function init() {
             this.configure();
+
+            $('.custom-scrollable').mCustomScrollbar();
 
             this.onReady().then(function () {
                 $.material.init();

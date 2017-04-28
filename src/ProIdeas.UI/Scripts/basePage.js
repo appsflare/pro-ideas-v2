@@ -1,7 +1,15 @@
 ﻿//import Barba from 'barba.js';
 //import FadeTransition from './transitions/fade';
 import Turbolinks from 'turbolinks';
-$(function () { Turbolinks.start(); });
+$(function () {
+    Turbolinks.start();
+    $(document).on('turbolinks:before-cache', (e) => {
+        $('.custom-scrollable').mCustomScrollbar('destroy');
+        $('body').addClass('animated fadeOut');
+    }).on('turbolinks:before-render', () => {
+        $(event.data.newBody).removeClass('fadeOut').addClass('animated fadeIn');
+    });
+});
 
 //Turbolinks would show progress bar automatically when page takes longer than 500ms to load
 //https://github.com/turbolinks/turbolinks/issues/17#issuecomment-186635946
@@ -28,6 +36,8 @@ export default class BasePage {
 
     init() {
         this.configure();
+
+        $('.custom-scrollable').mCustomScrollbar();
 
         this.onReady()
             .then(() => {

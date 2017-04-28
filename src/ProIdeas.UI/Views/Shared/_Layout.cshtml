@@ -20,7 +20,7 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body>    
+<body>
 
     @RenderSection("Styles", required: false)
 
@@ -38,22 +38,24 @@
                         <img src="/logos/ideaboard-logo-white-nocap.png" />
                     </a>
                 </div>
-                <div class="navbar-collapse collapse">                    
+                <div class="navbar-collapse collapse">
                     @await Html.PartialAsync("_LoginPartial")
                 </div>
             </div>
         </nav>
-        <div class="container body-content">
-            <div class="wrapper">
-                <div class="main">
-                    @RenderBody()
+        <div class="container-wrap custom-scrollable">
+            <div class="container body-content">
+                <div class="wrapper">
+                    <div class="main">
+                        @RenderBody()
+                    </div>
                 </div>
             </div>
         </div>
         <footer>
             <p class="copyright">&copy; 2017 - ProIdeas.UI</p>
         </footer>
-    </div>    
+    </div>
     @await Html.PartialAsync("_CommonLibImports")
     @await Html.PartialAsync("_CommonImports")
     @RenderSection("Scripts", required: false)
