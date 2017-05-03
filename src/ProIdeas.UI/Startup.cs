@@ -110,7 +110,8 @@ namespace ProIdeas.UI
                 // Connect to Redis database.
                 var redis = ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable("REDIS_HOST"));
                 services.AddDataProtection()
-                    .PersistKeysToRedis(redis, "DataProtection-Keys");
+                    .PersistKeysToRedis(redis, "DataProtection-Keys")
+                    .SetDefaultKeyLifetime(TimeSpan.FromDays(14));
             }
 
             var mappingProvider = new MappingProvider();
