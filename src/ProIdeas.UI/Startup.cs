@@ -15,7 +15,6 @@ using ProIdeas.Services.Contracts;
 using ProIdeas.Logic.Contracts;
 using ProIdeas.Logic;
 using ProIdeas.Domain.Core.Events;
-using ProIdeas.Infra.Commands.Ideas;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Bus;
 using ProIdeas.Infra.EventSourcing;
@@ -24,7 +23,6 @@ using ProIdeas.Serializers.Contracts;
 using ProIdeas.Serializers;
 using ProIdeas.Authentication.Contracts;
 using ProIdeas.UI.Authentication;
-using ProIdeas.Logic.Filters;
 using ProIdeas.Files.Contracts;
 using System.Reflection;
 using System.Linq;
@@ -34,13 +32,18 @@ using System.Collections.Generic;
 using ProIdeas.Domain.Core.Commands;
 using ProIdeas.Infra.Commands.Collaboration;
 using ProIdeas.Infra.Events;
+using StackExchange.Redis;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace ProIdeas.UI
 {
     public class Startup
     {
+        private readonly IHostingEnvironment _env;
         public Startup(IHostingEnvironment env)
         {
+            _env = env;
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -60,7 +63,7 @@ namespace ProIdeas.UI
 
         private static void RegisterQueryTemplates(IServiceCollection services, IList<Type> exportedTypes)
         {
-            var queryTemplateInterface = typeof(IQueryTemplate);            
+            var queryTemplateInterface = typeof(IQueryTemplate);
 
             var queryTemplateTypes = exportedTypes
                  .Where(i => !i.GetTypeInfo().IsAbstract)
@@ -101,6 +104,15 @@ namespace ProIdeas.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            if (_env.IsProduction())
+            {
+                // Connect to Redis database.
+                var redis = ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable("REDIS_HOST"));
+                services.AddDataProtection()
+                    .PersistKeysToRedis(redis, "DataProtection-Keys");
+            }
+
             var mappingProvider = new MappingProvider();
 
             services.AddSingleton(mappingProvider.CreateMapper());
@@ -124,7 +136,7 @@ namespace ProIdeas.UI
             services.AddScoped<IBus, InMemoryBus>();
 
             services.AddScoped<ITenantStore, LocalJsonTenantStore>();
-            
+
 
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IIdeaService, IdeaService>();
@@ -162,9 +174,9 @@ namespace ProIdeas.UI
                   .ToList();
 
             RegisterAllGenericTypeImplementations(services, allExportedTypes, typeof(Message), typeof(IMessageFilter<>));
-            RegisterAllGenericTypeImplementations(services, allExportedTypes, typeof(Command), typeof(IHandler<>));                        
+            RegisterAllGenericTypeImplementations(services, allExportedTypes, typeof(Command), typeof(IHandler<>));
             RegisterAllGenericTypeImplementations(services, allExportedTypes, typeof(Event), typeof(IHandler<>));
-            
+
 
             RegisterQueryTemplates(services, allExportedTypes);
 
