@@ -16,8 +16,14 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
             var table = RethinkDB.R
              .Table(typeof(IdeaComment).Name);
 
-            var query = table.Filter(comment => comment[nameof(IdeaComment.IdeaId)] == queryParam.IdeaId);
-            return (await query.RunCursorAsync<IdeaComment>(context.Connection)).ToList();
+            var query = table.Filter(comment => comment.GetField(nameof(IdeaComment.IdeaId)).Eq(queryParam.IdeaId));
+
+            var finalQuery = query.Merge(idea => RethinkDB.R.HashMap(nameof(Idea.Owner), RethinkDB.R
+              .Table("ApplicationUser")
+              .Get(idea.GetField(nameof(IdeaComment.OwnerId)))
+              .Pluck(nameof(User.FullName))));
+
+            return (await finalQuery.RunCursorAsync<IdeaComment>(context.Connection)).ToList();
         }
     }
 }

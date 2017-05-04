@@ -214,6 +214,36 @@ var ApiClient = function () {
         value: function like(ideaId, isLike) {
             return utils.put('/api/ideas/' + ideaId + '/likes/' + isLike);
         }
+    }, {
+        key: 'getIdeaComments',
+        value: function getIdeaComments(_ref3) {
+            var ideaId = _ref3.ideaId,
+                page = _ref3.page,
+                _ref3$pageSize = _ref3.pageSize,
+                pageSize = _ref3$pageSize === undefined ? 100 : _ref3$pageSize;
+
+            var url = '/api/ideas/' + ideaId + '/comments?page=' + page + '&pageSize=' + pageSize;
+            return utils.get(url);
+        }
+    }, {
+        key: 'postIdeaComment',
+        value: function postIdeaComment(_ref4) {
+            var ideaId = _ref4.ideaId,
+                content = _ref4.content;
+
+            var url = '/api/ideas/' + ideaId + '/comments';
+            return utils.post(url, { content: content });
+        }
+    }, {
+        key: 'updateIdeaComment',
+        value: function updateIdeaComment(_ref5) {
+            var ideaId = _ref5.ideaId,
+                id = _ref5.id,
+                content = _ref5.content;
+
+            var url = '/api/ideas/' + ideaId + '/comments';
+            return utils.put(url, { id: id, content: content });
+        }
     }]);
     return ApiClient;
 }();

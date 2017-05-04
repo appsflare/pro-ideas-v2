@@ -43,7 +43,7 @@ namespace ProIdeas.Logic
         #region IIdeaCollaborationLogic Implementation
         async public Task<IdeaCommentDto> GetComment(string commentId)
         {
-            var comment = await _repository.QueryOneAsync<IdeaComment, GetSingleCommentByIdQueryTemplateParameter>(new GetSingleCommentByIdQueryTemplateParameter
+            var comment = await _repository.QueryOneAsync<IdeaComment, GetSingleCommentByIdQueryParameter>(new GetSingleCommentByIdQueryParameter
             {
                 CommentId = commentId
             });
@@ -74,6 +74,7 @@ namespace ProIdeas.Logic
         #region CreateIdeaCommentCommand Implementation
         public void Handle(CreateIdeaCommentCommand message)
         {
+            message.Comment.CreatedOn = DateTime.UtcNow;
             var createdComment = _repository.Add(_dataMapper.Map<IdeaComment>(message.Comment));
 
             message.SetCommentId(createdComment.Id);
@@ -93,6 +94,7 @@ namespace ProIdeas.Logic
             { return; }
 
             existingComment.Content = message.Comment.Content;
+            existingComment.ModifiedOn = DateTime.UtcNow;
 
             var updatedComment = _repository.Update(existingComment);
 

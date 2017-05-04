@@ -34,15 +34,18 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpPost, Route("ideas/{ideaId}/comments")]
-        public Task<IdeaCommentDto> CreateComment(string ideaId, [FromBody] IdeaCommentDto comment)
+        async public Task<IdeaCommentDto> CreateComment(string ideaId, [FromBody] IdeaCommentDto comment)
         {
-            return _ideaCommentService.CreateAsync(comment);
+            comment.IdeaId = ideaId;
+            comment.OwnerId = _userIdentityProvider.GetUserId();
+            var createdComment = await _ideaCommentService.CreateAsync(comment);
+            return await _ideaCommentService.GetCommentAsync(createdComment.Id);
         }
 
         [HttpPut, Route("ideas/{ideaId}/comments")]
         public IActionResult UpdateComment(string ideaId, [FromBody] IdeaCommentDto comment)
         {
-            comment.UserId = _userIdentityProvider.GetUserId();
+            comment.OwnerId = _userIdentityProvider.GetUserId();
             _ideaCommentService.Update(comment);
             return Json(new { message = "Comment updated successfully" });
         }

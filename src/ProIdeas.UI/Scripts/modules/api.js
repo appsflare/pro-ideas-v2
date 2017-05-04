@@ -107,4 +107,19 @@ export default class ApiClient {
     like(ideaId, isLike) {
         return utils.put(`/api/ideas/${ideaId}/likes/${isLike}`);
     }
+
+    getIdeaComments({ideaId, page, pageSize = 100}) {
+        let url = `/api/ideas/${ideaId}/comments?page=${page}&pageSize=${pageSize}`;
+        return utils.get(url);
+    }
+
+    postIdeaComment({ideaId, content}) {
+        let url = `/api/ideas/${ideaId}/comments`;
+        return utils.post(url, { content });
+    }
+
+    updateIdeaComment({ideaId, id, content}) {
+        let url = `/api/ideas/${ideaId}/comments`;
+        return utils.put(url, { id, content });
+    }
 }

@@ -4,7 +4,7 @@
 }
 
 @section Scripts{
-    <script src="~/Scripts/pages/generic.bundle.js" asp-append-version="true"></script>
+    <script src="~/Scripts/pages/ideas/details.bundle.js" asp-append-version="true"></script>
 }
 
 @inject UserManager<ApplicationUser> UserManager
@@ -72,30 +72,27 @@
             <div class="profile-tabs">
                 <div class="nav-align-left">
                     <ul class="nav nav-pills nav-pills-grey" role="tablist">
-                        <li>
-                            <a href="#comments" role="tab" data-toggle="tab">
-                                Comments
-                            </a>
-                        </li>
                         @foreach (var page in Model.Pages)
                         {
-                            <li class="@(page.IsActive ? "active" : string.Empty)">
-                                <a href="#@page.Id" role="tab" data-toggle="tab">
-                                    @page.Name
-                                </a>
-                            </li>
+                        <li class="@(page.IsActive ? "active" : string.Empty)">
+                            <a href="#@page.Id" role="tab" data-toggle="tab">
+                                @page.Name
+                            </a>
+                        </li>
                         }
                     </ul>
 
                     <div class="tab-content gallery">
                         @foreach (var page in Model.Pages)
                         {
-                            <div class="tab-pane @(page.IsActive ? "active" : string.Empty)" id="@page.Id">
-                                <div class="col-sm-10">
-                                    @Html.Raw(page.Content)
-                                </div>
+                        <div class="tab-pane @(page.IsActive ? "active" : string.Empty)" id="@page.Id">
+                            <div class="col-sm-10">
+                                @Html.Raw(page.Content)
                             </div>
+                        </div>
                         }
+
+
 
 
                     </div>
@@ -103,6 +100,10 @@
             </div>
 
         </div>
-
+        <div class="row">
+            <div class="col-md-10">
+                <comments-list params="ideaId: '@Model.Id', client: client"></comments-list>
+            </div>
+        </div>
     </div>
 </div>

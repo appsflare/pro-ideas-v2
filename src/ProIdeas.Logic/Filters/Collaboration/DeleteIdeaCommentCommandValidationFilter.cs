@@ -32,7 +32,7 @@ namespace ProIdeas.Logic.Filters.Collaboration
                 throw new InvalidOperationException("invalid comment");
             }
 
-            if (comment.UserId != _userIdentityProvider.GetUserId())
+            if (comment.OwnerId != _userIdentityProvider.GetUserId())
             {
                 throw new UnauthorizedAccessException();
             }

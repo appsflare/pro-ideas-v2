@@ -16,7 +16,7 @@ namespace ProIdeas.Infra.Commands.Collaboration
         {
             return Comment != null
                 && !string.IsNullOrEmpty(Comment.Content?.Trim())
-                && !string.IsNullOrEmpty(Comment.UserId.Trim());
+                && !string.IsNullOrEmpty(Comment.OwnerId?.Trim());
         }
     }
 }

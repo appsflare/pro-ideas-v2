@@ -33,7 +33,7 @@ namespace ProIdeas.Logic.Filters.Collaboration
 
             var comment = _repository.GetOne<IdeaComment>(context.Message.Comment.Id);
 
-            if (comment.UserId != _userIdentityProvider.GetUserId())
+            if (comment.OwnerId != _userIdentityProvider.GetUserId())
             {
                 throw new UnauthorizedAccessException();
             }

@@ -1,39 +1,39 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AspNet.Identity.Repository;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ProIdeas.UI.Models;
-using ProIdeas.UI.Services;
+using ProIdeas.Authentication.Contracts;
 using ProIdeas.Data.Mappings;
-using ProIdeas.DTO;
-using AspNet.Identity.Repository;
+using ProIdeas.Domain.Core.Bus;
+using ProIdeas.Domain.Core.Commands;
+using ProIdeas.Domain.Core.Events;
+using ProIdeas.Domain.Entities;
+using ProIdeas.Domain.RehtinkDb.QueryTemplates;
 using ProIdeas.Domain.Repositories;
 using ProIdeas.Domain.Repositories.RethinkDb;
-using ProIdeas.Services;
-using ProIdeas.Services.Contracts;
-using ProIdeas.Logic.Contracts;
-using ProIdeas.Logic;
-using ProIdeas.Domain.Core.Events;
-using ProIdeas.Domain.Core.Bus;
-using ProIdeas.Infra.Bus;
-using ProIdeas.Infra.EventSourcing;
-using ProIdeas.Domain.Entities;
-using ProIdeas.Serializers.Contracts;
-using ProIdeas.Serializers;
-using ProIdeas.Authentication.Contracts;
-using ProIdeas.UI.Authentication;
+using ProIdeas.DTO;
 using ProIdeas.Files.Contracts;
-using System.Reflection;
-using System.Linq;
-using ProIdeas.Domain.RehtinkDb.QueryTemplates;
-using System;
-using System.Collections.Generic;
-using ProIdeas.Domain.Core.Commands;
+using ProIdeas.Infra.Bus;
 using ProIdeas.Infra.Commands.Collaboration;
 using ProIdeas.Infra.Events;
+using ProIdeas.Infra.EventSourcing;
+using ProIdeas.Logic;
+using ProIdeas.Logic.Contracts;
+using ProIdeas.Serializers;
+using ProIdeas.Serializers.Contracts;
+using ProIdeas.Services;
+using ProIdeas.Services.Contracts;
+using ProIdeas.UI.Authentication;
+using ProIdeas.UI.Models;
+using ProIdeas.UI.Services;
 using StackExchange.Redis;
-using Microsoft.AspNetCore.DataProtection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace ProIdeas.UI
 {
@@ -228,8 +228,7 @@ namespace ProIdeas.UI
             //{
             app.UseIdentity();
             //});
-
-
+              
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 

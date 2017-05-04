@@ -41,7 +41,9 @@ export default class PagesViewModel {
         if (!this.pages().length) {
             this.pages.push(new PageViewModel({ name: 'Details', content: '', canDelete: false }));
         }
-        this.currentPage(this.pages()[0]);
+        const firstPage = this.pages()[0];
+        firstPage.canDelete(false);
+        this.currentPage(firstPage);
 
 
     }
@@ -63,7 +65,7 @@ export default class PagesViewModel {
     }
 
     removePage(page) {
-        if (!page)
+        if (!page || !page.canDelete())
         { return; }
 
         this.pages.remove(page);
