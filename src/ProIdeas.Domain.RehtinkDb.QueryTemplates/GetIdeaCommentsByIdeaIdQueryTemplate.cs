@@ -16,7 +16,10 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
             var table = RethinkDB.R
              .Table(typeof(IdeaComment).Name);
 
-            var query = table.Filter(comment => comment.GetField(nameof(IdeaComment.IdeaId)).Eq(queryParam.IdeaId));
+            var query = table
+                .OrderBy()
+                .OptArg("index", RethinkDB.R.Desc(nameof(IdeaComment.CreatedOn)))
+                .Filter(comment => comment.GetField(nameof(IdeaComment.IdeaId)).Eq(queryParam.IdeaId));
 
             var finalQuery = query.Merge(idea => RethinkDB.R.HashMap(nameof(Idea.Owner), RethinkDB.R
               .Table("ApplicationUser")

@@ -71,6 +71,22 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             return this;
         }
 
+        public DatabaseConfigurator EnsureTableIndex(string table, string index)
+        {
+            EnsureTables(table);
+
+            var allIndices = RethinkDB.R
+                 .Table(table)
+                 .IndexList()
+                 .RunAtom<List<string>>(EnsureConnection())
+                 .ToList();
+
+            if (!allIndices.Contains(index))
+            { RethinkDB.R.Table(table).IndexCreate(index).Run(EnsureConnection()); }
+
+            return this;
+        }
+
 
 
     }
