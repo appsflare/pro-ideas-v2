@@ -20,8 +20,8 @@ export default class KnockoutForEachCssTransition extends BaseCssTransition {
 
     }
 
-    onBeforeRemove(element, index) {
-        $(element).remove();
+    onBeforeRemove(element, index) {        
+        this.onItemRemoved({ element, index });
     }
 
 

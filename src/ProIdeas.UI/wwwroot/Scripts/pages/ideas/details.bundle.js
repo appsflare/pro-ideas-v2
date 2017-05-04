@@ -3428,9 +3428,11 @@ var BaseCSSTransition = function () {
                 transitionDuration: 750,
                 staggerDelay: 25,
                 updateTransitionDuration: 250,
+                removeTransitionDuration: 500,
                 transitionClass: 'animated',
                 prepareClass: 'start',
                 loadClass: "zoomInRight",
+                removeClass: "zoomOutRight",
                 updateClass: "pulse"
             };
         }
@@ -3509,6 +3511,23 @@ var BaseCSSTransition = function () {
                 $elt.removeClass(updateClass);
             }, updateTransitionDuration);
         }
+    }, {
+        key: 'onItemRemoved',
+        value: function onItemRemoved(_ref4) {
+            var element = _ref4.element;
+
+            var $elt = $(element);
+            var _options4 = this.options,
+                transitionClass = _options4.transitionClass,
+                removeClass = _options4.removeClass,
+                removeTransitionDuration = _options4.removeTransitionDuration;
+
+            $elt.addClass(transitionClass);
+            $elt.addClass(removeClass);
+            setTimeout(function () {
+                $elt.remove();
+            }, removeTransitionDuration);
+        }
     }]);
     return BaseCSSTransition;
 }();
@@ -3556,7 +3575,7 @@ var KnockoutForEachCssTransition = function (_BaseCssTransition) {
     }, {
         key: 'onBeforeRemove',
         value: function onBeforeRemove(element, index) {
-            $(element).remove();
+            this.onItemRemoved({ element: element, index: index });
         }
     }]);
     return KnockoutForEachCssTransition;

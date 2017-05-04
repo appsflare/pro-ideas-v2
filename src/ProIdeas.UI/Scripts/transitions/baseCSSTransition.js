@@ -5,9 +5,11 @@
             transitionDuration: 750,
             staggerDelay: 25,
             updateTransitionDuration: 250,
+            removeTransitionDuration: 500,
             transitionClass: 'animated',
             prepareClass: 'start',
             loadClass: "zoomInRight",
+            removeClass: "zoomOutRight",
             updateClass: "pulse"
         };
     }
@@ -58,7 +60,16 @@
             $elt.removeClass(updateClass);
         }, updateTransitionDuration);
 
-    }   
+    }
 
+    onItemRemoved({element}) {
+        let $elt = $(element);
+        const {transitionClass, removeClass, removeTransitionDuration} = this.options;
+        $elt.addClass(transitionClass);
+        $elt.addClass(removeClass);
+        setTimeout(() => {
+            $elt.remove();
+        }, removeTransitionDuration);
 
+    }
 }
