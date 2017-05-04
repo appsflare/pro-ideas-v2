@@ -19,7 +19,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 
 
             var query = table
-             .Filter(x => x[nameof(IdeaLike.OwnerId)] == queryParam.OwnerId)
+             .Filter(x => x.GetField(nameof(IdeaLike.OwnerId)).Eq(queryParam.OwnerId).And(x.GetField(nameof(IdeaLike.IdeaId)).Eq(queryParam.IdeaId)))
              .Limit(1)
              .Merge(idea => RethinkDB.R.HashMap(nameof(IdeaLike.Owner), RethinkDB.R
             .Table("ApplicationUser")

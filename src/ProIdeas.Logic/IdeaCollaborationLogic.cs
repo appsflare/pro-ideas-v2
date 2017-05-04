@@ -21,7 +21,9 @@ namespace ProIdeas.Logic
         IHandler<UpdateIdeaCommentCommand>,
         IHandler<DeleteIdeaCommentCommand>,
         IHandler<LikeIdeaCommand>,
-        IHandler<IdeaLikeChangedEvent>
+        IHandler<IdeaLikeChangedEvent>,
+        IHandler<IdeaCommentCreatedEvent>,
+        IHandler<IdeaCommentUpdatedEvent>
     {
         #region Private readonly fields
         private readonly IRepository _repository;
@@ -135,7 +137,7 @@ namespace ProIdeas.Logic
             }
             else
             {
-                hasChanged = likeData.IsLike == message.Like;
+                hasChanged = likeData.IsLike != message.Like;
 
                 likeData.IsLike = message.Like;
                 _repository.Update(likeData);
@@ -150,25 +152,39 @@ namespace ProIdeas.Logic
         #endregion
 
 
-        #region IdeaLikeChangedEvent Implementation
+        #region IdeaLikeChangedEvent,IdeaCommentCreatedEvent,IdeaCommentUpdatedEvent Implementation
         async public void Handle(IdeaLikeChangedEvent message)
+        {
+            await UpdateIdeaStats(message.IdeaId);
+        }
+
+        async public void Handle(IdeaCommentCreatedEvent message)
+        {
+            await UpdateIdeaStats(message.Comment.IdeaId);
+        }
+
+        async public void Handle(IdeaCommentUpdatedEvent message)
+        {
+            await UpdateIdeaStats(message.Comment.IdeaId);
+        }
+
+        private async Task UpdateIdeaStats(string ideaId)
         {
             var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQueryParameter>(new GetIdeaCollaborationStatsQueryParameter
             {
-                IdeaId = message.IdeaId
+                IdeaId = ideaId
             });
 
             if (stats == null)
             { return; }
 
-            var idea = await _repository.GetOneAsync<Idea>(message.IdeaId);
+            var idea = await _repository.GetOneAsync<Idea>(ideaId);
 
             idea.Likes = stats.Likes;
             idea.DisLikes = stats.DisLikes;
             idea.Comments = stats.Comments;
 
             _repository.Update(idea);
-
         }
         #endregion
 
