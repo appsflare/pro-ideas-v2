@@ -3419,6 +3419,149 @@ ko.validatedObservable = function (initialValue, options) {
 }));
 });
 
+var BaseCSSTransition = function () {
+    createClass(BaseCSSTransition, null, [{
+        key: 'defaultOptions',
+        get: function get$$1() {
+            return {
+                name: 'transition',
+                transitionDuration: 750,
+                staggerDelay: 25,
+                updateTransitionDuration: 250,
+                transitionClass: 'animated',
+                prepareClass: 'start',
+                loadClass: "zoomInRight",
+                updateClass: "pulse"
+            };
+        }
+    }]);
+
+    function BaseCSSTransition(options) {
+        classCallCheck(this, BaseCSSTransition);
+
+
+        this.options = Object.assign(BaseCSSTransition.defaultOptions, options);
+
+        this._queue = [];
+    }
+
+    createClass(BaseCSSTransition, [{
+        key: '_enQueue',
+        value: function _enQueue() {
+            this._queue.push(this._queue.length);
+        }
+    }, {
+        key: '_deQueue',
+        value: function _deQueue() {
+            return this._queue.shift();
+        }
+    }, {
+        key: 'onItemLoading',
+        value: function onItemLoading(_ref) {
+            var element = _ref.element;
+
+            var $elt = $(element);
+            var _options = this.options,
+                transitionClass = _options.transitionClass,
+                prepareClass = _options.prepareClass;
+
+            $elt.addClass(transitionClass);
+            $elt.addClass(prepareClass);
+            this._enQueue();
+        }
+    }, {
+        key: 'onItemLoaded',
+        value: function onItemLoaded(_ref2) {
+            var element = _ref2.element;
+
+            var $elt = $(element);
+            var _options2 = this.options,
+                loadClass = _options2.loadClass,
+                staggerDelay = _options2.staggerDelay,
+                transitionClass = _options2.transitionClass,
+                prepareClass = _options2.prepareClass,
+                transitionDuration = _options2.transitionDuration;
+
+            setTimeout(function () {
+                $elt.removeClass(prepareClass);
+                $elt.addClass(loadClass);
+                setTimeout(function () {
+                    $elt.removeClass(loadClass);
+                    $elt.removeClass(transitionClass);
+                }, transitionDuration);
+            }, staggerDelay * this._deQueue());
+        }
+    }, {
+        key: 'onItemUpdated',
+        value: function onItemUpdated(_ref3) {
+            var element = _ref3.element;
+
+            var $elt = $(element);
+            var _options3 = this.options,
+                transitionClass = _options3.transitionClass,
+                updateClass = _options3.updateClass,
+                updateTransitionDuration = _options3.updateTransitionDuration;
+
+            $elt.addClass(transitionClass);
+            $elt.addClass(updateClass);
+            setTimeout(function () {
+                $elt.removeClass(transitionClass);
+                $elt.removeClass(updateClass);
+            }, updateTransitionDuration);
+        }
+    }]);
+    return BaseCSSTransition;
+}();
+
+var KnockoutForEachCssTransition = function (_BaseCssTransition) {
+    inherits(KnockoutForEachCssTransition, _BaseCssTransition);
+
+    function KnockoutForEachCssTransition(options) {
+        classCallCheck(this, KnockoutForEachCssTransition);
+
+        var _this = possibleConstructorReturn(this, (KnockoutForEachCssTransition.__proto__ || Object.getPrototypeOf(KnockoutForEachCssTransition)).call(this, options));
+
+        _this.onAfterRender = _this.onAfterRender.bind(_this);
+        _this.onAfterAdd = _this.onAfterAdd.bind(_this);
+        _this.onBeforeRemove = _this.onBeforeRemove.bind(_this);
+        return _this;
+    }
+
+    createClass(KnockoutForEachCssTransition, [{
+        key: 'onAfterRender',
+        value: function onAfterRender() {
+            var _this2 = this;
+
+            var elements = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+            elements.forEach(function (element) {
+                return _this2.onItemLoading({ element: element });
+            });
+            setTimeout(function () {
+                return elements.forEach(function (element) {
+                    return _this2.onItemLoaded({ element: element });
+                });
+            });
+        }
+    }, {
+        key: 'onAfterAdd',
+        value: function onAfterAdd(element, index) {
+            var _this3 = this;
+
+            this.onItemLoading({ element: element });
+            requestAnimationFrame(function () {
+                return _this3.onItemLoaded({ element: element });
+            });
+        }
+    }, {
+        key: 'onBeforeRemove',
+        value: function onBeforeRemove(element, index) {
+            $(element).remove();
+        }
+    }]);
+    return KnockoutForEachCssTransition;
+}(BaseCSSTransition);
+
 var template = "﻿<div class=\"row\">\r\n    <div class=\"col-md-10\">\r\n        <form class=\"form\" data-bind=\"submit: createComment\">\r\n            <div class=\"input-group col-sm-12\">\r\n                <div class=\"form-group form-group-lg\" data-bind=\"validationElement: form().commentText\">\r\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Enter your comment here\" data-bind=\"disable: isCommentSaving, textInput: form().commentText\" />\r\n                    <span class=\"material-icons form-control-feedback\">clear</span>\r\n                    <span class=\"material-input\"></span>\r\n                </div>\r\n            </div>\r\n            <button class=\"btn btn-primary pull-right\">Comment</button>\r\n        </form>\r\n    </div>\r\n</div>\r\n<div class=\"row\" data-bind=\"foreach: items\">\r\n    <div class=\"col-md-10\">\r\n        <div class=\"panel panel-white post panel-shadow\">\r\n            <div class=\"post-heading\">\r\n                <div class=\"pull-left image\">\r\n                    <img src=\"http://bootdey.com/img/Content/user_1.jpg\" class=\"img-circle avatar\" alt=\"user profile image\">\r\n                </div>\r\n                <div class=\"pull-left meta\">\r\n                    <div class=\"title h5\">\r\n                        <a href=\"#\"><b data-bind=\"text: owner.fullName\"></b></a>\r\n                        commented\r\n                    </div>\r\n                    <h6 class=\"text-muted time\" data-bind=\"text: commentedAgo\"></h6>\r\n                </div>\r\n                <div class=\"pull-right\">\r\n                    <button class=\"btn btn-simple\" data-bind=\"if: $parent.canDelete($data), click: function(){ $parent.deleteComment($data);}\"><i class=\"material-icons\">delete</i></button>\r\n                </div>\r\n            </div>\r\n            <div class=\"post-description\">\r\n                <p data-bind=\"text: content\"></p>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>";
 
 var moment = createCommonjsModule(function (module, exports) {
@@ -7911,6 +8054,8 @@ var CommentsListViewModel = function () {
         this.canLoadMore = knockout.observable(true);
         this.currentPage = 1;
 
+        var transition = new KnockoutForEachCssTransition({});
+
         this.form = knockout.validatedObservable({
             commentText: knockout.observable('').extend({
                 required: true,
@@ -7920,7 +8065,28 @@ var CommentsListViewModel = function () {
 
         this.isCommentSaving = knockout.observable(false);
 
-        this.items = knockout.observableArray([]);
+        this.items = {
+            unshift: function unshift() {
+                var _data;
+
+                return (_data = this.data).unshift.apply(_data, arguments);
+            },
+            push: function push() {
+                var _data2;
+
+                return (_data2 = this.data).push.apply(_data2, arguments);
+            },
+            remove: function remove() {
+                var _data3;
+
+                return (_data3 = this.data).remove.apply(_data3, arguments);
+            },
+
+            data: knockout.observableArray([]),
+            afterRender: transition.onAfterAdd,
+            afterAdd: transition.onAfterAdd,
+            beforeRemove: transition.onBeforeRemove
+        };
     }
 
     createClass(CommentsListViewModel, [{

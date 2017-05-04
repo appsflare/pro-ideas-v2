@@ -1,5 +1,6 @@
 ﻿import ko from 'knockout';
 import 'knockout.validation';
+import KnockoutForEachCssTransition from '../transitions/KnockoutForEachCssTransition';
 
 ko.validation.init({
     errorElementClass: 'has-error',
@@ -25,6 +26,8 @@ class CommentsListViewModel {
         this.canLoadMore = ko.observable(true);
         this.currentPage = 1;
 
+        const transition = new KnockoutForEachCssTransition({});
+
 
 
         this.form = ko.validatedObservable({
@@ -36,7 +39,21 @@ class CommentsListViewModel {
 
         this.isCommentSaving = ko.observable(false);
 
-        this.items = ko.observableArray([]);
+        this.items = {
+            unshift() {
+                return this.data.unshift(...arguments);
+            },
+            push() {
+                return this.data.push(...arguments);
+            },
+            remove() {
+                return this.data.remove(...arguments);
+            },
+            data: ko.observableArray([]),
+            afterRender: transition.onAfterAdd,
+            afterAdd: transition.onAfterAdd,
+            beforeRemove: transition.onBeforeRemove
+        };
     }
 
     canDelete(comment) {
