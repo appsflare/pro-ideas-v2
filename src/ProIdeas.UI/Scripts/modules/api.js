@@ -33,6 +33,16 @@ const utils = {
             });
         });
     },
+    delete(url) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url,
+                type: 'DELETE',                
+                success: resolve,
+                error: reject
+            });
+        });
+    },
 
     uploadFile(url, files = []) {
         var formData = new FormData();
@@ -121,5 +131,10 @@ export default class ApiClient {
     updateIdeaComment({ideaId, id, content}) {
         let url = `/api/ideas/${ideaId}/comments`;
         return utils.put(url, { id, content });
+    }
+
+    deleteComment(id) {
+        let url = `/api/ideas/comments/${id}`;
+        return utils.delete(url);
     }
 }

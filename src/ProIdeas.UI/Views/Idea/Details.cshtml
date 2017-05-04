@@ -102,7 +102,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <comments-list params="ideaId: '@Model.Id', client: client"></comments-list>
+                <comments-list params="ideaId: '@Model.Id', client: client, userId: '@UserManager.GetUserId(User)'"></comments-list>
             </div>
         </div>
     </div>

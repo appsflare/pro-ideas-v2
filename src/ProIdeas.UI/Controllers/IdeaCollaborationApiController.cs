@@ -50,6 +50,14 @@ namespace ProIdeas.UI.Controllers
             return Json(new { message = "Comment updated successfully" });
         }
 
+
+        [HttpDelete, Route("ideas/comments/{id}")]
+        public IActionResult DeleteComment(string id)
+        {            
+            _ideaCommentService.DeleteComment(id);
+            return Json(new { message = "Comment deleted successfully" });
+        }
+
         [HttpPut, Route("ideas/{ideaId}/likes/{like}")]
         async public Task<IdeaCollaborationStatsDto> Update(string ideaId, bool like)
         {

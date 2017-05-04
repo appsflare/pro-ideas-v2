@@ -1,9 +1,12 @@
 ﻿<div class="row">
     <div class="col-md-10">
-        <form data-bind="submit: createComment">
-            <div class="form-group form-group-lg">
-                <textarea class="form-control" data-bind="disable: isCommentSaving, textInput: commentText">
-                </textarea>                
+        <form class="form" data-bind="submit: createComment">
+            <div class="input-group col-sm-12">
+                <div class="form-group form-group-lg" data-bind="validationElement: form().commentText">
+                    <input type="text" class="form-control" placeholder="Enter your comment here" data-bind="disable: isCommentSaving, textInput: form().commentText" />
+                    <span class="material-icons form-control-feedback">clear</span>
+                    <span class="material-input"></span>
+                </div>
             </div>
             <button class="btn btn-primary pull-right">Comment</button>
         </form>
@@ -22,6 +25,9 @@
                         commented
                     </div>
                     <h6 class="text-muted time" data-bind="text: commentedAgo"></h6>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-simple" data-bind="if: $parent.canDelete($data), click: function(){ $parent.deleteComment($data);}"><i class="material-icons">delete</i></button>
                 </div>
             </div>
             <div class="post-description">

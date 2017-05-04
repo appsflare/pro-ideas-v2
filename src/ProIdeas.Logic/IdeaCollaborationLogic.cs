@@ -23,7 +23,8 @@ namespace ProIdeas.Logic
         IHandler<LikeIdeaCommand>,
         IHandler<IdeaLikeChangedEvent>,
         IHandler<IdeaCommentCreatedEvent>,
-        IHandler<IdeaCommentUpdatedEvent>
+        IHandler<IdeaCommentUpdatedEvent>,
+        IHandler<IdeaCommentDeletedEvent>
     {
         #region Private readonly fields
         private readonly IRepository _repository;
@@ -152,7 +153,7 @@ namespace ProIdeas.Logic
         #endregion
 
 
-        #region IdeaLikeChangedEvent,IdeaCommentCreatedEvent,IdeaCommentUpdatedEvent Implementation
+        #region IdeaLikeChangedEvent,IdeaCommentCreatedEvent,IdeaCommentUpdatedEvent,IdeaCommentDeletedEvent Implementation
         async public void Handle(IdeaLikeChangedEvent message)
         {
             await UpdateIdeaStats(message.IdeaId);
@@ -164,6 +165,11 @@ namespace ProIdeas.Logic
         }
 
         async public void Handle(IdeaCommentUpdatedEvent message)
+        {
+            await UpdateIdeaStats(message.Comment.IdeaId);
+        }
+
+        async public void Handle(IdeaCommentDeletedEvent message)
         {
             await UpdateIdeaStats(message.Comment.IdeaId);
         }

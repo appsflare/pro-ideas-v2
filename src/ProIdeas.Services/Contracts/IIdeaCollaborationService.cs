@@ -17,6 +17,8 @@ namespace ProIdeas.Services.Contracts
 
         void Update(IdeaCommentDto comment);
 
+        void DeleteComment(string commentId);
+
         void Update(string ideaId, string userId, bool like);
 
     }

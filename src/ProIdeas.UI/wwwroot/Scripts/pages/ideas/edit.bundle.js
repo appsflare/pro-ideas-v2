@@ -117,6 +117,16 @@ var utils = {
             });
         });
     },
+    delete: function _delete(url) {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: resolve,
+                error: reject
+            });
+        });
+    },
     uploadFile: function uploadFile(url) {
         var files = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
@@ -243,6 +253,12 @@ var ApiClient = function () {
 
             var url = '/api/ideas/' + ideaId + '/comments';
             return utils.put(url, { id: id, content: content });
+        }
+    }, {
+        key: 'deleteComment',
+        value: function deleteComment(id) {
+            var url = '/api/ideas/comments/' + id;
+            return utils.delete(url);
         }
     }]);
     return ApiClient;

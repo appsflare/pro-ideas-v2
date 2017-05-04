@@ -29,6 +29,13 @@ namespace ProIdeas.Services
             return GetCommentAsync(command.Comment.Id);
         }
 
+        public void DeleteComment(string commentId)
+        {
+            var command = new DeleteIdeaCommentCommand(commentId);
+
+            _bus.SendCommand(command);
+        }
+
         public Task<IdeaCommentDto> GetCommentAsync(string commentId)
         {
             return _ideaCollaborationLogic.GetComment(commentId);
