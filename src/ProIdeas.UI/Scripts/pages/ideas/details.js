@@ -14,7 +14,7 @@ class DetailsPage extends BasePage {
 
     onReady() {
         console.log('edit page ready');
-        ko.applyBindings({ client: this._client }, document.querySelector('.idea-details-page'));
+        ko.applyBindings({ client: this._client }, document.querySelector('.idea-details-page-wrap'));
         return Promise.resolve(true);
     }
 }

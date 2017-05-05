@@ -9,22 +9,23 @@
 
 @inject UserManager<ApplicationUser> UserManager
 
-<div class="idea-details-page">
-    <div class="container">
-        <div class="row">
-            <div class="row idea-header">
-                <div class="col-sm-6">
-                    <img src="/api/ideas/@Model.Id/banner" alt="Circle Image" class="img-responsive">
-                </div>
-                <div class="name col-sm-6">
-                    <h3 class="title">@Model.Title</h3>
-                    @*<h6>Designer</h6>*@
-                    <h6 class="description">
-                        @Model.Description
-                    </h6>
-                </div>
+<div class="idea-details-page-wrap">
+    <div class="idea-details-page">
+        <div class="container">
+            <div class="row">
+                <div class="row idea-header">
+                    <div class="col-sm-6">
+                        <img src="/api/ideas/@Model.Id/banner" alt="Circle Image" class="img-responsive">
+                    </div>
+                    <div class="name col-sm-6">
+                        <h3 class="title">@Model.Title</h3>
+                        @*<h6>Designer</h6>*@
+                        <h6 class="description">
+                            @Model.Description
+                        </h6>
+                    </div>
 
-                @if (Model.IsOwner(UserManager.GetUserId(User)))
+                    @if (Model.IsOwner(UserManager.GetUserId(User)))
                 {
                     <div class="col-sm-6">
                         <div class="col-sm-2">
@@ -41,19 +42,19 @@
 
                                     @if (Model.IsPublished)
                                     {
-                                        <li>
-                                            <form class="form-inline" method="post" asp-action="Unpublish" asp-route-id="@Model.Id">
-                                                <button class="btn btn-simple">Unpublish</button>
-                                            </form>
-                                        </li>
+                                    <li>
+                                        <form class="form-inline" method="post" asp-action="Unpublish" asp-route-id="@Model.Id">
+                                            <button class="btn btn-simple">Unpublish</button>
+                                        </form>
+                                    </li>
                                     }
                                     else
                                     {
-                                        <li>
-                                            <form class="form-inline" method="post" asp-action="Publish" asp-route-id="@Model.Id">
-                                                <button class="btn btn-simple">Publish</button>
-                                            </form>
-                                        </li>
+                                    <li>
+                                        <form class="form-inline" method="post" asp-action="Publish" asp-route-id="@Model.Id">
+                                            <button class="btn btn-simple">Publish</button>
+                                        </form>
+                                    </li>
                                     }
 
                                 </ul>
@@ -64,46 +65,45 @@
                         </div>
                     </div>
                 }
-            </div>
-        </div>
-
-
-        <div class="row">
-            <div class="profile-tabs">
-                <div class="nav-align-left">
-                    <ul class="nav nav-pills nav-pills-grey" role="tablist">
-                        @foreach (var page in Model.Pages)
-                        {
-                        <li class="@(page.IsActive ? "active" : string.Empty)">
-                            <a href="#@page.Id" role="tab" data-toggle="tab">
-                                @page.Name
-                            </a>
-                        </li>
-                        }
-                    </ul>
-
-                    <div class="tab-content gallery">
-                        @foreach (var page in Model.Pages)
-                        {
-                        <div class="tab-pane @(page.IsActive ? "active" : string.Empty)" id="@page.Id">
-                            <div class="col-sm-10">
-                                @Html.Raw(page.Content)
-                            </div>
-                        </div>
-                        }
-
-
-
-
-                    </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="profile-tabs">
+                    <div class="nav-align-left">
+                        <ul class="nav nav-pills nav-pills-grey" role="tablist">
+                            @foreach (var page in Model.Pages)
+                        {
+                            <li class="@(page.IsActive ? "active" : string.Empty)">
+                                <a href="#@page.Id" role="tab" data-toggle="tab">
+                                    @page.Name
+                                </a>
+                            </li>
+                        }
+                        </ul>
 
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <comments-list params="ideaId: '@Model.Id', client: client, userId: '@UserManager.GetUserId(User)'"></comments-list>
+                        <div class="tab-content gallery">
+                            @foreach (var page in Model.Pages)
+                        {
+                            <div class="tab-pane @(page.IsActive ? "active" : string.Empty)" id="@page.Id">
+                                <div class="col-sm-10">
+                                    @Html.Raw(page.Content)
+                                </div>
+                            </div>
+                        }
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <comments-list params="ideaId: '@Model.Id', client: client, userId: '@UserManager.GetUserId(User)'"></comments-list>
         </div>
     </div>
 </div>
