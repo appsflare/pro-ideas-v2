@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ProIdeas.Logic
 {
     public class UserProfileLogic : IUserProfileLogic,
-        IHandler<IdeaLikeChangedEvent>
+        IHandler<IdeaStatsChangedEvent>
     {
         private readonly IRepository _repository;
         public UserProfileLogic(IRepository repository)
@@ -16,9 +16,14 @@ namespace ProIdeas.Logic
             _repository = repository;
         }
 
-        public Task Handle(IdeaLikeChangedEvent message)
+        public Task Handle(IdeaStatsChangedEvent message)
         {
-            var profile = _repository.GetOne<UserProfile>(message.UserId);
+            var profile = _repository.GetOne<UserProfile>(message.Idea.OwnerId);
+
+            if (profile == null)
+            { return Task.CompletedTask; }
+
+            
 
             return Task.CompletedTask;
         }

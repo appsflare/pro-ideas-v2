@@ -42,7 +42,7 @@ namespace ProIdeas.Logic
         #region IIdeaLogic Implementation
         async public Task<IdeaDto> GetIdea(string ideaId)
         {
-            return _dataMapper.Map<IdeaDto>(await _repository.QueryOneAsync<Idea, GetSingleIdeaByIdQueryTemplateParameter>(new GetSingleIdeaByIdQueryTemplateParameter
+            return _dataMapper.Map<IdeaDto>(await _repository.QueryOneAsync<Idea, GetSingleIdeaByIdQueryParameter>(new GetSingleIdeaByIdQueryParameter
             {
                 IdeaId = ideaId
             }));

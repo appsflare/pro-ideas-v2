@@ -55,7 +55,7 @@ namespace ProIdeas.Logic
 
         async public Task<IEnumerable<IdeaCommentDto>> GetComments(string ideaId)
         {
-            var comments = await _repository.QueryAsync<IdeaComment, GetIdeaCommentsByIdeaIdQueryTemplateParameter>(new GetIdeaCommentsByIdeaIdQueryTemplateParameter
+            var comments = await _repository.QueryAsync<IdeaComment, GetIdeaCommentsByIdeaIdQueryParameter>(new GetIdeaCommentsByIdeaIdQueryParameter
             {
                 IdeaId = ideaId
             });
