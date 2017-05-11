@@ -22,6 +22,7 @@ namespace ProIdeas.Data.Mappings
                 cfg.CreateMap<IdeaLike, IdeaLikeDto>();
                 cfg.CreateMap<IdeaComment, IdeaCommentDto>().ReverseMap();
                 cfg.CreateMap<UserProfile, UserProfileDto>();
+                cfg.CreateMap<UserProfileStats, UserProfileStatsDto>();
 
 
             });

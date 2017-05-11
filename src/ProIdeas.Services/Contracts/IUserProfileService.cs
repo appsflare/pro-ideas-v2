@@ -1,9 +1,9 @@
 ﻿using ProIdeas.DTO;
 using System.Threading.Tasks;
 
-namespace ProIdeas.Logic.Contracts
+namespace ProIdeas.Services.Contracts
 {
-    public interface IUserProfileLogic
+    public interface IUserProfileService
     {
         Task<UserProfileDto> GetUserProfileAsync(string userId);
     }

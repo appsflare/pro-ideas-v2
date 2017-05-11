@@ -139,6 +139,8 @@ namespace ProIdeas.UI
             services.AddScoped<ITenantLogic, TenantLogic>();
             services.AddScoped<IIdeaLogic, IdeaLogic>();
             services.AddScoped<IIdeaCollaborationLogic, IdeaCollaborationLogic>();
+            services.AddScoped<IUserProfileLogic, UserProfileLogic>();
+
             services.AddScoped<IEventStore, DefaultEventStore>();
 
             services.AddScoped<IBus, InMemoryBus>();
@@ -149,6 +151,7 @@ namespace ProIdeas.UI
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IIdeaService, IdeaService>();
             services.AddScoped<IIdeaCollaborationService, IdeaCollaborationService>();
+            services.AddScoped<IUserProfileService, UserProfileService>();
 
             services.AddScoped<IRethinkDbConnectionProvider, DefaultRethinkDbConnectionProvider>();
 
@@ -203,7 +206,7 @@ namespace ProIdeas.UI
                        nameof(StoredEvent),
                        nameof(UserProfile))
                        .EnsureTableIndex(nameof(Idea), nameof(IdeaComment.OwnerId))
-                       .EnsureTableIndex(nameof(IdeaComment),nameof(IdeaComment.CreatedOn))
+                       .EnsureTableIndex(nameof(IdeaComment), nameof(IdeaComment.CreatedOn))
                        .EnsureTableIndex(nameof(IdeaComment), nameof(IdeaComment.CreatedOn))
                        .EnsureTableIndex(nameof(IdeaLike), nameof(IdeaLike.OwnerId));
             }
@@ -233,7 +236,7 @@ namespace ProIdeas.UI
             //{
             app.UseIdentity();
             //});
-              
+
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 

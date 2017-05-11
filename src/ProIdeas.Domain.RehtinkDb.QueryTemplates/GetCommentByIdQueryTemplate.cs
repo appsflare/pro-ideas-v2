@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
-    public class GetSingleCommentByIdQueryTemplate : BaseRethinkQueryTemplate<IdeaComment, GetSingleCommentByIdQueryParameter>
+    public class GetCommentByIdQueryTemplate : BaseRethinkQueryTemplate<IdeaComment, GetCommentByIdQueryParameter>
     {
-        async protected override Task<IEnumerable<IdeaComment>> ExecuteAsync(QueryTemplateContext<GetSingleCommentByIdQueryParameter> context)
+        async protected override Task<IEnumerable<IdeaComment>> ExecuteAsync(QueryTemplateContext<GetCommentByIdQueryParameter> context)
         {
             var queryParam = context.Parameter;
 

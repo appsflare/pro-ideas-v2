@@ -1,6 +1,6 @@
 ﻿namespace ProIdeas.Domain.Queries
 {
-    public class GetSingleCommentByIdQueryParameter
+    public class GetCommentByIdQueryParameter
     {
         public string CommentId { get; set; }
     }

@@ -46,7 +46,7 @@ namespace ProIdeas.Logic
         #region IIdeaCollaborationLogic Implementation
         async public Task<IdeaCommentDto> GetComment(string commentId)
         {
-            var comment = await _repository.QueryOneAsync<IdeaComment, GetSingleCommentByIdQueryParameter>(new GetSingleCommentByIdQueryParameter
+            var comment = await _repository.QueryOneAsync<IdeaComment, GetCommentByIdQueryParameter>(new GetCommentByIdQueryParameter
             {
                 CommentId = commentId
             });
