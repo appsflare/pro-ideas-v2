@@ -65,9 +65,9 @@ namespace ProIdeas.UI.Controllers
 
         // PUT: api/IdeaApi/5
         [HttpPut("{id}")]
-        public IActionResult Put(string id, [FromBody]IdeaDto idea)
+        async public Task<IActionResult> Put(string id, [FromBody]IdeaDto idea)
         {
-            _ideaService.Update(idea);
+            await _ideaService.UpdateAsync(idea);
             return Json(new { message = "Idea updated successfully" });
         }
 
@@ -121,9 +121,9 @@ namespace ProIdeas.UI.Controllers
 
         [HttpPut]
         [Route("{id}/pages")]
-        public IActionResult SavePages([FromRoute]string id, [FromBody]IEnumerable<PageDto> pages)
+        async public Task<IActionResult> SavePages([FromRoute]string id, [FromBody]IEnumerable<PageDto> pages)
         {
-            _ideaService.SavePages(id, pages);
+            await _ideaService.SavePagesAsync(id, pages);
 
             return Json(new { message = "Pages saved successfully" });
         }

@@ -10,13 +10,13 @@ namespace ProIdeas.Services.Contracts
 
         Task<IdeaDto> CreateAsync(IdeaDto idea);
 
-        Task Update(IdeaDto idea);
+        Task UpdateAsync(IdeaDto idea);
 
-        Task SavePages(string ideaId, IEnumerable<PageDto> pages);
+        Task SavePagesAsync(string ideaId, IEnumerable<PageDto> pages);
 
-        Task Publish(string ideaId);
+        Task PublishAsync(string ideaId);
 
-        Task Unpublish(string ideaId);
+        Task UnpublishAsync(string ideaId);
 
         Task<IEnumerable<IdeaDto>> GetUserIdeasAsync(string userId, int pageSize, int page, string keyword);
 

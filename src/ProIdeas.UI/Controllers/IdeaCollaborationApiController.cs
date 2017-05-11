@@ -42,27 +42,26 @@ namespace ProIdeas.UI.Controllers
             return await _ideaCommentService.GetCommentAsync(createdComment.Id);
         }
 
-        [HttpPut, Route("ideas/{ideaId}/comments")]
-        public IActionResult UpdateComment(string ideaId, [FromBody] IdeaCommentDto comment)
+        [HttpPut, Route("comments")]
+        async public Task<IActionResult> UpdateComment([FromBody] IdeaCommentDto comment)
         {
             comment.OwnerId = _userIdentityProvider.GetUserId();
-            _ideaCommentService.Update(comment);
+            await _ideaCommentService.Update(comment);
             return Json(new { message = "Comment updated successfully" });
         }
 
 
         [HttpDelete, Route("ideas/comments/{id}")]
-        public IActionResult DeleteComment(string id)
-        {            
-            _ideaCommentService.DeleteComment(id);
+        async public Task<IActionResult> DeleteComment(string id)
+        {
+            await _ideaCommentService.DeleteComment(id);
             return Json(new { message = "Comment deleted successfully" });
         }
 
         [HttpPut, Route("ideas/{ideaId}/likes/{like}")]
         async public Task<IdeaCollaborationStatsDto> Update(string ideaId, bool like)
         {
-            _ideaCommentService.Update(ideaId, _userIdentityProvider.GetUserId(), like);
-            await Task.Delay(10);
+            await _ideaCommentService.Update(ideaId, _userIdentityProvider.GetUserId(), like);
             return await _ideaCommentService.GetStats(ideaId);
         }
     }

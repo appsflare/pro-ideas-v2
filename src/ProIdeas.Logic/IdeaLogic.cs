@@ -113,6 +113,7 @@ namespace ProIdeas.Logic
             var newIdea = _dataMapper.Map<Idea>(message.Idea);
             newIdea.Status = Status.Draft.ToString();
 
+            newIdea.CreatedOn = DateTime.UtcNow;
 
             var result = _repository.Add(newIdea);
 
@@ -137,6 +138,9 @@ namespace ProIdeas.Logic
             existing.Description = ideaTobeUpdated.Description;
             existing.IsFundingRequired = ideaTobeUpdated.IsFundingRequired;
             existing.FundingRequirement = ideaTobeUpdated.FundingRequirement;
+
+            existing.ModifiedOn = DateTime.UtcNow;
+            existing.LastModifiedBy = _userIdentityProvider.GetUserId();
 
             var result = _repository.Update(existing);
 
@@ -171,6 +175,9 @@ namespace ProIdeas.Logic
 
             idea.Status = Status.Unpublished.ToString();
 
+            idea.ModifiedOn = DateTime.UtcNow;
+            idea.LastModifiedBy = _userIdentityProvider.GetUserId();
+
             _repository.Update(idea);
 
             return _bus.RaiseEvent(new IdeaUnpublishedEvent(idea.Id));
@@ -186,6 +193,8 @@ namespace ProIdeas.Logic
             { return Task.CompletedTask; }
 
             idea.Status = Status.Published.ToString();
+            idea.ModifiedOn = DateTime.UtcNow;
+            idea.LastModifiedBy = _userIdentityProvider.GetUserId();
 
             _repository.Update(idea);
 

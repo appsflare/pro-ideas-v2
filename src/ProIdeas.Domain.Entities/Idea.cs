@@ -38,6 +38,8 @@ namespace ProIdeas.Domain.Entities
 
         public DateTime? ModifiedOn { get; set; }
 
+        public string LastModifiedBy { get; set; }
+
         public string Status { get; set; }
 
         public User Owner { get; set; }

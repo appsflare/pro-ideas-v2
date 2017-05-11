@@ -82,14 +82,14 @@ namespace ProIdeas.UI.Controllers
         [HttpPost, Route("{id}/publish")]
         public IActionResult Publish(string id)
         {
-            _ideaService.Publish(id);
+            _ideaService.PublishAsync(id);
             return RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpPost, Route("{id}/unpublish")]
         public IActionResult Unpublish(string id)
         {
-            _ideaService.Unpublish(id);
+            _ideaService.UnpublishAsync(id);
             return RedirectToAction(nameof(Details), new { id });
         }
 
