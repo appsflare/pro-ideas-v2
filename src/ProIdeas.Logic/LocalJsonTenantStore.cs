@@ -1,11 +1,6 @@
 ﻿using ProIdeas.Logic.Contracts;
-using System;
-using System.Linq;
-using ProIdeas.DTO;
 using ProIdeas.Files.Contracts;
-using System.IO;
 using ProIdeas.Serializers.Contracts;
-using System.Collections.Generic;
 using ProIdeas.Domain.Entities;
 
 namespace ProIdeas.Logic

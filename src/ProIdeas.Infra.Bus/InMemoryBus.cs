@@ -3,6 +3,7 @@ using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Domain.Core.Commands;
 using ProIdeas.Domain.Core.Events;
 using ProIdeas.Domain.Core.Notifications;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Infra.Bus
 {
@@ -17,32 +18,32 @@ namespace ProIdeas.Infra.Bus
             _eventStore = eventStore;
         }
 
-        public void SendCommand<T>(T theCommand) where T : Command
+        public Task SendCommand<T>(T theCommand) where T : Command
         {
-            Publish(theCommand);
+            return Publish(theCommand);
         }
 
-        public void RaiseEvent<T>(T theEvent) where T : Event
+        public Task RaiseEvent<T>(T theEvent) where T : Event
         {
             if (!theEvent.MessageType.Equals("DomainNotification"))
             { _eventStore?.Save(theEvent); }
 
-            Publish(theEvent);
+            return Publish(theEvent);
         }
 
-        private void Publish<T>(T message) where T : Message
+        async private Task Publish<T>(T message) where T : Message
         {
             if (_container == null) return;
 
-           var filter = _container.GetService(typeof(IMessageFilter<T>)) as IMessageFilter<T>;
+            var filter = _container.GetService(typeof(IMessageFilter<T>)) as IMessageFilter<T>;
             var filterContext = new FilterContext<T>(message);
-            filter?.Execute(filterContext);
+            await filter?.Execute(filterContext);
 
             var obj = _container.GetService(message.MessageType.Equals("DomainNotification")
                 ? typeof(IDomainNotificationHandler<T>)
                 : typeof(IHandler<T>));
 
-            ((IHandler<T>)obj)?.Handle(filterContext.Message);
+            await ((IHandler<T>)obj)?.Handle(filterContext.Message);
         }
 
         private object GetService(Type serviceType)

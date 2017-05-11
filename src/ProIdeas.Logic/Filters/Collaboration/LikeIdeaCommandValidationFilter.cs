@@ -4,6 +4,7 @@ using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Repositories;
 using ProIdeas.Infra.Commands.Collaboration;
 using System;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Logic.Filters.Collaboration
 {
@@ -17,7 +18,7 @@ namespace ProIdeas.Logic.Filters.Collaboration
             _repository = repository;
         }
 
-        protected override void Validate(FilterContext<LikeIdeaCommand> context)
+        protected override Task Validate(FilterContext<LikeIdeaCommand> context)
         {
             if (!context.Message.IsValid())
             { throw new ArgumentException(nameof(context.Message)); }
@@ -28,6 +29,8 @@ namespace ProIdeas.Logic.Filters.Collaboration
                 throw new InvalidOperationException("invalid idea");
             }
 
+
+            return Task.CompletedTask;
 
             //TODO: perform user validation as well
 

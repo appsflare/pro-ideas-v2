@@ -5,7 +5,6 @@ using ProIdeas.Logic.Contracts;
 using System.Threading.Tasks;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Commands.Collaboration;
-using System;
 
 namespace ProIdeas.Services
 {
@@ -29,11 +28,11 @@ namespace ProIdeas.Services
             return GetCommentAsync(command.Comment.Id);
         }
 
-        public void DeleteComment(string commentId)
+        public Task DeleteComment(string commentId)
         {
             var command = new DeleteIdeaCommentCommand(commentId);
 
-            _bus.SendCommand(command);
+            return _bus.SendCommand(command);
         }
 
         public Task<IdeaCommentDto> GetCommentAsync(string commentId)
@@ -51,17 +50,17 @@ namespace ProIdeas.Services
             return _ideaCollaborationLogic.GetStats(ideaId);
         }
 
-        public void Update(IdeaCommentDto comment)
+        public Task Update(IdeaCommentDto comment)
         {
             var command = new UpdateIdeaCommentCommand(comment);
 
-            _bus.SendCommand(command);
+            return _bus.SendCommand(command);
         }
 
-        public void Update(string ideaId, string userId, bool like)
+        public Task Update(string ideaId, string userId, bool like)
         {
-            _bus.SendCommand(new LikeIdeaCommand(ideaId, userId, like));
+            return _bus.SendCommand(new LikeIdeaCommand(ideaId, userId, like));
         }
-        
+
     }
 }

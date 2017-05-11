@@ -1,6 +1,6 @@
 ﻿namespace ProIdeas.Logic.Contracts
 {
-    public interface IIdeaPagesLogic
+    public interface IUserProfileLogic
     {
 
     }

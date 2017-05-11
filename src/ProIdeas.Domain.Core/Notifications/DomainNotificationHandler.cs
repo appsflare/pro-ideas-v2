@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ProIdeas.Domain.Core.Events;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.Core.Notifications
 {
     public class DomainNotificationHandler : IDomainNotificationHandler<DomainNotification>
     {
-        private List<DomainNotification> _notifications;
+        private IList<DomainNotification> _notifications;
 
         public DomainNotificationHandler()
         {
             _notifications = new List<DomainNotification>();
         }
 
-        public void Handle(DomainNotification message)
+        public Task Handle(DomainNotification message)
         {
             _notifications.Add(message);
+            return Task.CompletedTask;
         }
 
-        public List<DomainNotification> GetNotifications()
+        public IEnumerable<DomainNotification> GetNotifications()
         {
             return _notifications;
         }

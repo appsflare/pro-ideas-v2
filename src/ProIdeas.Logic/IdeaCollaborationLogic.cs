@@ -75,7 +75,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region CreateIdeaCommentCommand Implementation
-        public void Handle(CreateIdeaCommentCommand message)
+        public Task Handle(CreateIdeaCommentCommand message)
         {
             message.Comment.CreatedOn = DateTime.UtcNow;
             var createdComment = _repository.Add(_dataMapper.Map<IdeaComment>(message.Comment));
@@ -84,17 +84,18 @@ namespace ProIdeas.Logic
 
             _bus.RaiseEvent(new IdeaCommentCreatedEvent(_dataMapper.Map<IdeaCommentDto>(createdComment)));
 
+            return Task.CompletedTask;
 
         }
         #endregion
 
         #region UpdateIdeaCommentCommand Implementation
-        public void Handle(UpdateIdeaCommentCommand message)
+        public Task Handle(UpdateIdeaCommentCommand message)
         {
             var existingComment = _repository.GetOne<IdeaComment>(message.Comment.Id);
 
             if (existingComment == null)
-            { return; }
+            { return Task.CompletedTask; }
 
             existingComment.Content = message.Comment.Content;
             existingComment.ModifiedOn = DateTime.UtcNow;
@@ -102,20 +103,22 @@ namespace ProIdeas.Logic
             var updatedComment = _repository.Update(existingComment);
 
             _bus.RaiseEvent(new IdeaCommentUpdatedEvent(_dataMapper.Map<IdeaCommentDto>(updatedComment)));
+
+            return Task.CompletedTask;
         }
         #endregion
 
         #region DeleteIdeaCommentCommand Implementation
-        public void Handle(DeleteIdeaCommentCommand message)
+        public Task Handle(DeleteIdeaCommentCommand message)
         {
             var ideaComment = _repository.GetOne<IdeaComment>(message.CommentId);
             _repository.Delete(ideaComment);
-            _bus.RaiseEvent(new IdeaCommentDeletedEvent(_dataMapper.Map<IdeaCommentDto>(ideaComment)));
+            return _bus.RaiseEvent(new IdeaCommentDeletedEvent(_dataMapper.Map<IdeaCommentDto>(ideaComment)));
         }
         #endregion
 
         #region LikeIdeaCommand Implementation
-        async public void Handle(LikeIdeaCommand message)
+        async public Task Handle(LikeIdeaCommand message)
         {
             var likeData = await _repository.QueryOneAsync<IdeaLike, GetIdeaLikeByUserIdQueryParameter>(new GetIdeaLikeByUserIdQueryParameter
             {
@@ -148,28 +151,28 @@ namespace ProIdeas.Logic
             if (!hasChanged)
             { return; }
 
-            _bus.RaiseEvent(new IdeaLikeChangedEvent(message.IdeaId, message.UserId, message.Like));
+            await _bus.RaiseEvent(new IdeaLikeChangedEvent(message.IdeaId, message.UserId, message.Like));
         }
         #endregion
 
 
         #region IdeaLikeChangedEvent,IdeaCommentCreatedEvent,IdeaCommentUpdatedEvent,IdeaCommentDeletedEvent Implementation
-        async public void Handle(IdeaLikeChangedEvent message)
+        async public Task Handle(IdeaLikeChangedEvent message)
         {
             await UpdateIdeaStats(message.IdeaId);
         }
 
-        async public void Handle(IdeaCommentCreatedEvent message)
+        async public Task Handle(IdeaCommentCreatedEvent message)
         {
             await UpdateIdeaStats(message.Comment.IdeaId);
         }
 
-        async public void Handle(IdeaCommentUpdatedEvent message)
+        async public Task Handle(IdeaCommentUpdatedEvent message)
         {
             await UpdateIdeaStats(message.Comment.IdeaId);
         }
 
-        async public void Handle(IdeaCommentDeletedEvent message)
+        async public Task Handle(IdeaCommentDeletedEvent message)
         {
             await UpdateIdeaStats(message.Comment.IdeaId);
         }
@@ -191,6 +194,8 @@ namespace ProIdeas.Logic
             idea.Comments = stats.Comments;
 
             _repository.Update(idea);
+
+            await _bus.RaiseEvent(new IdeaStatsChangedEvent(_dataMapper.Map<IdeaDto>(idea)));
         }
         #endregion
 

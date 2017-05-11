@@ -1,7 +1,5 @@
 ﻿using ProIdeas.DTO;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ProIdeas.Services.Contracts
 {

@@ -7,10 +7,9 @@ using ProIdeas.Files.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http;
 using System.Net;
-using Microsoft.Net.Http.Headers;
 
 namespace ProIdeas.UI.Controllers
-{    
+{
     [Route("api/files")]
     [Authorize]
     public class FilesApiController : Controller

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.Core.Events
 {
     public interface IHandler<in T> where T : Message
     {
-        void Handle(T message);
+        Task Handle(T message);
     }
 }

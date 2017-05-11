@@ -1,7 +1,4 @@
-﻿using ProIdeas.Domain.Repositories;
-using System;
-
-namespace ProIdeas.Domain.Entities
+﻿namespace ProIdeas.Domain.Entities
 {
     public class TenantSettings : BaseEntity
     {

@@ -14,8 +14,10 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
             var queryParam = context.Parameter;
 
 
+
             var table = RethinkDB.R
              .Table(typeof(Idea).Name);
+            
 
             var query = table.Filter(x=>x.HasFields(nameof(Idea.Title)));
 

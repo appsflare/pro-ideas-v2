@@ -1,5 +1,4 @@
 ﻿using ProIdeas.Domain.Repositories;
-using RethinkDb.Driver.Net;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.Core.Events
 {
-    public class BaseMessageValidationFilter<T> : IMessageFilter<T> where T : Message
+    public abstract class BaseMessageValidationFilter<T> : IMessageFilter<T> where T : Message
     {
-        public void Execute(FilterContext<T> context)
+        public Task Execute(FilterContext<T> context)
         {
             if (context == null)
             { throw new ArgumentNullException(nameof(context)); }
@@ -13,12 +14,9 @@ namespace ProIdeas.Domain.Core.Events
             { throw new ArgumentNullException(nameof(context.Message)); }
 
 
-            Validate(context);
+            return Validate(context);
         }
 
-        protected virtual void Validate(FilterContext<T> context)
-        {
-
-        }
+        protected abstract Task Validate(FilterContext<T> context);
     }
 }

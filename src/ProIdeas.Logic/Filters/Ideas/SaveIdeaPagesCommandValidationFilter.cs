@@ -4,6 +4,7 @@ using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Repositories;
 using ProIdeas.Infra.Commands.Ideas;
 using System;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Logic.Filters.Ideas
 {
@@ -17,7 +18,7 @@ namespace ProIdeas.Logic.Filters.Ideas
             _repository = repository;
         }
 
-        protected override void Validate(FilterContext<SaveIdeaPagesCommand> context)
+        protected override Task Validate(FilterContext<SaveIdeaPagesCommand> context)
         {
             if (!context.Message.IsValid())
             {
@@ -30,6 +31,8 @@ namespace ProIdeas.Logic.Filters.Ideas
             {
                 throw new UnauthorizedAccessException();
             }
+
+            return Task.CompletedTask;
         }
     }
 }

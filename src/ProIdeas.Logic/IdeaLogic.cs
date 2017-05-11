@@ -36,7 +36,7 @@ namespace ProIdeas.Logic
             _dataMapper = dataMapper;
             _bus = bus;
             _userIdentityProvider = userIdentityProvider;
-        } 
+        }
         #endregion
 
         #region IIdeaLogic Implementation
@@ -89,7 +89,7 @@ namespace ProIdeas.Logic
 
                 return _dataMapper.Map<IEnumerable<IdeaLikeDto>>(_repository.Query(query));
             });
-        }        
+        }
 
         async public Task<IEnumerable<IdeaDto>> GetUserIdeas(string userId, int pageSize, int page, string keyword)
         {
@@ -107,7 +107,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region CreateIdeaCommand Implementation
-        public void Handle(CreateIdeaCommand message)
+        public Task Handle(CreateIdeaCommand message)
         {
 
             var newIdea = _dataMapper.Map<Idea>(message.Idea);
@@ -121,12 +121,12 @@ namespace ProIdeas.Logic
             message.Idea.Id = createdIdea.Id;
 
 
-            _bus.RaiseEvent(new IdeaCreatedEvent(_dataMapper.Map<IdeaDto>(result)));
-        } 
+            return _bus.RaiseEvent(new IdeaCreatedEvent(_dataMapper.Map<IdeaDto>(result)));
+        }
         #endregion
 
         #region UpdateIdeaCommand Implementation
-        public void Handle(UpdateIdeaCommand message)
+        public Task Handle(UpdateIdeaCommand message)
         {
             var ideaTobeUpdated = _dataMapper.Map<Idea>(message.Idea);
 
@@ -140,59 +140,59 @@ namespace ProIdeas.Logic
 
             var result = _repository.Update(existing);
 
-            _bus.RaiseEvent(new IdeaUpdatedEvent(_dataMapper.Map<IdeaDto>(result)));
+            return _bus.RaiseEvent(new IdeaUpdatedEvent(_dataMapper.Map<IdeaDto>(result)));
         }
         #endregion
 
         #region DeleteIdeaCommand Implementation
 
-        public void Handle(DeleteIdeaCommand message)
+        public Task Handle(DeleteIdeaCommand message)
         {
             var idea = _repository.GetOne<Idea>(message.IdeaId);
 
             if (idea == null)
-            { return; }
+            { return Task.CompletedTask; }
 
             _repository.Delete(idea);
 
-            _bus.RaiseEvent(new IdeaDeletedEvent(_dataMapper.Map<IdeaDto>(idea)));
+            return _bus.RaiseEvent(new IdeaDeletedEvent(_dataMapper.Map<IdeaDto>(idea)));
 
         }
 
         #endregion
 
         #region UnpublishIdeaCommand Implementation
-        public void Handle(UnpublishIdeaCommand message)
+        public Task Handle(UnpublishIdeaCommand message)
         {
             var idea = _repository.GetOne<Idea>(message.IdeaId);
 
             if (idea == null)
-            { return; }
+            { return Task.CompletedTask; }
 
             idea.Status = Status.Unpublished.ToString();
 
             _repository.Update(idea);
 
-            _bus.RaiseEvent(new IdeaUnpublishedEvent(idea.Id));
-        } 
+            return _bus.RaiseEvent(new IdeaUnpublishedEvent(idea.Id));
+        }
         #endregion
 
         #region PublishIdeaCommand
-        public void Handle(PublishIdeaCommand message)
+        public Task Handle(PublishIdeaCommand message)
         {
             var idea = _repository.GetOne<Idea>(message.IdeaId);
 
             if (idea == null)
-            { return; }
+            { return Task.CompletedTask; }
 
             idea.Status = Status.Published.ToString();
 
             _repository.Update(idea);
 
-            _bus.RaiseEvent(new IdeaPublishedEvent(idea.Id));
-        } 
+            return _bus.RaiseEvent(new IdeaPublishedEvent(idea.Id));
+        }
         #endregion
 
-        
+
     }
 }

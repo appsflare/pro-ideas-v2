@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ProIdeas.DTO
+﻿namespace ProIdeas.DTO
 {
     public class TenantSettingsDto : BaseDto<string>
     {

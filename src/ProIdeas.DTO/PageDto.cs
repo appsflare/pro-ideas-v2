@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ProIdeas.DTO
+﻿namespace ProIdeas.DTO
 {
     public class PageDto : BaseDto<string>
     {

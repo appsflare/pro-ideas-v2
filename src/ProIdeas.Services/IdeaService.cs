@@ -1,7 +1,5 @@
 ﻿using ProIdeas.Services.Contracts;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using ProIdeas.DTO;
 using ProIdeas.Logic.Contracts;
 using System.Threading.Tasks;
@@ -30,11 +28,11 @@ namespace ProIdeas.Services
             return GetIdeaAsync(command.Idea.Id);
         }
 
-        public void Update(IdeaDto idea)
+        public Task Update(IdeaDto idea)
         {
             var command = new UpdateIdeaCommand(idea);
 
-            _bus.SendCommand(command);
+            return _bus.SendCommand(command);
         }
 
         public Task<IdeaDto> GetIdeaAsync(string ideaId)
@@ -45,26 +43,26 @@ namespace ProIdeas.Services
         public Task<IEnumerable<IdeaDto>> GetIdeasAsync(int pageSize, int page)
         {
             return _ideaLogic.GetIdeas(pageSize, page, string.Empty);
-        }        
+        }
 
         public Task<IEnumerable<IdeaDto>> SearchIdeasAsync(string keyword, int pageSize, int page)
         {
             return _ideaLogic.GetIdeas(pageSize, page, keyword);
         }
 
-        public void SavePages(string ideaId, IEnumerable<PageDto> pages)
+        public Task SavePages(string ideaId, IEnumerable<PageDto> pages)
         {
-            _bus.SendCommand(new SaveIdeaPagesCommand(ideaId, pages));
+            return _bus.SendCommand(new SaveIdeaPagesCommand(ideaId, pages));
         }
 
-        public void Publish(string ideaId)
+        public Task Publish(string ideaId)
         {
-            _bus.SendCommand(new PublishIdeaCommand(ideaId));
+            return _bus.SendCommand(new PublishIdeaCommand(ideaId));
         }
 
-        public void Unpublish(string ideaId)
+        public Task Unpublish(string ideaId)
         {
-            _bus.SendCommand(new UnpublishIdeaCommand(ideaId));
+            return _bus.SendCommand(new UnpublishIdeaCommand(ideaId));
         }
 
         public Task<IEnumerable<IdeaDto>> GetUserIdeasAsync(string userId, int pageSize, int page, string keyword)

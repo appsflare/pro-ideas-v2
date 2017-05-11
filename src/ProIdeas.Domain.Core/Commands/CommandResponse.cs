@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ProIdeas.Domain.Core.Commands
+﻿namespace ProIdeas.Domain.Core.Commands
 {
     public class CommandResponse
     {

@@ -4,6 +4,7 @@ using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Repositories;
 using ProIdeas.Infra.Commands.Collaboration;
 using System;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Logic.Filters.Collaboration
 {
@@ -17,7 +18,7 @@ namespace ProIdeas.Logic.Filters.Collaboration
             _repository = repository;
         }
 
-        protected override void Validate(FilterContext<DeleteIdeaCommentCommand> context)
+        protected override Task Validate(FilterContext<DeleteIdeaCommentCommand> context)
         {
             if (!context.Message.IsValid())
             {
@@ -35,6 +36,8 @@ namespace ProIdeas.Logic.Filters.Collaboration
             {
                 throw new UnauthorizedAccessException();
             }
+
+            return Task.CompletedTask;
         }
     }
 }

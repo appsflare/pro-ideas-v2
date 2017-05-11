@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ProIdeas.DTO
+﻿namespace ProIdeas.DTO
 {
     public class UserDto : BaseDto<string>
     {

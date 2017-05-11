@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ProIdeas.DataMappings.Data.Mappings.Contracts
+﻿namespace ProIdeas.DataMappings.Data.Mappings.Contracts
 {
     public interface IDataMapper
     {

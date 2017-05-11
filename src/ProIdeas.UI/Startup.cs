@@ -200,7 +200,8 @@ namespace ProIdeas.UI
                        nameof(IdeaComment),
                        nameof(IdeaLike),
                        nameof(Page),
-                       nameof(StoredEvent))
+                       nameof(StoredEvent),
+                       nameof(UserProfile))
                        .EnsureTableIndex(nameof(Idea), nameof(IdeaComment.OwnerId))
                        .EnsureTableIndex(nameof(IdeaComment),nameof(IdeaComment.CreatedOn))
                        .EnsureTableIndex(nameof(IdeaComment), nameof(IdeaComment.CreatedOn))

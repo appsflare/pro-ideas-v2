@@ -1,5 +1,4 @@
 ﻿using ProIdeas.Domain.Repositories;
-using System;
 
 namespace ProIdeas.Domain.Core.Events
 {

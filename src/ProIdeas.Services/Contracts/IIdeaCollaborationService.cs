@@ -15,11 +15,11 @@ namespace ProIdeas.Services.Contracts
 
         Task<IdeaCommentDto> CreateAsync(IdeaCommentDto comment);
 
-        void Update(IdeaCommentDto comment);
+        Task Update(IdeaCommentDto comment);
 
-        void DeleteComment(string commentId);
+        Task DeleteComment(string commentId);
 
-        void Update(string ideaId, string userId, bool like);
+        Task Update(string ideaId, string userId, bool like);
 
     }
 }

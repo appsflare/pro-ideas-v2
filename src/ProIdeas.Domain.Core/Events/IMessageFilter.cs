@@ -1,7 +1,9 @@
-﻿namespace ProIdeas.Domain.Core.Events
+﻿using System.Threading.Tasks;
+
+namespace ProIdeas.Domain.Core.Events
 {
     public interface IMessageFilter<T> where T : Message
     {
-        void Execute(FilterContext<T> context);
+        Task Execute(FilterContext<T> context);
     }
 }

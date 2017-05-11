@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace ProIdeas.Authentication.Contracts
+﻿namespace ProIdeas.Authentication.Contracts
 {
     public interface IUserIdentityProvider
     {
