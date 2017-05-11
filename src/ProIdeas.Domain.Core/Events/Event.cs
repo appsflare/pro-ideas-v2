@@ -9,6 +9,7 @@ namespace ProIdeas.Domain.Core.Events
         protected Event()
         {
             Timestamp = DateTime.Now;
+            MessageType = "DomainEvent";
         }
     }
 }

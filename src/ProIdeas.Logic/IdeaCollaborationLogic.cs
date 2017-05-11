@@ -82,9 +82,8 @@ namespace ProIdeas.Logic
 
             message.SetCommentId(createdComment.Id);
 
-            _bus.RaiseEvent(new IdeaCommentCreatedEvent(_dataMapper.Map<IdeaCommentDto>(createdComment)));
+            return _bus.RaiseEvent(new IdeaCommentCreatedEvent(_dataMapper.Map<IdeaCommentDto>(createdComment)));
 
-            return Task.CompletedTask;
 
         }
         #endregion
@@ -102,9 +101,7 @@ namespace ProIdeas.Logic
 
             var updatedComment = _repository.Update(existingComment);
 
-            _bus.RaiseEvent(new IdeaCommentUpdatedEvent(_dataMapper.Map<IdeaCommentDto>(updatedComment)));
-
-            return Task.CompletedTask;
+            return _bus.RaiseEvent(new IdeaCommentUpdatedEvent(_dataMapper.Map<IdeaCommentDto>(updatedComment)));            
         }
         #endregion
 

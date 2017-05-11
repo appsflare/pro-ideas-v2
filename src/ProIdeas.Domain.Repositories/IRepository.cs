@@ -37,7 +37,8 @@ namespace ProIdeas.Domain.Repositories
         IEnumerable<TEntity> All<TEntity>(int page, int pageSize) where TEntity : class, IEntity, new();
 
         TEntity Add<TEntity>(TEntity item) where TEntity : class, IEntity, new();
-
+        Task<TEntity> AddAsync<TEntity>(TEntity item) where TEntity : class, IEntity, new();
         TEntity Update<TEntity>(TEntity item) where TEntity : class, IEntity, new();
+        Task<TEntity> UpdateAsync<TEntity>(TEntity item) where TEntity : class, IEntity, new();
     }
 }

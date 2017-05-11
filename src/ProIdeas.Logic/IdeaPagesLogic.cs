@@ -24,16 +24,16 @@ namespace ProIdeas.Logic
             _bus = bus;
 
         }
-        public Task Handle(SaveIdeaPagesCommand message)
+        async public Task Handle(SaveIdeaPagesCommand message)
         {
             var idea = _repository.GetOne<Idea>(message.IdeaId);
 
             idea.Pages = new List<Page>(_dataMapper.Map<IEnumerable<Page>>(message.Pages));
-            _repository.Update(idea);
+            await _repository.UpdateAsync(idea);
 
 
 
-            return _bus.RaiseEvent(new IdeaPagesUpdatedEvent(idea.Id, message.Pages));
+            await _bus.RaiseEvent(new IdeaPagesUpdatedEvent(idea.Id, message.Pages));
         }
     }
 }

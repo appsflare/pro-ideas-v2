@@ -150,5 +150,17 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
             return (await queryTemplate?.ExecuteAsync(_connection, queryParam)).FirstOrDefault();
         }
+
+        async Task<TEntity> IRepository.AddAsync<TEntity>(TEntity item)
+        {
+            var result = await GetTable<TEntity>().Insert(item).RunResultAsync(_connection);
+            return result.GeneratedKeys.Any() ? await GetOneAsync<TEntity>(result.GeneratedKeys.First().ToString()) : default(TEntity);
+        }
+
+        async Task<TEntity> IRepository.UpdateAsync<TEntity>(TEntity item)
+        {
+            var result = await RethinkDB.R.Table(GetTableName<TEntity>()).Get(item.Id).Update(item).RunResultAsync(_connection);
+            return await GetOneAsync<TEntity>(item.Id);
+        }
     }
 }

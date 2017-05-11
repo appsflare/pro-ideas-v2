@@ -140,6 +140,7 @@ namespace ProIdeas.UI
             services.AddScoped<IIdeaLogic, IdeaLogic>();
             services.AddScoped<IIdeaCollaborationLogic, IdeaCollaborationLogic>();
             services.AddScoped<IUserProfileLogic, UserProfileLogic>();
+            services.AddScoped<IActivityLogic, ActivityLogic>();
 
             services.AddScoped<IEventStore, DefaultEventStore>();
 
@@ -204,11 +205,13 @@ namespace ProIdeas.UI
                        nameof(IdeaLike),
                        nameof(Page),
                        nameof(StoredEvent),
-                       nameof(UserProfile))
+                       nameof(UserProfile),
+                       nameof(Activity))
                        .EnsureTableIndex(nameof(Idea), nameof(IdeaComment.OwnerId))
                        .EnsureTableIndex(nameof(IdeaComment), nameof(IdeaComment.CreatedOn))
                        .EnsureTableIndex(nameof(IdeaComment), nameof(IdeaComment.CreatedOn))
-                       .EnsureTableIndex(nameof(IdeaLike), nameof(IdeaLike.OwnerId));
+                       .EnsureTableIndex(nameof(IdeaLike), nameof(IdeaLike.OwnerId))
+                       .EnsureTableIndex(nameof(Activity), nameof(Activity.OwnerId));
             }
 
         }
