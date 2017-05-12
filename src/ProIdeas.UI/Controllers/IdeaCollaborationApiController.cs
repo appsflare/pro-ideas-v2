@@ -46,7 +46,7 @@ namespace ProIdeas.UI.Controllers
         async public Task<IActionResult> UpdateComment([FromBody] IdeaCommentDto comment)
         {
             comment.OwnerId = _userIdentityProvider.GetUserId();
-            await _ideaCommentService.Update(comment);
+            await _ideaCommentService.UpdateAsync(comment);
             return Json(new { message = "Comment updated successfully" });
         }
 
@@ -54,15 +54,31 @@ namespace ProIdeas.UI.Controllers
         [HttpDelete, Route("ideas/comments/{id}")]
         async public Task<IActionResult> DeleteComment(string id)
         {
-            await _ideaCommentService.DeleteComment(id);
+            await _ideaCommentService.DeleteCommentAsync(id);
             return Json(new { message = "Comment deleted successfully" });
         }
 
         [HttpPut, Route("ideas/{ideaId}/likes/{like}")]
         async public Task<IdeaCollaborationStatsDto> Update(string ideaId, bool like)
         {
-            await _ideaCommentService.Update(ideaId, _userIdentityProvider.GetUserId(), like);
-            return await _ideaCommentService.GetStats(ideaId);
+            await _ideaCommentService.UpdateAsync(ideaId, _userIdentityProvider.GetUserId(), like);
+            return await _ideaCommentService.GetStatsAsync(ideaId);
+        }
+
+        [HttpPost, Route("ideas/{ideaId}/team")]
+        async public Task<TeamDto> CreateTeam(string ideaId, TeamDto team)
+        {
+            team.IdeaId = ideaId;
+            return await _ideaCommentService.CreateTeamAsync(team);
+        }
+
+        [HttpPut, Route("ideas/{ideaId}/team/{teamId}")]
+        async public Task<TeamDto> CreateTeam(string ideaId, string teamId, TeamDto team)
+        {
+            team.IdeaId = ideaId;
+            team.Id = teamId;
+
+            return await _ideaCommentService.UpdateTeamAsync(team);
         }
     }
 }

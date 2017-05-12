@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2372A970-DCA2-4FD7-B573-8243BBBDF7FA}"
 EndProject
@@ -64,6 +64,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProIdeas.Authentication.Contracts", "ProIdeas.Authentication.Contracts\ProIdeas.Authentication.Contracts.csproj", "{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProIdeas.Domain.RehtinkDb.QueryTemplates", "ProIdeas.Domain.RehtinkDb.QueryTemplates\ProIdeas.Domain.RehtinkDb.QueryTemplates.csproj", "{9E9A9428-AAA9-410B-A7EA-2CB766B83924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProIdeas.Messaging", "ProIdeas.Messaging\ProIdeas.Messaging.csproj", "{C1100A47-906F-41A9-AF5E-FE987B0711E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProIdeas.Exceptions", "ProIdeas.Exceptions\ProIdeas.Exceptions.csproj", "{58AA121C-7B17-412C-BDDC-13654496220D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +159,14 @@ Global
 		{9E9A9428-AAA9-410B-A7EA-2CB766B83924}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E9A9428-AAA9-410B-A7EA-2CB766B83924}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E9A9428-AAA9-410B-A7EA-2CB766B83924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1100A47-906F-41A9-AF5E-FE987B0711E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1100A47-906F-41A9-AF5E-FE987B0711E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1100A47-906F-41A9-AF5E-FE987B0711E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1100A47-906F-41A9-AF5E-FE987B0711E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58AA121C-7B17-412C-BDDC-13654496220D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58AA121C-7B17-412C-BDDC-13654496220D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58AA121C-7B17-412C-BDDC-13654496220D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58AA121C-7B17-412C-BDDC-13654496220D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,5 +198,7 @@ Global
 		{CF12F244-6E0D-46BB-8299-B16533D59D20} = {232AEF7D-469F-4383-A9F3-F7AFC433B1C8}
 		{A11B1D47-3053-4A25-B4D3-B59A70EB1D5A} = {E5D0F62B-29C9-41FC-9177-699CAC883629}
 		{9E9A9428-AAA9-410B-A7EA-2CB766B83924} = {16ABF993-D20E-4BD0-9BD4-7AE38C0659E4}
+		{C1100A47-906F-41A9-AF5E-FE987B0711E6} = {09CD6B1C-C4D9-4A7D-BADB-4F1DE1FC5670}
+		{58AA121C-7B17-412C-BDDC-13654496220D} = {E5D0F62B-29C9-41FC-9177-699CAC883629}
 	EndGlobalSection
 EndGlobal

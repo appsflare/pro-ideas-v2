@@ -7,7 +7,7 @@ namespace ProIdeas.Services.Contracts
     public interface IIdeaCollaborationService
     {
 
-        Task<IdeaCollaborationStatsDto> GetStats(string ideaId);
+        Task<IdeaCollaborationStatsDto> GetStatsAsync(string ideaId);
 
         Task<IdeaCommentDto> GetCommentAsync(string commentId);
 
@@ -15,11 +15,17 @@ namespace ProIdeas.Services.Contracts
 
         Task<IdeaCommentDto> CreateAsync(IdeaCommentDto comment);
 
-        Task Update(IdeaCommentDto comment);
+        Task UpdateAsync(IdeaCommentDto comment);
 
-        Task DeleteComment(string commentId);
+        Task DeleteCommentAsync(string commentId);
 
-        Task Update(string ideaId, string userId, bool like);
+        Task UpdateAsync(string ideaId, string userId, bool like);
+
+        Task<TeamDto> GetTeamAsync(string ideaId);
+
+        Task<TeamDto> CreateTeamAsync(TeamDto team);
+
+        Task<TeamDto> UpdateTeamAsync(TeamDto team);        
 
     }
 }

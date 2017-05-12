@@ -6,12 +6,13 @@ namespace ProIdeas.Logic.Contracts
 {
     public interface IIdeaCollaborationLogic
     {
-        Task<IEnumerable<IdeaCommentDto>> GetComments(string ideaId);
+        Task<IEnumerable<IdeaCommentDto>> GetCommentsAsync(string ideaId);
 
-        Task<IdeaCommentDto> GetComment(string commentId);
+        Task<IdeaCommentDto> GetCommentAsync(string commentId);
 
-        Task<IdeaCollaborationStatsDto> GetStats(string ideaId);
+        Task<IdeaCollaborationStatsDto> GetStatsAsync(string ideaId);
 
+        Task<TeamDto> GetTeamAsync(string ideaId);
 
     }
 }

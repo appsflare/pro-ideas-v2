@@ -12,6 +12,7 @@
     <ProjectReference Include="..\ProIdeas.Domain.Queries\ProIdeas.Domain.Queries.csproj" />
     <ProjectReference Include="..\ProIdeas.Domain.Repositories\ProIdeas.Domain.Repositories.csproj" />
     <ProjectReference Include="..\ProIdeas.DTO\ProIdeas.DTO.csproj" />
+    <ProjectReference Include="..\ProIdeas.Exceptions\ProIdeas.Exceptions.csproj" />
     <ProjectReference Include="..\ProIdeas.Files.Contracts\ProIdeas.Files.Contracts.csproj" />
     <ProjectReference Include="..\ProIdeas.Infra.Commands\ProIdeas.Infra.Commands.csproj" />
     <ProjectReference Include="..\ProIdeas.Infra.Events\ProIdeas.Infra.Events.csproj" />

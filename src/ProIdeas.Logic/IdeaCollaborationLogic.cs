@@ -1,18 +1,19 @@
-﻿using ProIdeas.Logic.Contracts;
-using System.Collections.Generic;
-using ProIdeas.DTO;
-using ProIdeas.Domain.Repositories;
-using ProIdeas.Domain.Entities;
-using ProIdeas.Domain.Queries;
+﻿using ProIdeas.Authentication.Contracts;
 using ProIdeas.DataMappings.Data.Mappings.Contracts;
-using ProIdeas.Domain.Core.Events;
 using ProIdeas.Domain.Core.Bus;
-using ProIdeas.Infra.Events;
-using System.Threading.Tasks;
-using ProIdeas.Authentication.Contracts;
-using ProIdeas.Infra.Commands.Collaboration;
+using ProIdeas.Domain.Core.Events;
+using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Entities.Model;
+using ProIdeas.Domain.Queries;
+using ProIdeas.Domain.Repositories;
+using ProIdeas.DTO;
+using ProIdeas.Exceptions;
+using ProIdeas.Infra.Commands.Collaboration;
+using ProIdeas.Infra.Events;
+using ProIdeas.Logic.Contracts;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Logic
 {
@@ -21,6 +22,7 @@ namespace ProIdeas.Logic
         IHandler<UpdateIdeaCommentCommand>,
         IHandler<DeleteIdeaCommentCommand>,
         IHandler<LikeIdeaCommand>,
+        IHandler<CreateTeamCommand>,
         IHandler<IdeaLikeChangedEvent>,
         IHandler<IdeaCommentCreatedEvent>,
         IHandler<IdeaCommentUpdatedEvent>,
@@ -44,7 +46,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region IIdeaCollaborationLogic Implementation
-        async public Task<IdeaCommentDto> GetComment(string commentId)
+        async public Task<IdeaCommentDto> GetCommentAsync(string commentId)
         {
             var comment = await _repository.QueryOneAsync<IdeaComment, GetCommentByIdQueryParameter>(new GetCommentByIdQueryParameter
             {
@@ -53,7 +55,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IdeaCommentDto>(comment);
         }
 
-        async public Task<IEnumerable<IdeaCommentDto>> GetComments(string ideaId)
+        async public Task<IEnumerable<IdeaCommentDto>> GetCommentsAsync(string ideaId)
         {
             var comments = await _repository.QueryAsync<IdeaComment, GetIdeaCommentsByIdeaIdQueryParameter>(new GetIdeaCommentsByIdeaIdQueryParameter
             {
@@ -62,7 +64,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IEnumerable<IdeaCommentDto>>(comments);
         }
 
-        async public Task<IdeaCollaborationStatsDto> GetStats(string ideaId)
+        async public Task<IdeaCollaborationStatsDto> GetStatsAsync(string ideaId)
         {
             var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQueryParameter>(new GetIdeaCollaborationStatsQueryParameter
             {
@@ -70,6 +72,19 @@ namespace ProIdeas.Logic
             });
 
             return _dataMapper.Map<IdeaCollaborationStatsDto>(stats);
+        }
+
+        async public Task<TeamDto> GetTeamAsync(string ideaId)
+        {
+            var team = await _repository.QueryOneAsync<Team, GetTeamByIdeaIdQueryParameter>(new GetTeamByIdeaIdQueryParameter
+            {
+                IdeaId = ideaId
+            });
+
+            if (team == null)
+            { throw new LogicalException(ErrorCategory.NotFound, "Team not found"); }
+
+            return _dataMapper.Map<TeamDto>(team);
         }
 
         #endregion
@@ -101,7 +116,7 @@ namespace ProIdeas.Logic
 
             var updatedComment = _repository.Update(existingComment);
 
-            return _bus.RaiseEvent(new IdeaCommentUpdatedEvent(_dataMapper.Map<IdeaCommentDto>(updatedComment)));            
+            return _bus.RaiseEvent(new IdeaCommentUpdatedEvent(_dataMapper.Map<IdeaCommentDto>(updatedComment)));
         }
         #endregion
 
@@ -152,6 +167,17 @@ namespace ProIdeas.Logic
         }
         #endregion
 
+        #region CreateTeamCommand Implementation
+        async public Task Handle(CreateTeamCommand message)
+        {
+            var team = _dataMapper.Map<Team>(message.Team);
+
+            var createdTeam = await _repository.AddAsync(team);
+
+            await _bus.RaiseEvent(new TeamCreatedEvent(_dataMapper.Map<TeamDto>(team)));
+        }
+        #endregion
+
 
         #region IdeaLikeChangedEvent,IdeaCommentCreatedEvent,IdeaCommentUpdatedEvent,IdeaCommentDeletedEvent Implementation
         async public Task Handle(IdeaLikeChangedEvent message)
@@ -173,7 +199,6 @@ namespace ProIdeas.Logic
         {
             await UpdateIdeaStats(message.Comment.IdeaId);
         }
-
         private async Task UpdateIdeaStats(string ideaId)
         {
             var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQueryParameter>(new GetIdeaCollaborationStatsQueryParameter

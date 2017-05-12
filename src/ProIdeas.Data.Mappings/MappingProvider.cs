@@ -24,6 +24,9 @@ namespace ProIdeas.Data.Mappings
                 cfg.CreateMap<UserProfile, UserProfileDto>();
                 cfg.CreateMap<UserProfileStats, UserProfileStatsDto>();
 
+                cfg.CreateMap<Team, TeamDto>().ReverseMap();
+                cfg.CreateMap<TeamMember, TeamMemberDto>().ReverseMap();
+
 
             });
 
