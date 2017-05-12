@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ProIdeas.Messaging
+﻿namespace ProIdeas.Messaging
 {
     public class Class1
     {
