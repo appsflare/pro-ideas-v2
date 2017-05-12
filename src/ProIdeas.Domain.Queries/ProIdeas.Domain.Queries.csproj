@@ -8,8 +8,4 @@
     <ProjectReference Include="..\ProIdeas.Domain.Repositories\ProIdeas.Domain.Repositories.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Tasks\" />
-  </ItemGroup>
-
 </Project>
