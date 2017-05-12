@@ -1,0 +1,24 @@
+﻿@model  UserProfileViewModel
+
+<div class="profile-card l-top-margin">
+    <div class="profile-image">
+        <img src="http://bootdey.com/img/Content/user_1.jpg" class="img-circle avatar" alt="user profile image">
+    </div>
+    <div class="profile-body">
+        <h3 class="profile-username text-center">@Model.FullName</h3>
+        <ul class="list-group list-group-unbordered">
+            <li class="list-group-item">
+                <b>Ideas</b>
+                <a class="pull-right">@Model.Ideas</a>
+            </li>
+            <li class="list-group-item">
+                <b>Likes</b>
+                <a class="pull-right">@Model.LikedIdeas</a>
+            </li>
+            <li class="list-group-item">
+                <b>Comments</b>
+                <a class="pull-right">@Model.Comments</a>
+            </li>
+        </ul>
+    </div>
+</div>

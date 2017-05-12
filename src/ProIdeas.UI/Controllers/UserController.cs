@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using ProIdeas.Services.Contracts;
 using System.Threading.Tasks;
-using ProIdeas.UI.Models.TimeLineViewModel;
+using ProIdeas.UI.Models.User;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,18 +12,20 @@ namespace ProIdeas.UI.Controllers
     public class UserController : Controller
     {
         private readonly IIdeaCollaborationService _collaborationService;
+
+     
         public UserController(IIdeaCollaborationService collaborationService)
         {
             _collaborationService = collaborationService;
         }
         // GET: /<controller>/
-        [Route("profile/:userId")]
-        async public Task<IActionResult> Details(string userId)
+        [Route("profile/:id")]
+        async public Task<IActionResult> Details(string id)
         {
-           userId = "560e2e37-1056-4b46-90ba-389b8309907d";
-           var activities = await _collaborationService.GetActivitiesAsync(userId);
-            TimeLineViewModel.MapFrom(activities);
-            return View();
+          var model = UserActivityViewModel.MapFrom(
+              await _collaborationService.GetActivitiesAsync(id),
+              await _collaborationService.GetContributionsAsync(id), id);
+          return View(model);
         }
     }
 }
