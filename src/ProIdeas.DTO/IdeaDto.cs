@@ -26,9 +26,9 @@ namespace ProIdeas.DTO
 
         public IList<PageDto> Pages { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime? ModifiedOn { get; set; }
+        public DateTime? ModifiedAt { get; set; }
 
         public string Status { get; set; }
         public int Likes { get; set; }

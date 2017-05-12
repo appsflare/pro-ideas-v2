@@ -71,6 +71,11 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             RethinkDB.R.Table(GetTableName<TEntity>()).Get(item.Id).Delete().RunResult(_connection);
         }
 
+        public Task DeleteAsync<TEntity>(TEntity item) where TEntity : class, IEntity, new()
+        {
+            return RethinkDB.R.Table(GetTableName<TEntity>()).Get(item.Id).Delete().RunResultAsync(_connection);
+        }
+
         public void DeleteAll<TEntity>() where TEntity : class, IEntity, new()
         {
             RethinkDB.R.Table(GetTableName<TEntity>()).Delete().RunResult(_connection);

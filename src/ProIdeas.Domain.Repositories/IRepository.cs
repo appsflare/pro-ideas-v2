@@ -11,6 +11,8 @@ namespace ProIdeas.Domain.Repositories
 
         void Delete<TEntity>(TEntity item) where TEntity : class, IEntity, new();
 
+        Task DeleteAsync<TEntity>(TEntity item) where TEntity : class, IEntity, new();
+
         void DeleteAll<TEntity>() where TEntity : class, IEntity, new();
 
         TEntity Single<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class, IEntity, new();

@@ -4,9 +4,7 @@ namespace ProIdeas.Domain.Entities.Tasks
 {
     public class TaskItem : BaseEntity
     {
-        public string Title { get; set; }
-
-        public string Details { get; set; }
+        public string Content { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

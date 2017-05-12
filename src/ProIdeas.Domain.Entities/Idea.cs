@@ -34,9 +34,9 @@ namespace ProIdeas.Domain.Entities
 
         public IList<Page> Pages { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime? ModifiedOn { get; set; }
+        public DateTime? ModifiedAt { get; set; }
 
         public string LastModifiedBy { get; set; }
 

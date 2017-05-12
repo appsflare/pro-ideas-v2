@@ -4,9 +4,7 @@ namespace ProIdeas.DTO.Tasks
 {
     public class TaskItemDto : BaseDto<string>
     {
-        public string Title { get; set; }
-
-        public string Details { get; set; }
+        public string Content { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
