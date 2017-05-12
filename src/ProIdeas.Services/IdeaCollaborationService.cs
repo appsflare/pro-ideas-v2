@@ -46,7 +46,7 @@ namespace ProIdeas.Services
 
         public Task<IEnumerable<ActivityDto>> GetActivitiesAsync(string userId)
         {
-            return _activityLogic.GetActivities(userId);
+            return _activityLogic.GetActivitiesAsync(userId);
         }
 
         public Task<IdeaCommentDto> GetCommentAsync(string commentId)
@@ -59,6 +59,11 @@ namespace ProIdeas.Services
             return _ideaCollaborationLogic.GetCommentsAsync(ideaId);
         }
 
+        public Task<IEnumerable<ActivityDto>> GetContributionsAsync(string userId)
+        {
+            return _activityLogic.GetContributionsAsync(userId);
+        }
+
         public Task<IdeaCollaborationStatsDto> GetStatsAsync(string ideaId)
         {
             return _ideaCollaborationLogic.GetStatsAsync(ideaId);
@@ -66,7 +71,7 @@ namespace ProIdeas.Services
 
         public Task<TeamDto> GetTeamAsync(string ideaId)
         {
-            throw new NotImplementedException();
+            return _ideaCollaborationLogic.GetTeamAsync(ideaId);
         }
 
         public Task UpdateAsync(IdeaCommentDto comment)

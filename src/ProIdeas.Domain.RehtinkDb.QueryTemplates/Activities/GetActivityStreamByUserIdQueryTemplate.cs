@@ -22,8 +22,14 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates.Activities
 
             var userTable = RethinkDB.R.Table("ApplicationUser");
 
-            var query = activityTable.Filter(x => x.GetField(nameof(Activity.OwnerId)).Eq(queryParam.UserId))
-                .Merge(activity => r.HashMap(nameof(Activity.Owner), userTable.Get(activity.GetField(nameof(Activity.OwnerId))).Pluck(nameof(User.FullName))))
+            var query = activityTable.Filter(x => x.GetField(nameof(Activity.OwnerId)).Eq(queryParam.UserId));
+
+            if (queryParam.Types.Any())
+            {
+                query = query.Filter(x => r.Expr(queryParam.Types).Contains(x.GetField(nameof(Activity.Type))));
+            }
+
+            var finalQuery = query.Merge(activity => r.HashMap(nameof(Activity.Owner), userTable.Get(activity.GetField(nameof(Activity.OwnerId))).Pluck(nameof(User.FullName))))
                 .Merge(activity => r.HashMap(nameof(Activity.ItemOwner), userTable.Get(activity.GetField(nameof(Activity.ItemOwnerId))).Pluck(nameof(User.FullName))))
                 .Merge(activity => r.HashMap(nameof(Activity.IdeaOwner), userTable.Get(activity.GetField(nameof(Activity.IdeaOwnerId))).Pluck(nameof(User.FullName))));
 

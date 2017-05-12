@@ -6,7 +6,7 @@ namespace ProIdeas.Domain.Entities
     {
         public const string IDEAS_CREATE = "ideas.create";
         public const string IDEAS_UPDATE = "ideas.create";
-        public const string IDEAS_PGAE_UPDATE = "ideas.page.update";
+        public const string IDEAS_PAGE_UPDATE = "ideas.page.update";
         public const string IDEAS_PUBLISH = "ideas.publish";
         public const string IDEAS_COMMENTS_CREATE = "ideas.comments.create";
         public const string IDEAS_VOTES = "ideas.votes";

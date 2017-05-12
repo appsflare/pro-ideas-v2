@@ -6,6 +6,7 @@ namespace ProIdeas.Logic.Contracts
 {
     public interface IActivityLogic
     {
-        Task<IEnumerable<ActivityDto>> GetActivities(string userId);
+        Task<IEnumerable<ActivityDto>> GetActivitiesAsync(string userId);
+        Task<IEnumerable<ActivityDto>> GetContributionsAsync(string userId);
     }
 }

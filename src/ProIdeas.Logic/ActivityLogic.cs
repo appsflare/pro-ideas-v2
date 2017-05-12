@@ -21,11 +21,14 @@ namespace ProIdeas.Logic
         IHandler<IdeaPublishedEvent>,
         IHandler<IdeaUpdatedEvent>
     {
+        #region Private Readonly Fields
         private readonly IRepository _repository;
         private readonly IBus _bus;
         private readonly IDataMapper _dataMapper;
-        private readonly IUserIdentityProvider _userIdentityProvider;
+        private readonly IUserIdentityProvider _userIdentityProvider; 
+        #endregion
 
+        #region Ctors
         public ActivityLogic(IRepository repository, IBus bus, IDataMapper dataMapper, IUserIdentityProvider userIdentityProvider)
         {
             _repository = repository;
@@ -33,15 +36,37 @@ namespace ProIdeas.Logic
             _dataMapper = dataMapper;
             _userIdentityProvider = userIdentityProvider;
         }
+        #endregion
 
-        async public Task<IEnumerable<ActivityDto>> GetActivities(string userId)
+        #region IActivityLogic Implementations
+        async public Task<IEnumerable<ActivityDto>> GetActivitiesAsync(string userId)
+        {
+            return await GetActivities(userId);
+        }
+
+        private async Task<IEnumerable<ActivityDto>> GetActivities(string userId, params string[] types)
         {
             var activities = await _repository.QueryAsync<Activity, GetActivityStreamByUserId>(new GetActivityStreamByUserId
             {
-                UserId = userId
+                UserId = userId,
+                Types = types
             });
             return _dataMapper.Map<IEnumerable<ActivityDto>>(activities);
         }
+
+        public Task<IEnumerable<ActivityDto>> GetContributionsAsync(string userId)
+        {
+            return GetActivities(userId,
+                    Activity.IDEAS_COMMENTS_CREATE,
+                    Activity.IDEAS_CREATE,
+                    Activity.IDEAS_PAGE_UPDATE,
+                    Activity.IDEAS_PUBLISH,
+                    Activity.IDEAS_UPDATE);
+        }
+        #endregion
+
+
+        #region Domain Event Handler Implementations
 
         async public Task Handle(IdeaLikeChangedEvent message)
         {
@@ -134,6 +159,9 @@ namespace ProIdeas.Logic
                 IdeaOwnerId = message.Idea.OwnerId,
                 ItemDetails = new ActivityItemDetails()
             });
-        }
+        } 
+        #endregion
+
+
     }
 }

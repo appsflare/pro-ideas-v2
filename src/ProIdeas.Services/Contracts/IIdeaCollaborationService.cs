@@ -9,6 +9,8 @@ namespace ProIdeas.Services.Contracts
 
         Task<IEnumerable<ActivityDto>> GetActivitiesAsync(string userId);
 
+        Task<IEnumerable<ActivityDto>> GetContributionsAsync(string userId);
+
         Task<IdeaCollaborationStatsDto> GetStatsAsync(string ideaId);
 
         Task<IdeaCommentDto> GetCommentAsync(string commentId);
