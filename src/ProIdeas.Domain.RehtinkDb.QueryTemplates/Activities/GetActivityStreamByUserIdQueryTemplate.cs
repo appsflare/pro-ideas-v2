@@ -33,7 +33,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates.Activities
                 .Merge(activity => r.HashMap(nameof(Activity.ItemOwner), userTable.Get(activity.GetField(nameof(Activity.ItemOwnerId))).Pluck(nameof(User.FullName))))
                 .Merge(activity => r.HashMap(nameof(Activity.IdeaOwner), userTable.Get(activity.GetField(nameof(Activity.IdeaOwnerId))).Pluck(nameof(User.FullName))));
 
-            return (await query.RunCursorAsync<Activity>(context.Connection)).ToList();
+            return (await finalQuery.RunCursorAsync<Activity>(context.Connection)).ToList();
         }
     }
 }

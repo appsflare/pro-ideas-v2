@@ -13,6 +13,8 @@ namespace ProIdeas.DTO
 
         public string ItemOwnerId { get; set; }
 
+        public string ActivityDetails { get; set; }
+
         public UserDto ItemOwner { get; set; }
 
         public ActivityItemDetailsDto ItemDetails { get; set; }
