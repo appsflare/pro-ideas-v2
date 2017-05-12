@@ -48,7 +48,7 @@ namespace ProIdeas.Logic
         #region IIdeaCollaborationLogic Implementation
         async public Task<IdeaCommentDto> GetCommentAsync(string commentId)
         {
-            var comment = await _repository.QueryOneAsync<IdeaComment, GetCommentByIdQueryParameter>(new GetCommentByIdQueryParameter
+            var comment = await _repository.QueryOneAsync<IdeaComment, GetCommentByIdQuery>(new GetCommentByIdQuery
             {
                 CommentId = commentId
             });
@@ -57,7 +57,7 @@ namespace ProIdeas.Logic
 
         async public Task<IEnumerable<IdeaCommentDto>> GetCommentsAsync(string ideaId)
         {
-            var comments = await _repository.QueryAsync<IdeaComment, GetIdeaCommentsByIdeaIdQueryParameter>(new GetIdeaCommentsByIdeaIdQueryParameter
+            var comments = await _repository.QueryAsync<IdeaComment, GetIdeaCommentsByIdeaIdQuery>(new GetIdeaCommentsByIdeaIdQuery
             {
                 IdeaId = ideaId
             });
@@ -66,7 +66,7 @@ namespace ProIdeas.Logic
 
         async public Task<IdeaCollaborationStatsDto> GetStatsAsync(string ideaId)
         {
-            var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQueryParameter>(new GetIdeaCollaborationStatsQueryParameter
+            var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQuery>(new GetIdeaCollaborationStatsQuery
             {
                 IdeaId = ideaId
             });
@@ -76,7 +76,7 @@ namespace ProIdeas.Logic
 
         async public Task<TeamDto> GetTeamAsync(string ideaId)
         {
-            var team = await _repository.QueryOneAsync<Team, GetTeamByIdeaIdQueryParameter>(new GetTeamByIdeaIdQueryParameter
+            var team = await _repository.QueryOneAsync<Team, GetTeamByIdeaIdQuery>(new GetTeamByIdeaIdQuery
             {
                 IdeaId = ideaId
             });
@@ -132,7 +132,7 @@ namespace ProIdeas.Logic
         #region LikeIdeaCommand Implementation
         async public Task Handle(LikeIdeaCommand message)
         {
-            var likeData = await _repository.QueryOneAsync<IdeaLike, GetIdeaLikeByUserIdQueryParameter>(new GetIdeaLikeByUserIdQueryParameter
+            var likeData = await _repository.QueryOneAsync<IdeaLike, GetIdeaLikeByUserIdQuery>(new GetIdeaLikeByUserIdQuery
             {
                 IdeaId = message.IdeaId,
                 OwnerId = message.UserId
@@ -201,7 +201,7 @@ namespace ProIdeas.Logic
         }
         private async Task UpdateIdeaStats(string ideaId)
         {
-            var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQueryParameter>(new GetIdeaCollaborationStatsQueryParameter
+            var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQuery>(new GetIdeaCollaborationStatsQuery
             {
                 IdeaId = ideaId
             });

@@ -23,16 +23,16 @@ namespace ProIdeas.DTO
 
         public DateTime CreatedAt { get; set; }
 
+        public string IdeaId { get; set; }
+
+        public string IdeaOwnerId { get; set; }
+
+        public UserDto IdeaOwner { get; set; }
+
     }
 
     public class ActivityItemDetailsDto
-    {
-        public string IdeaId { get; set; }
-
-        public string TargetOwnerId { get; set; }
-
-        public bool IsUpVote { get; set; }
-
-        public UserDto TargetOwner { get; set; }
+    {        
+        public bool IsUpVote { get; set; }        
     }
 }

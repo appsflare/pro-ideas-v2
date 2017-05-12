@@ -1,6 +1,6 @@
 ﻿namespace ProIdeas.Domain.Queries
 {
-    public class FilterIdeaQueryTemplateParameter
+    public class FilterIdeaQuery
     {
         public string Keyword { get; set; }
 

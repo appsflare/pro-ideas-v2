@@ -3,6 +3,7 @@ using ProIdeas.DataMappings.Data.Mappings.Contracts;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Domain.Core.Events;
 using ProIdeas.Domain.Entities;
+using ProIdeas.Domain.Queries.Activities;
 using ProIdeas.Domain.Repositories;
 using ProIdeas.DTO;
 using ProIdeas.Infra.Events;
@@ -25,13 +26,6 @@ namespace ProIdeas.Logic
         private readonly IDataMapper _dataMapper;
         private readonly IUserIdentityProvider _userIdentityProvider;
 
-        private const string IDEAS_CREATE = "ideas.create";
-        private const string IDEAS_UPDATE = "ideas.create";
-        private const string IDEAS_PGAE_UPDATE = "ideas.page.update";
-        private const string IDEAS_PUBLISH = "ideas.publish";
-        private const string IDEAS_COMMENTS_CREATE = "ideas.comments.create";
-        private const string IDEAS_VOTES = "ideas.votes";
-
         public ActivityLogic(IRepository repository, IBus bus, IDataMapper dataMapper, IUserIdentityProvider userIdentityProvider)
         {
             _repository = repository;
@@ -40,9 +34,13 @@ namespace ProIdeas.Logic
             _userIdentityProvider = userIdentityProvider;
         }
 
-        public Task<IEnumerable<ActivityDto>> GetActivities(string userId)
+        async public Task<IEnumerable<ActivityDto>> GetActivities(string userId)
         {
-            throw new NotImplementedException();
+            var activities = await _repository.QueryAsync<Activity, GetActivityStreamByUserId>(new GetActivityStreamByUserId
+            {
+                UserId = userId
+            });
+            return _dataMapper.Map<IEnumerable<ActivityDto>>(activities);
         }
 
         async public Task Handle(IdeaLikeChangedEvent message)
@@ -50,16 +48,16 @@ namespace ProIdeas.Logic
             var idea = await GetIdea(message.IdeaId);
             await _repository.AddAsync(new Activity
             {
-                Type = IDEAS_VOTES,
+                Type = Activity.IDEAS_VOTES,
                 Body = string.Empty,
                 OwnerId = _userIdentityProvider.GetUserId(),
                 CreatedAt = DateTime.UtcNow,
-                ItemOwnerId = message.UserId,                
+                ItemOwnerId = message.UserId,
+                IdeaId = message.IdeaId,
+                IdeaOwnerId = idea.OwnerId,
                 ItemDetails = new ActivityItemDetails
                 {
-                    IdeaId = message.IdeaId,
-                    IsUpVote = message.Like,
-                    TargetOwnerId = idea.OwnerId
+                    IsUpVote = message.Like
                 }
             });
 
@@ -75,17 +73,15 @@ namespace ProIdeas.Logic
             var idea = await GetIdea(message.Comment.IdeaId);
             await _repository.AddAsync(new Activity
             {
-                Type = IDEAS_COMMENTS_CREATE,
+                Type = Activity.IDEAS_COMMENTS_CREATE,
                 Body = string.Empty,
                 OwnerId = _userIdentityProvider.GetUserId(),
                 CreatedAt = DateTime.UtcNow,
                 ItemId = message.Comment.Id,
                 ItemOwnerId = message.Comment.OwnerId,
-                ItemDetails = new ActivityItemDetails
-                {
-                    IdeaId = message.Comment.IdeaId,
-                    TargetOwnerId = idea.OwnerId
-                }
+                IdeaId = message.Comment.IdeaId,
+                IdeaOwnerId = idea.OwnerId,
+                ItemDetails = new ActivityItemDetails()
             });
         }
 
@@ -94,16 +90,15 @@ namespace ProIdeas.Logic
             var idea = await GetIdea(message.IdeaId);
             await _repository.AddAsync(new Activity
             {
-                Type = IDEAS_UPDATE,
+                Type = Activity.IDEAS_UPDATE,
                 Body = string.Empty,
                 OwnerId = _userIdentityProvider.GetUserId(),
                 CreatedAt = DateTime.UtcNow,
                 ItemId = message.IdeaId,
                 ItemOwnerId = idea.OwnerId,
-                ItemDetails = new ActivityItemDetails
-                {
-                    IdeaId = message.IdeaId
-                }
+                IdeaId = message.IdeaId,
+                IdeaOwnerId = idea.OwnerId,
+                ItemDetails = new ActivityItemDetails()
             });
         }
 
@@ -112,16 +107,15 @@ namespace ProIdeas.Logic
             var idea = await GetIdea(message.IdeaId);
             await _repository.AddAsync(new Activity
             {
-                Type = IDEAS_COMMENTS_CREATE,
+                Type = Activity.IDEAS_COMMENTS_CREATE,
                 Body = string.Empty,
                 OwnerId = _userIdentityProvider.GetUserId(),
                 CreatedAt = DateTime.UtcNow,
                 ItemId = message.IdeaId,
                 ItemOwnerId = idea.OwnerId,
-                ItemDetails = new ActivityItemDetails
-                {
-                    IdeaId = message.IdeaId
-                }
+                IdeaId = message.IdeaId,
+                IdeaOwnerId = idea.OwnerId,
+                ItemDetails = new ActivityItemDetails()
             });
         }
 
@@ -130,16 +124,15 @@ namespace ProIdeas.Logic
             var idea = await GetIdea(message.Idea.Id);
             await _repository.AddAsync(new Activity
             {
-                Type = IDEAS_UPDATE,
+                Type = Activity.IDEAS_UPDATE,
                 Body = string.Empty,
                 OwnerId = _userIdentityProvider.GetUserId(),
                 CreatedAt = DateTime.UtcNow,
                 ItemId = message.Idea.Id,
                 ItemOwnerId = idea.OwnerId,
-                ItemDetails = new ActivityItemDetails
-                {
-                    IdeaId = message.Idea.Id
-                }
+                IdeaId = message.Idea.Id,
+                IdeaOwnerId = message.Idea.OwnerId,
+                ItemDetails = new ActivityItemDetails()
             });
         }
     }

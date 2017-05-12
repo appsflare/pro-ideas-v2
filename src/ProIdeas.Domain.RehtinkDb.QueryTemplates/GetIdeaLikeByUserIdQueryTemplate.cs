@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
-    public class GetIdeaLikeByUserIdQueryTemplate : BaseRethinkQueryTemplate<IdeaLike, GetIdeaLikeByUserIdQueryParameter>
+    public class GetIdeaLikeByUserIdQueryTemplate : BaseRethinkQueryTemplate<IdeaLike, GetIdeaLikeByUserIdQuery>
     {
-        async protected override Task<IEnumerable<IdeaLike>> ExecuteAsync(QueryTemplateContext<GetIdeaLikeByUserIdQueryParameter> context)
+        async protected override Task<IEnumerable<IdeaLike>> ExecuteAsync(QueryTemplateContext<GetIdeaLikeByUserIdQuery> context)
         {
             var queryParam = context.Parameter;
 
 
             var table = RethinkDB.R
-             .Table(typeof(IdeaLike).Name);
+             .Table(nameof(IdeaLike));
 
 
             var query = table

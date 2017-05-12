@@ -27,7 +27,7 @@ namespace ProIdeas.Logic
 
         async public Task<UserProfileDto> GetUserProfileAsync(string userId)
         {
-            var profile = await _repository.QueryOneAsync<UserProfile, GetUserProfileByUserIdQueryParameter>(new GetUserProfileByUserIdQueryParameter
+            var profile = await _repository.QueryOneAsync<UserProfile, GetUserProfileByUserIdQuery>(new GetUserProfileByUserIdQuery
             {
                 UserId = userId
             });
@@ -43,7 +43,7 @@ namespace ProIdeas.Logic
             { return; }
 
 
-            var stats = await _repository.QueryOneAsync<UserProfileStats, GetUserProfileStatsQueryParameter>(new GetUserProfileStatsQueryParameter
+            var stats = await _repository.QueryOneAsync<UserProfileStats, GetUserProfileStatsQuery>(new GetUserProfileStatsQuery
             {
                 UserId = message.Idea.OwnerId
             });

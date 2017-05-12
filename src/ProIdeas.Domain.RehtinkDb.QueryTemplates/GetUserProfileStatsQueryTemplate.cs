@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
-    public class GetUserProfileStatsQueryTemplate : BaseRethinkQueryTemplate<UserProfileStats, GetUserProfileStatsQueryParameter>
+    public class GetUserProfileStatsQueryTemplate : BaseRethinkQueryTemplate<UserProfileStats, GetUserProfileStatsQuery>
     {
-        async protected override Task<IEnumerable<UserProfileStats>> ExecuteAsync(QueryTemplateContext<GetUserProfileStatsQueryParameter> context)
+        async protected override Task<IEnumerable<UserProfileStats>> ExecuteAsync(QueryTemplateContext<GetUserProfileStatsQuery> context)
         {
 
             var queryParam = context.Parameter;

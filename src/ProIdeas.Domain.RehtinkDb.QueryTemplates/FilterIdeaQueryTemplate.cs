@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
-    public class FilterIdeaQueryTemplate : BaseRethinkQueryTemplate<Idea, FilterIdeaQueryTemplateParameter>
+    public class FilterIdeaQueryTemplate : BaseRethinkQueryTemplate<Idea, FilterIdeaQuery>
     {
-        async protected override Task<IEnumerable<Idea>> ExecuteAsync(QueryTemplateContext<FilterIdeaQueryTemplateParameter> context)
+        async protected override Task<IEnumerable<Idea>> ExecuteAsync(QueryTemplateContext<FilterIdeaQuery> context)
         {
             var queryParam = context.Parameter;
 
 
 
             var table = RethinkDB.R
-             .Table(typeof(Idea).Name);
+             .Table(nameof(Idea));
             
 
             var query = table.Filter(x=>x.HasFields(nameof(Idea.Title)));

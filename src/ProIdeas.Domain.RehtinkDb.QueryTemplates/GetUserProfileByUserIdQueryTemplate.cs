@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
-    public class GetUserProfileByUserIdQueryTemplate : BaseRethinkQueryTemplate<UserProfile, GetUserProfileByUserIdQueryParameter>
+    public class GetUserProfileByUserIdQueryTemplate : BaseRethinkQueryTemplate<UserProfile, GetUserProfileByUserIdQuery>
     {
-        async protected override Task<IEnumerable<UserProfile>> ExecuteAsync(QueryTemplateContext<GetUserProfileByUserIdQueryParameter> context)
+        async protected override Task<IEnumerable<UserProfile>> ExecuteAsync(QueryTemplateContext<GetUserProfileByUserIdQuery> context)
         {
             var queryParam = context.Parameter;
 
 
             var table = RethinkDB.R
-             .Table(typeof(UserProfile).Name);
+             .Table(nameof(UserProfile));
 
 
             var query = table

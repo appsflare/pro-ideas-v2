@@ -1,7 +1,9 @@
 ﻿namespace ProIdeas.Domain.Queries
 {
-    public class GetIdeaCollaborationStatsQueryParameter
+    public class GetIdeaLikeByUserIdQuery
     {
         public string IdeaId { get; set; }
+
+        public string OwnerId { get; set; }
     }
 }

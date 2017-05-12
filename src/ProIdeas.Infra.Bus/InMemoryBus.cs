@@ -3,7 +3,6 @@ using System.Linq;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Domain.Core.Commands;
 using ProIdeas.Domain.Core.Events;
-using ProIdeas.Domain.Core.Notifications;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 

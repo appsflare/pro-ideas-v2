@@ -4,6 +4,12 @@ namespace ProIdeas.Domain.Entities
 {
     public class Activity : BaseEntity
     {
+        public const string IDEAS_CREATE = "ideas.create";
+        public const string IDEAS_UPDATE = "ideas.create";
+        public const string IDEAS_PGAE_UPDATE = "ideas.page.update";
+        public const string IDEAS_PUBLISH = "ideas.publish";
+        public const string IDEAS_COMMENTS_CREATE = "ideas.comments.create";
+        public const string IDEAS_VOTES = "ideas.votes";
 
         public string Body { get; set; }
 
@@ -23,16 +29,17 @@ namespace ProIdeas.Domain.Entities
 
         public DateTime CreatedAt { get; set; }
 
+        public string IdeaId { get; set; }
+
+        public string IdeaOwnerId { get; set; }
+
+        public User IdeaOwner { get; set; }
+
     }
 
     public class ActivityItemDetails
     {
-        public string IdeaId { get; set; }
-
-        public string TargetOwnerId { get; set; }
-
         public bool IsUpVote { get; set; }
 
-        public User TargetOwner { get; set; }
     }
 }

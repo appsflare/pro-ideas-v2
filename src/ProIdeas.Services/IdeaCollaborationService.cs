@@ -12,12 +12,13 @@ namespace ProIdeas.Services
     public class IdeaCollaborationService : IIdeaCollaborationService
     {
         private readonly IIdeaCollaborationLogic _ideaCollaborationLogic;
+        private readonly IActivityLogic _activityLogic;
         private readonly IBus _bus;
-        public IdeaCollaborationService(IIdeaCollaborationLogic ideaCommentLogic, IBus bus)
+        public IdeaCollaborationService(IIdeaCollaborationLogic ideaCommentLogic, IBus bus, IActivityLogic activityLogic)
         {
             _ideaCollaborationLogic = ideaCommentLogic;
             _bus = bus;
-
+            _activityLogic = activityLogic;
         }
 
         public Task<IdeaCommentDto> CreateAsync(IdeaCommentDto comment)
@@ -41,6 +42,11 @@ namespace ProIdeas.Services
             var command = new DeleteIdeaCommentCommand(commentId);
 
             return _bus.SendCommand(command);
+        }
+
+        public Task<IEnumerable<ActivityDto>> GetActivitiesAsync(string userId)
+        {
+            return _activityLogic.GetActivities(userId);
         }
 
         public Task<IdeaCommentDto> GetCommentAsync(string commentId)

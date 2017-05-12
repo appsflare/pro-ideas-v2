@@ -80,5 +80,12 @@ namespace ProIdeas.UI.Controllers
 
             return await _ideaCommentService.UpdateTeamAsync(team);
         }
+
+
+        [HttpGet, Route("users/{userId}/activities")]
+        async public Task<IEnumerable<ActivityDto>> GetActivities(string userId)
+        {            
+            return await _ideaCommentService.GetActivitiesAsync(userId);
+        }
     }
 }

@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
-    public class GetIdeaByIdQueryTemplate : BaseRethinkQueryTemplate<Idea, GetIdeaByIdQueryParameter>
+    public class GetIdeaByIdQueryTemplate : BaseRethinkQueryTemplate<Idea, GetIdeaByIdQuery>
     {
-        async protected override Task<IEnumerable<Idea>> ExecuteAsync(QueryTemplateContext<GetIdeaByIdQueryParameter> context)
+        async protected override Task<IEnumerable<Idea>> ExecuteAsync(QueryTemplateContext<GetIdeaByIdQuery> context)
         {
             var queryParam = context.Parameter;
 
 
             var table = RethinkDB.R
-             .Table(typeof(Idea).Name);
+             .Table(nameof(Idea));
 
             //var filter =  RethinkDB.R.Js($@"(function(idea){{
             //      return idea.title.indexOf('{queryParam.Keyword}') >-1 ||idea.description.indexOf('{queryParam.Keyword}') > -1;

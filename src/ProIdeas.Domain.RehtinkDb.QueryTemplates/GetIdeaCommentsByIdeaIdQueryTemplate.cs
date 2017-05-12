@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
-    public class GetIdeaCommentsByIdeaIdQueryTemplate : BaseRethinkQueryTemplate<IdeaComment, GetIdeaCommentsByIdeaIdQueryParameter>
+    public class GetIdeaCommentsByIdeaIdQueryTemplate : BaseRethinkQueryTemplate<IdeaComment, GetIdeaCommentsByIdeaIdQuery>
     {
-        async protected override Task<IEnumerable<IdeaComment>> ExecuteAsync(QueryTemplateContext<GetIdeaCommentsByIdeaIdQueryParameter> context)
+        async protected override Task<IEnumerable<IdeaComment>> ExecuteAsync(QueryTemplateContext<GetIdeaCommentsByIdeaIdQuery> context)
         {
             var queryParam = context.Parameter;
 
             var table = RethinkDB.R
-             .Table(typeof(IdeaComment).Name);
+             .Table(nameof(IdeaComment));
 
             var query = table
                 .OrderBy()

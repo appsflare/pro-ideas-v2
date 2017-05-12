@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
-    public class GetCommentByIdQueryTemplate : BaseRethinkQueryTemplate<IdeaComment, GetCommentByIdQueryParameter>
+    public class GetCommentByIdQueryTemplate : BaseRethinkQueryTemplate<IdeaComment, GetCommentByIdQuery>
     {
-        async protected override Task<IEnumerable<IdeaComment>> ExecuteAsync(QueryTemplateContext<GetCommentByIdQueryParameter> context)
+        async protected override Task<IEnumerable<IdeaComment>> ExecuteAsync(QueryTemplateContext<GetCommentByIdQuery> context)
         {
             var queryParam = context.Parameter;
 
             var table = RethinkDB.R
-             .Table(typeof(IdeaComment).Name);
+             .Table(nameof(IdeaComment));
 
             var query = table.Get(queryParam.CommentId)
                 .Merge(idea => RethinkDB.R.HashMap(nameof(Idea.Owner), RethinkDB.R

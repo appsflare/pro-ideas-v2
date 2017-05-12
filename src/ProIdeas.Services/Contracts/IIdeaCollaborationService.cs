@@ -7,6 +7,8 @@ namespace ProIdeas.Services.Contracts
     public interface IIdeaCollaborationService
     {
 
+        Task<IEnumerable<ActivityDto>> GetActivitiesAsync(string userId);
+
         Task<IdeaCollaborationStatsDto> GetStatsAsync(string ideaId);
 
         Task<IdeaCommentDto> GetCommentAsync(string commentId);
