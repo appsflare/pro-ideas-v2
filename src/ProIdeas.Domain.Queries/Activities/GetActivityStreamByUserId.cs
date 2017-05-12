@@ -13,6 +13,8 @@ namespace ProIdeas.Domain.Queries.Activities
 
         public string UserId { get; set; }
 
+        public bool IncludeAllUserActivities { get; set; }
+
         public IEnumerable<string> Types { get; set; }
     }
 }

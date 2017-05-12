@@ -23,13 +23,13 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 
             var ideaDisLikesQuery = ideaLikeTable.Filter(x => x[nameof(IdeaLike.OwnerId)].Eq(queryParam.UserId) && x[nameof(IdeaLike.IsLike)].Eq(false)).Count();
 
-            var ideaCommentsQuery = ideaCommentTable.Filter(x => x[nameof(IdeaLike.OwnerId)].Eq(queryParam.UserId)).Count();
+            var ideaCommentsQuery = ideaCommentTable.Filter(x => x[nameof(IdeaComment.OwnerId)].Eq(queryParam.UserId)).Count();
 
-            var ideasQuery = ideaCommentTable.Filter(x => x[nameof(IdeaLike.OwnerId)].Eq(queryParam.UserId)).Count();
+            var ideasQuery = ideaTable.Filter(x => x[nameof(Idea.OwnerId)].Eq(queryParam.UserId)).Count();
 
 
-            var stats = await ideaLikesQuery
-                .Map(likesCount => RethinkDB.R.HashMap(nameof(UserProfileStats.Likes), likesCount))
+            var stats = await usersTable.Get(queryParam.UserId).Pluck("id")
+                .Merge(user => RethinkDB.R.HashMap(nameof(UserProfileStats.Likes), ideaLikesQuery))
                 .Merge(RethinkDB.R.HashMap(nameof(UserProfileStats.DisLikes), ideaDisLikesQuery))
                 .Merge(RethinkDB.R.HashMap(nameof(UserProfileStats.Comments), ideaCommentsQuery))
                 .Merge(RethinkDB.R.HashMap(nameof(UserProfileStats.Ideas), ideasQuery))

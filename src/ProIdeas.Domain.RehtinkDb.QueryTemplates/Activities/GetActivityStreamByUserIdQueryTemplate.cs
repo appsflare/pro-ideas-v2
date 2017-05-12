@@ -27,19 +27,39 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates.Activities
             return _userTable.Get(field).Pluck(nameof(User.FullName));
         }
 
+        Or GetFilter(ReqlExpr activity, GetActivityStreamByUserId queryParam)
+        {
+            return activity.Or(activity.GetField(nameof(Activity.OwnerId)).Eq(queryParam.UserId))
+                 .Or(activity.GetField(nameof(Activity.ItemOwnerId)).Eq(queryParam.UserId))
+              .Or(activity.GetField(nameof(Activity.IdeaOwnerId)).Eq(queryParam.UserId));
+        }
+
         async protected override Task<IEnumerable<Activity>> ExecuteAsync(QueryTemplateContext<GetActivityStreamByUserId> context)
         {
             var r = RethinkDB.R;
             var queryParam = context.Parameter;
 
-            var query = _activityTable.Filter(x => x.GetField(nameof(Activity.OwnerId)).Eq(queryParam.UserId));
+            var query = _activityTable
+                .OrderBy()
+                .OptArg("index", RethinkDB.R.Desc(nameof(Activity.CreatedAt)));
+
+            ReqlExpr condtQuery;
+            if (queryParam.IncludeAllUserActivities)
+            {
+                condtQuery = query.Filter(x => GetFilter(x, queryParam));
+            }
+            else
+            {
+                condtQuery = query.Filter(x => x.GetField(nameof(Activity.OwnerId)).Eq(queryParam.UserId));
+
+            }
 
             if (queryParam.Types.Any())
             {
-                query = query.Filter(x => r.Expr(queryParam.Types).Contains(x.GetField(nameof(Activity.Type))));
+                condtQuery = condtQuery.Filter(x => r.Expr(queryParam.Types).Contains(x.GetField(nameof(Activity.Type))));
             }
 
-            var finalQuery = query.Merge(activity => r.HashMap(nameof(Activity.Owner), GetUserFullName(activity.GetField(nameof(Activity.OwnerId)))))
+            var finalQuery = condtQuery.Merge(activity => r.HashMap(nameof(Activity.Owner), GetUserFullName(activity.GetField(nameof(Activity.OwnerId)))))
                 .Merge(activity => r.HashMap(nameof(Activity.ItemOwner), GetUserFullName(activity.GetField(nameof(Activity.ItemOwnerId)))))
                 .Merge(activity => r.HashMap(nameof(Activity.IdeaOwner), GetUserFullName(activity.GetField(nameof(Activity.IdeaOwnerId)))));
 

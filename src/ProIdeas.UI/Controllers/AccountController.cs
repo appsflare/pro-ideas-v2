@@ -11,6 +11,7 @@ using ProIdeas.UI.Models;
 using ProIdeas.UI.Models.AccountViewModels;
 using ProIdeas.UI.Services;
 using System;
+using ProIdeas.Services.Contracts;
 
 namespace ProIdeas.UI.Controllers
 {
@@ -19,6 +20,7 @@ namespace ProIdeas.UI.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUserProfileService _userProfileService;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
@@ -28,6 +30,7 @@ namespace ProIdeas.UI.Controllers
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOptions<IdentityCookieOptions> identityCookieOptions,
+            IUserProfileService userProfileService,
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory)
@@ -35,6 +38,7 @@ namespace ProIdeas.UI.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
+            _userProfileService = userProfileService;
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<AccountController>();

@@ -6,13 +6,16 @@ using ProIdeas.Domain.Entities.Model;
 using ProIdeas.Domain.Queries;
 using ProIdeas.Domain.Repositories;
 using ProIdeas.DTO;
+using ProIdeas.Infra.Commands.Users;
 using ProIdeas.Infra.Events;
 using ProIdeas.Logic.Contracts;
 using System.Threading.Tasks;
+using System;
 
 namespace ProIdeas.Logic
 {
     public class UserProfileLogic : IUserProfileLogic,
+        IHandler<CreateUserProfileCommand>,
         IHandler<IdeaStatsChangedEvent>
     {
         private readonly IRepository _repository;
@@ -25,19 +28,24 @@ namespace ProIdeas.Logic
             _dataMapper = dataMapper;
         }
 
-        async public Task<UserProfileDto> GetUserProfileAsync(string userId)
+        private async Task<UserProfile> GetUserProfile(string userId)
         {
-            var profile = await _repository.QueryOneAsync<UserProfile, GetUserProfileByUserIdQuery>(new GetUserProfileByUserIdQuery
+            return await _repository.QueryOneAsync<UserProfile, GetUserProfileByUserIdQuery>(new GetUserProfileByUserIdQuery
             {
                 UserId = userId
             });
+        }
+
+        async public Task<UserProfileDto> GetUserProfileAsync(string userId)
+        {
+            var profile = await GetUserProfile(userId);
 
             return _dataMapper.Map<UserProfileDto>(profile);
         }
 
         async public Task Handle(IdeaStatsChangedEvent message)
         {
-            var profile = await _repository.GetOneAsync<UserProfile>(message.Idea.OwnerId);
+            var profile = await GetUserProfile(message.Idea.OwnerId);
 
             if (profile == null)
             { return; }
@@ -58,5 +66,22 @@ namespace ProIdeas.Logic
             await _bus.RaiseEvent(new UserProfileStatsChangedEvent(_dataMapper.Map<UserProfileStatsDto>(stats)));
 
         }
+
+        async public Task Handle(CreateUserProfileCommand message)
+        {
+            var userProfile = await GetUserProfile(message.UserId);
+
+            if (userProfile != null)
+            {
+                return;
+            }
+
+            await _repository.AddAsync(new UserProfile
+            {
+                OwnerId = message.UserId
+            });
+        }
+
+      
     }
 }

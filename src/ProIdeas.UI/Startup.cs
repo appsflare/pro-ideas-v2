@@ -214,7 +214,9 @@ namespace ProIdeas.UI
                        .EnsureTableIndex(nameof(IdeaComment), nameof(IdeaComment.CreatedOn))
                        .EnsureTableIndex(nameof(IdeaComment), nameof(IdeaComment.CreatedOn))
                        .EnsureTableIndex(nameof(IdeaLike), nameof(IdeaLike.OwnerId))
-                       .EnsureTableIndex(nameof(Activity), nameof(Activity.OwnerId));
+                       .EnsureTableIndex(nameof(UserProfile), nameof(UserProfile.OwnerId))
+                       .EnsureTableIndex(nameof(Activity), nameof(Activity.OwnerId))
+                       .EnsureTableIndex(nameof(Activity), nameof(Activity.CreatedAt));
             }
 
         }
