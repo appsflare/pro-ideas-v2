@@ -1,6 +1,7 @@
 ﻿using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Queries.Activities;
 using RethinkDb.Driver;
+using RethinkDb.Driver.Ast;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,31 +10,42 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates.Activities
 {
     public class GetActivityStreamByUserIdQueryTemplate : BaseRethinkQueryTemplate<Activity, GetActivityStreamByUserId>
     {
+        private readonly Table _activityTable;
+        private readonly Table _ideaTable;
+        private readonly Table _commentTable;
+        private readonly Table _userTable;
+        public GetActivityStreamByUserIdQueryTemplate()
+        {
+            _activityTable = RethinkDB.R.Table(nameof(Activity));
+            _ideaTable = RethinkDB.R.Table(nameof(Idea));
+            _commentTable = RethinkDB.R.Table(nameof(IdeaComment));
+            _userTable = RethinkDB.R.Table("ApplicationUser");
+        }
+
+        private Pluck GetUserFullName(GetField field)
+        {
+            return _userTable.Get(field).Pluck(nameof(User.FullName));
+        }
+
         async protected override Task<IEnumerable<Activity>> ExecuteAsync(QueryTemplateContext<GetActivityStreamByUserId> context)
         {
             var r = RethinkDB.R;
             var queryParam = context.Parameter;
 
-            var activityTable = RethinkDB.R.Table(nameof(Activity));
-
-            var ideaTable = RethinkDB.R.Table(nameof(Idea));
-
-            var commentTable = RethinkDB.R.Table(nameof(Idea));
-
-            var userTable = RethinkDB.R.Table("ApplicationUser");
-
-            var query = activityTable.Filter(x => x.GetField(nameof(Activity.OwnerId)).Eq(queryParam.UserId));
+            var query = _activityTable.Filter(x => x.GetField(nameof(Activity.OwnerId)).Eq(queryParam.UserId));
 
             if (queryParam.Types.Any())
             {
                 query = query.Filter(x => r.Expr(queryParam.Types).Contains(x.GetField(nameof(Activity.Type))));
             }
 
-            var finalQuery = query.Merge(activity => r.HashMap(nameof(Activity.Owner), userTable.Get(activity.GetField(nameof(Activity.OwnerId))).Pluck(nameof(User.FullName))))
-                .Merge(activity => r.HashMap(nameof(Activity.ItemOwner), userTable.Get(activity.GetField(nameof(Activity.ItemOwnerId))).Pluck(nameof(User.FullName))))
-                .Merge(activity => r.HashMap(nameof(Activity.IdeaOwner), userTable.Get(activity.GetField(nameof(Activity.IdeaOwnerId))).Pluck(nameof(User.FullName))));
+            var finalQuery = query.Merge(activity => r.HashMap(nameof(Activity.Owner), GetUserFullName(activity.GetField(nameof(Activity.OwnerId)))))
+                .Merge(activity => r.HashMap(nameof(Activity.ItemOwner), GetUserFullName(activity.GetField(nameof(Activity.ItemOwnerId)))))
+                .Merge(activity => r.HashMap(nameof(Activity.IdeaOwner), GetUserFullName(activity.GetField(nameof(Activity.IdeaOwnerId)))));
 
-            return (await query.RunCursorAsync<Activity>(context.Connection)).ToList();
+            var results = await finalQuery.RunCursorAsync<Activity>(context.Connection);
+
+            return results.ToList();
         }
     }
 }
