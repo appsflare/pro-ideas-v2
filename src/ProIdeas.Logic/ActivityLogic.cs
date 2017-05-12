@@ -25,7 +25,7 @@ namespace ProIdeas.Logic
         private readonly IRepository _repository;
         private readonly IBus _bus;
         private readonly IDataMapper _dataMapper;
-        private readonly IUserIdentityProvider _userIdentityProvider; 
+        private readonly IUserIdentityProvider _userIdentityProvider;
         #endregion
 
         #region Ctors
@@ -71,6 +71,9 @@ namespace ProIdeas.Logic
         async public Task Handle(IdeaLikeChangedEvent message)
         {
             var idea = await GetIdea(message.IdeaId);
+            if (idea == null)
+            { return; }
+
             await _repository.AddAsync(new Activity
             {
                 Type = Activity.IDEAS_VOTES,
@@ -96,10 +99,13 @@ namespace ProIdeas.Logic
         async public Task Handle(IdeaCommentCreatedEvent message)
         {
             var idea = await GetIdea(message.Comment.IdeaId);
+            if (idea == null)
+            { return; }
+
             await _repository.AddAsync(new Activity
             {
                 Type = Activity.IDEAS_COMMENTS_CREATE,
-                Body = string.Empty,
+                Body = message.Comment.Content,
                 OwnerId = _userIdentityProvider.GetUserId(),
                 CreatedAt = DateTime.UtcNow,
                 ItemId = message.Comment.Id,
@@ -113,6 +119,9 @@ namespace ProIdeas.Logic
         async public Task Handle(IdeaPagesUpdatedEvent message)
         {
             var idea = await GetIdea(message.IdeaId);
+            if (idea == null)
+            { return; }
+
             await _repository.AddAsync(new Activity
             {
                 Type = Activity.IDEAS_UPDATE,
@@ -130,6 +139,9 @@ namespace ProIdeas.Logic
         async public Task Handle(IdeaPublishedEvent message)
         {
             var idea = await GetIdea(message.IdeaId);
+            if (idea == null)
+            { return; }
+
             await _repository.AddAsync(new Activity
             {
                 Type = Activity.IDEAS_COMMENTS_CREATE,
@@ -147,6 +159,9 @@ namespace ProIdeas.Logic
         async public Task Handle(IdeaUpdatedEvent message)
         {
             var idea = await GetIdea(message.Idea.Id);
+            if (idea == null)
+            { return; }
+
             await _repository.AddAsync(new Activity
             {
                 Type = Activity.IDEAS_UPDATE,
@@ -159,7 +174,7 @@ namespace ProIdeas.Logic
                 IdeaOwnerId = message.Idea.OwnerId,
                 ItemDetails = new ActivityItemDetails()
             });
-        } 
+        }
         #endregion
 
 

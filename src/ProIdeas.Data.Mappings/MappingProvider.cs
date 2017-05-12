@@ -2,7 +2,9 @@
 using ProIdeas.DataMappings.Data.Mappings.Contracts;
 using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.Entities.Model;
+using ProIdeas.Domain.Entities.Tasks;
 using ProIdeas.DTO;
+using ProIdeas.DTO.Tasks;
 
 namespace ProIdeas.Data.Mappings
 {
@@ -29,6 +31,10 @@ namespace ProIdeas.Data.Mappings
 
                 cfg.CreateMap<Team, TeamDto>().ReverseMap();
                 cfg.CreateMap<TeamMember, TeamMemberDto>().ReverseMap();
+
+                cfg.CreateMap<TaskItem, TaskItemDto>().ReverseMap();
+                cfg.CreateMap<TaskItemType, TaskItemTypeDto>().ReverseMap();
+                cfg.CreateMap<TaskItemState, TaskItemStateDto>().ReverseMap();
 
 
             });

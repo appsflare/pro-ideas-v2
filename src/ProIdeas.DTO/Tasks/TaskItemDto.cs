@@ -21,5 +21,7 @@ namespace ProIdeas.DTO.Tasks
         public string StateId { get; set; }
 
         public string TaskTypeId { get; set; }
+
+        public string TaskBoardId { get; set; }
     }
 }

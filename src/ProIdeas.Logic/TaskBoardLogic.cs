@@ -1,15 +1,14 @@
-﻿using ProIdeas.Logic.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ProIdeas.DTO.Tasks;
-using System.Threading.Tasks;
-using ProIdeas.Domain.Repositories;
-using ProIdeas.Domain.Core.Bus;
-using ProIdeas.Authentication.Contracts;
+﻿using ProIdeas.Authentication.Contracts;
 using ProIdeas.DataMappings.Data.Mappings.Contracts;
+using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Domain.Entities.Tasks;
+using ProIdeas.Domain.Queries.Tasks;
+using ProIdeas.Domain.Repositories;
+using ProIdeas.DTO.Tasks;
 using ProIdeas.Exceptions;
+using ProIdeas.Logic.Contracts;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProIdeas.Logic
 {
@@ -53,19 +52,35 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<TaskItemDto>(taskItem);
         }
 
-        public Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(string boardId, string taskItemStateId)
+        async public Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(string boardId, string taskItemStateId)
         {
-            throw new NotImplementedException();
+            var tasks = await _repository.QueryAsync<TaskItem, GetTaskBoardTasksByStateId>(new GetTaskBoardTasksByStateId
+            {
+                TaskBoardId = boardId,
+                StateId = taskItemStateId
+            });
+
+            return _dataMapper.Map<IEnumerable<TaskItemDto>>(tasks);
         }
 
-        public Task<IEnumerable<TaskItemStateDto>> GetTaskItemStatesAsync(string boardId)
+        async public Task<IEnumerable<TaskItemStateDto>> GetTaskItemStatesAsync(string boardId)
         {
-            throw new NotImplementedException();
+            var tasks = await _repository.QueryAsync<TaskItem, GetTaskItemStatesByBoardId>(new GetTaskItemStatesByBoardId
+            {
+                TaskBoardId = boardId
+            });
+
+            return _dataMapper.Map<IEnumerable<TaskItemStateDto>>(tasks);
         }
 
-        public Task<IEnumerable<TaskItemTypeDto>> GetTaskItemTypesAsync(string boardId)
+        async public Task<IEnumerable<TaskItemTypeDto>> GetTaskItemTypesAsync(string boardId)
         {
-            throw new NotImplementedException();
+            var tasks = await _repository.QueryAsync<TaskItem, GetTaskItemTypesByBoardId>(new GetTaskItemTypesByBoardId
+            {
+                TaskBoardId = boardId
+            });
+
+            return _dataMapper.Map<IEnumerable<TaskItemTypeDto>>(tasks);
         }
     }
 }

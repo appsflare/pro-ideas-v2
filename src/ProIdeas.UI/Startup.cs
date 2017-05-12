@@ -141,6 +141,7 @@ namespace ProIdeas.UI
             services.AddScoped<IIdeaCollaborationLogic, IdeaCollaborationLogic>();
             services.AddScoped<IUserProfileLogic, UserProfileLogic>();
             services.AddScoped<IActivityLogic, ActivityLogic>();
+            services.AddScoped<ITaskBoardLogic, TaskBoardLogic>();
 
             services.AddScoped<IEventStore, DefaultEventStore>();
 
@@ -153,6 +154,8 @@ namespace ProIdeas.UI
             services.AddScoped<IIdeaService, IdeaService>();
             services.AddScoped<IIdeaCollaborationService, IdeaCollaborationService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<ITaskBoardService, TaskBoardService>();
+
 
             services.AddScoped<IRethinkDbConnectionProvider, DefaultRethinkDbConnectionProvider>();
 
