@@ -12,10 +12,10 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
     public class GetUserProfileByUserIdQueryTemplate : BaseRethinkQueryTemplate<UserProfile, GetUserProfileByUserIdQuery>
     {
         private readonly ILogger _logger;
-        //public GetUserProfileByUserIdQueryTemplate(ILogger logger)
-        //{
-        //    _logger = logger;
-        //}
+        public GetUserProfileByUserIdQueryTemplate(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<GetUserProfileByUserIdQueryTemplate>();
+        }
 
         async protected override Task<IEnumerable<UserProfile>> ExecuteAsync(QueryTemplateContext<GetUserProfileByUserIdQuery> context)
         {
@@ -33,15 +33,16 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
             .Get(profile.GetField(nameof(UserProfile.OwnerId)))
             .Pluck(nameof(User.FullName))));
 
-            //TODO: refactor the query to execute safely.
+            
             try
             {
                 return (await query.RunCursorAsync<UserProfile>(context.Connection)).ToList();
             }
-            catch
+            catch(Exception ex)
             {
-                //_logger.LogError(ex.ToString());
+                _logger.LogError(ex.ToString());
             }
+
             return Enumerable.Empty<UserProfile>();
         }
     }

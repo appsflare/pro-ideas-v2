@@ -29,10 +29,12 @@ using ProIdeas.Services.Contracts;
 using ProIdeas.UI.Authentication;
 using ProIdeas.UI.Models;
 using ProIdeas.UI.Services;
+using Serilog;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 
 namespace ProIdeas.UI
@@ -110,14 +112,25 @@ namespace ProIdeas.UI
                 // Connect to Redis database.
                 try
                 {
-                    var redis = ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable("REDIS_HOST"));
+                    var redisHostName = Environment.GetEnvironmentVariable("REDIS_HOST_NAME");
+
+                    var redisHostPort = Environment.GetEnvironmentVariable("REDIS_HOST_PORT");
+
+                    // Get DNS host information.
+                    var hostAdressesTask = Dns.GetHostAddressesAsync(redisHostName);
+
+                    hostAdressesTask.Wait();
+
+                    var redisHost = hostAdressesTask.Result.First();
+
+                    var redis = ConnectionMultiplexer.Connect($"{redisHost.MapToIPv4()}:{redisHostPort}");
                     services.AddDataProtection()
                         .PersistKeysToRedis(redis, "DataProtection-Keys")
                         .SetDefaultKeyLifetime(TimeSpan.FromDays(14));
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine(ex);
                 }
             }
 
@@ -226,11 +239,11 @@ namespace ProIdeas.UI
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            loggerFactory.AddSerilog();
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseDeveloperExceptionPage();                
                 app.UseBrowserLink();
             }
             else
