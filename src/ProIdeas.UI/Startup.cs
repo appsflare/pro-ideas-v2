@@ -144,6 +144,18 @@ namespace ProIdeas.UI
             services.AddSingleton<IJsonSerializer, JsonSerializer>();
             //services.AddMultitenancy<TenantSettingsDto, CachingTenantResolver>();
 
+            services.AddSingleton(new AuthMessageSenderOptions
+            {
+                DefaultSenderEmail = Environment.GetEnvironmentVariable("EMAIL_DEFAULT_SENDER_EMAIL"),
+                DefaultSenderName = Environment.GetEnvironmentVariable("EMAIL_DEFAULT_SENDER_NAME"),
+                MailJetApiKey = Environment.GetEnvironmentVariable("EMAIL_MAILJET_API_KEY"),
+                MailJetApiSecret = Environment.GetEnvironmentVariable("EMAIL_MAILJET_API_SECRET")
+            });
+
+            // Add application services.
+            services.AddSingleton<IEmailSender, AuthMessageSender>();
+            services.AddSingleton<ISmsSender, AuthMessageSender>();
+
             var dbHost = Environment.GetEnvironmentVariable("DB_HOSTS");
             services.AddSingleton(new ConnectionOptions
             {
@@ -189,9 +201,7 @@ namespace ProIdeas.UI
 
             services.AddMvc();
 
-            // Add application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+
 
 
             var type1 = typeof(FilterIdeaQueryTemplate);
@@ -252,10 +262,7 @@ namespace ProIdeas.UI
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-
-                var options = new RewriteOptions().AddRedirectToHttps();
-                app.UseRewriter(options);
-            }            
+            }
 
             app.UseStaticFiles();
 
