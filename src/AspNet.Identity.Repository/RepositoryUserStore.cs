@@ -28,7 +28,7 @@
 
         public RepositoryUserStore(IRepository repository)
         {
-            _repository = repository; ;
+            _repository = repository;
         }
 
         public virtual void Dispose()

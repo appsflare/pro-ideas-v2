@@ -1,0 +1,6 @@
+<div class="actionBar">	
+    <a class="actionBtn edit" ng-if="!task.editMode && task.showEdit" ng-click="actionBarVm.editTask(task)"> EDIT</a>
+    <a class="actionBtn delete" ng-if="!task.editMode && task.showEdit" ng-click="actionBarVm.deleteTask(task, tasks)"> DELETE</a>
+    <a class="actionBtn save" ng-if="task.editMode" ng-click="actionBarVm.updateTask(task)"> SAVE</a>
+    <a class="actionBtn cancel" ng-if="task.editMode" ng-click="actionBarVm.cancelEditTask(task)"> CANCEL</a>
+</div>

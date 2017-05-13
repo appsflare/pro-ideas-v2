@@ -34,7 +34,7 @@ namespace ProIdeas.UI.Controllers
             _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
             _emailSender = emailSender;
             _smsSender = smsSender;
-            _logger = loggerFactory.CreateLogger<ManageController>();
+            _logger = loggerFactory.CreateLogger<ManageController>();            
         }
 
         //

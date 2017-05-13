@@ -1,10 +1,12 @@
 ﻿using AspNet.Identity.Repository;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using ProIdeas.Authentication.Contracts;
 using ProIdeas.Data.Mappings;
 using ProIdeas.Domain.Core.Bus;
@@ -243,7 +245,7 @@ namespace ProIdeas.UI
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();                
+                app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
             else
@@ -258,6 +260,26 @@ namespace ProIdeas.UI
             app.UseIdentity();
             //});
 
+
+            if (Environment.GetEnvironmentVariable("COCKPIT_AUTH_ENABLED") == "true")
+            {
+                var openIdConnectOptions = new OpenIdConnectOptions
+                {
+                    DisplayName = "Agile Cockpit Identity",
+                    AuthenticationScheme = "Agile Cockpit",
+                    AutomaticChallenge = false,
+                    ClientId = Configuration.GetValue<string>("Cockpit.ClientId") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_ID"),
+                    ClientSecret = Configuration.GetValue<string>("Cockpit.ClientSecret") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_SECRET"),
+                    Authority = Configuration.GetValue<string>("Cockpit.Authority") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_IDENTITY_SERVER_URL"),
+                    ResponseType = OpenIdConnectResponseType.Code,
+                    GetClaimsFromUserInfoEndpoint = true,
+                    RequireHttpsMetadata = false
+
+                };
+                openIdConnectOptions.Description.DisplayName = openIdConnectOptions.DisplayName;
+
+                app.UseOpenIdConnectAuthentication(openIdConnectOptions);
+            }
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 

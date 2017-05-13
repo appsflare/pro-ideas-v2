@@ -1,0 +1,25 @@
+<!--<div class="form-contain">
+    <form ng-submit="tasksVm.pushTask()">
+        <input required type="text" placeholder="Task title" ng-model="tasksVm.newTask.title">
+        <input required type="text" placeholder="Description" ng-model="tasksVm.newTask.description">
+        <select required ng-model="tasksVm.newTask.stage_id" ng-options="stage.id as stage.name for stage in tasksVm.stages">
+            <option value="">Status</option>
+
+        <input type="submit" value="Add New Task">
+    </form>
+</div>
+<div class="export-container">
+    <button ng-click="tasksVm.exportTasks()">Export all tasks</button>
+</div>
+
+<div class="kanban-column todo" ng-repeat="stage in tasksVm.stages" ng-drop="true" ng-drop-success="onDrop($data,$event,stage)" ng-class="{'todo': stage.name == 'To Do', inprogress: stage.name == 'In Progress', review: stage.name == 'Review', done: stage.name == 'Done'}">
+    <h3>{{tasksVm.stage.name}}</h3>
+    <div class="cards-container">
+        <div class="card task" ng-drag="true" ng-drag-data="task" ng-repeat="task in tasksVm.tasks" ng-if="task.stage_id == stage.id" ng-drag-start="dragStart($event, task)" ng-init="task.dragging = false" 
+        data-ng-mouseenter="tasksVm.toggleActionBar(task)" data-ng-mouseleave="tasksVm.toggleActionBar(task)">
+            <div class="card-title" contenteditable="false">{{task.title}}</div>
+
+            <actionbar></actionbar>
+        </div>						
+    </div>
+</div>-->

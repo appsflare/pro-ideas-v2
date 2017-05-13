@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html ng-app="taskboard">
+	<head>
+		<!-- Meta information -->
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!-- stylesheets -->
+		<link rel="stylesheet" type="text/css" href="css/reset.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans|Baumans' rel='stylesheet' type='text/css'>
+
+		<!-- scripts -->
+		<script type="text/javascript" src="js/lib/jquery.min.js"></script>
+		<!--<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>-->
+		<script type="text/javascript" src="js/lib/angular.js"></script>
+		<script type="text/javascript" src="js/lib/ngDraggable.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+		<script type="text/javascript" src="js/actionbar/actionbar.controller.js"></script>
+		<script type="text/javascript" src="js/actionbar/actionbar.component.js"></script>
+
+		<script type="text/javascript" src="js/tasks/tasks.service.js"></script>
+		<script type="text/javascript" src="js/tasks/tasks.component.js"></script>
+		
+		<script type="text/javascript" src="js/tasks/tasks.controller.js"></script>
+		
+
+
+
+	</head>
+
+	<body>
+		<section id="kanban-container">
+        	<tasks></tasks>
+		</section>
+	</body>
+</html>

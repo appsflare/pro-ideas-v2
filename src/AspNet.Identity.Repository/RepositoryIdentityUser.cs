@@ -88,7 +88,7 @@ namespace AspNet.Identity.Repository
 
         public virtual void AddLogin(UserLoginInfo login)
         {
-            LoginsWrapper.Add(new UserLoginInfoWrapper(login.LoginProvider, login.ProviderKey));
+            LoginsWrapper.Add(new UserLoginInfoWrapper(login.LoginProvider, login.ProviderKey, login.ProviderDisplayName));
             //Logins.Add(login);
         }
 

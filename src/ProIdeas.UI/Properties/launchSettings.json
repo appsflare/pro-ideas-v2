@@ -1,4 +1,4 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -19,6 +19,9 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
+        "COCKPIT_AUTH_CLIENT_SECRET": "BAE2988C-D563-47C8-97CF-8FAF7A50AD2D",
+        "COCKPIT_AUTH_IDENTITY_SERVER_URL": "http://localhost:19970/opic/",
+        "COCKPIT_AUTH_CLIENT_ID": "BAE2988C-D563-47C8-97CF-8FAF7A50AD2D",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:57454"

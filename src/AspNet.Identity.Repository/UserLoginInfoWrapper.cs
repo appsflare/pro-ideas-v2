@@ -18,9 +18,9 @@ namespace AspNet.Identity.Repository
             UserLoginInfo = new UserLoginInfo(null, null, null);
         }
 
-        public UserLoginInfoWrapper(string loginProvider, string providerKey)
+        public UserLoginInfoWrapper(string loginProvider, string providerKey, string providerDisplayName)
         {
-            UserLoginInfo = new UserLoginInfo(loginProvider, providerKey, null);
+            UserLoginInfo = new UserLoginInfo(loginProvider, providerKey, providerDisplayName);
         }
 
         /// <summary>
