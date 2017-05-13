@@ -1,0 +1,29 @@
+﻿@model  ActivitiesTimeLineViewModel
+
+<li>
+    <i class="fa fa-comments bg-yellow"></i>
+    <div class="timeline-item">
+        <span class="time">
+            <i class="fa fa-clock-o">
+            </i>@Model.ActivityDuration
+        </span>
+        <h3 class="timeline-header">
+            @if (Model.ActivityOwner.self) {
+            <b>You</b>
+            }
+            else
+            {
+                <a asp-controller="User" asp-route-id="@Model.ActivityOwner.Id">@Model.ActivityOwner.FullName</a>
+            }
+            commented on
+            <a  asp-controller="Idea" asp-route-id="@Model.Activity.IdeaId">idea</a>
+        </h3>
+        <div class="timeline-body">
+            @Model.Activity.Details
+        </div>
+        <div class="timeline-footer">
+            <a asp-controller="Idea" asp-route-id="@Model.Activity.IdeaId"  class="btn btn-warning btn-flat btn-xs">View idea</a>
+        </div>
+    </div>
+
+</li>

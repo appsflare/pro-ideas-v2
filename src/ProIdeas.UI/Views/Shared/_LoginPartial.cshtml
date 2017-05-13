@@ -33,6 +33,13 @@
                             <div class="ripple-container"></div>
                         </a>
                     </li>
+                    <li>
+                        <a asp-area="" asp-controller="User" asp-action="Details" asp-route-id="@userInfo.Id" title="View your profiles">
+                            @*<i class="material-icons">account_circle</i>*@
+                            My Profile
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
                     <li role="separator" class="divider"></li>
                     <li><a href="#" onclick="$(this).closest('form').submit()">Log out</a></li>
                 </ul>

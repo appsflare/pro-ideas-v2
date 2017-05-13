@@ -9,6 +9,7 @@ using ProIdeas.DTO;
 using ProIdeas.Infra.Events;
 using ProIdeas.Logic.Contracts;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -49,7 +50,8 @@ namespace ProIdeas.Logic
             var activities = await _repository.QueryAsync<Activity, GetActivityStreamByUserId>(new GetActivityStreamByUserId
             {
                 UserId = userId,
-                Types = types
+                Types = types,
+                IncludeAllUserActivities = !types.Any()
             });
             return _dataMapper.Map<IEnumerable<ActivityDto>>(activities);
         }

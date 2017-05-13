@@ -1,0 +1,51 @@
+@model  UserActivityViewModel
+
+<div class="wrapper">
+    <div class="main">
+        <div class="container m-margin">
+            <div class="col-md-3">
+                @await Component.InvokeAsync("Profile", new { userId = Model.OwnerId })
+            </div>
+            <div class="col-md-9">
+                @await Html.PartialAsync("_NavigationBar", Model)
+
+                <div class="tab-content">
+                    @*User Actions*@
+                    <div class="s-margin tab-pane active" id="contributions">
+                        <ul class="timeline timeline-inverse">
+                            @foreach (var activity in Model.UserContributions)
+                            {
+                                <li class="time-label">
+                                    <span class="bg-red">@activity.ActivityDate</span>
+                                </li>
+                                @foreach (var item in activity.ActivityTimeLine)
+                                {
+                                    @await Html.PartialAsync(item.Activity.ActivityType, item);
+                                }
+                            }
+                        </ul>
+                    </div>
+
+                    @*User Timeline*@
+                    <div class="s-margin tab-pane" id="timeline">
+                        <ul class="timeline timeline-inverse">
+                            @foreach (var activity in Model.UserActivities)
+                            {
+                                <li class="time-label">
+                                    <span class="bg-red">@activity.ActivityDate</span>
+                                </li>
+                                @foreach (var item in activity.ActivityTimeLine)
+                                {
+                                    @await Html.PartialAsync(item.Activity.ActivityType, item);
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
