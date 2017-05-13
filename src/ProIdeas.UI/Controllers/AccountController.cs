@@ -137,7 +137,7 @@ namespace ProIdeas.UI.Controllers
                     //await _signInManager.SignInAsync(user, isPersistent: false);
 
                     _logger.LogInformation(3, "User created a new account with password.");
-                    
+
                     ViewBag.SuccessMessage = string.Join(Environment.NewLine, "Account successfully created. Please confirm your email by clicking the confirmation link sent to your email");
 
 
@@ -211,7 +211,8 @@ namespace ProIdeas.UI.Controllers
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
+                var name = info.Principal.FindFirstValue("name");
+                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email, FullName = name });
             }
         }
 
@@ -230,7 +231,7 @@ namespace ProIdeas.UI.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

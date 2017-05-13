@@ -3,6 +3,7 @@
     Layout = "_LayoutSignUp";
     ViewData["Title"] = "Register";
 }
+@inject SignInManager<ApplicationUser> SignInManager
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <div class="card card-signup">
@@ -69,20 +70,30 @@
 
 
                 <div class="col-md-5">
-                    @*<div class="social text-center">
-                        <button class="btn btn-just-icon btn-round btn-twitter">
-                            <i class="fa fa-twitter"></i>
-                        </button>
-                        <button class="btn btn-just-icon btn-round btn-dribbble">
-                            <i class="fa fa-dribbble"></i>
-                        </button>
-                        <button class="btn btn-just-icon btn-round btn-facebook">
-                            <i class="fa fa-facebook"></i>
-                        </button>
-                        <h4> or be classical </h4>
-                    </div>*@
+                    <div class="social text-center">
+                        @{
+                            var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                            if (loginProviders.Any())
+                            {
+                                <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                                    <div>
+                                        <p>
+                                            @foreach (var provider in loginProviders)
+                                            {
+                                                <button type="submit" class="btn btn-info" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">
+                                                    <img src="~/img/icons/cockpit-icon.png" alt="Agile Cockpit Identity" />&nbsp; Login using AgileCockpit
+                                                </button>
+                                            }
+                                        </p>
+                                    </div>
+                                </form>
+                                <h4> or be classical </h4>
+                            }
+                        }
+
+                    </div>
                     <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form">
-                        <div class="content">                           
+                        <div class="content">
 
                             <div class="input-group">
                                 <span class="input-group-addon">

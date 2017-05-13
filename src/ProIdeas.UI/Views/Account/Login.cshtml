@@ -12,24 +12,34 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
         <div class="card card-signup">
-            <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form">
-                <div class="header header-primary text-center">
-                    <h4 class="card-title">@ViewData["Title"]</h4>
-                    @*<div class="social-line">
-                            <a href="#pablo" class="btn btn-just-icon btn-simple">
-                                <i class="fa fa-facebook-square"></i>
-                            </a>
-                            <a href="#pablo" class="btn btn-just-icon btn-simple">
-                                <i class="fa fa-twitter"></i>
-                            </a>
-                            <a href="#pablo" class="btn btn-just-icon btn-simple">
-                                <i class="fa fa-google-plus"></i>
-                            </a>
-                        </div>*@
+            <div class="header header-primary text-center">
+                <h4 class="card-title">@ViewData["Title"]</h4>
+                <div class="social-line">
+                    @{
+                        var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                        if (loginProviders.Any())
+                        {
+                            <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                                <div>
+                                    <p>
+                                        @foreach (var provider in loginProviders)
+                                        {
+                                            <button type="submit" class="btn btn-just-icon btn-simple" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">
+                                                <img src="~/img/icons/cockpit-icon.png" alt="Agile Cockpit Identity" />
+                                            </button>
+                                        }
+                                    </p>
+                                </div>
+                            </form>
+                        }
+                    }
                 </div>
-                @*<p class="description text-center">Or Be Classical</p>*@
-
-
+            </div>
+            @if (loginProviders.Any())
+            {
+                <p class="description text-center">Or Be Classical</p>
+            }
+            <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form">
 
                 @if (ViewBag.ErrorMessage != null)
                 {
@@ -92,38 +102,6 @@
                 </div>
             </form>
         </div>
-
-        @*<div class="col-md-4">
-                <section>
-                    <h4>Use another service to log in.</h4>
-                    <hr />
-                    @{
-                        var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
-                        if (loginProviders.Count == 0)
-                        {
-                            <div>
-                                <p>
-                                    There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                                    for details on setting up this ASP.NET application to support logging in via external services.
-                                </p>
-                            </div>
-                        }
-                        else
-                        {
-                            <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                                <div>
-                                    <p>
-                                        @foreach (var provider in loginProviders)
-                                        {
-                                            <button type="submit" class="btn btn-default" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
-                                        }
-                                    </p>
-                                </div>
-                            </form>
-                        }
-                    }
-                </section>
-            </div>*@
     </div>
 
 </div>
