@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using ProIdeas.Serializers.Contracts;
 using System;
 using System.Collections.Generic;
@@ -47,34 +48,45 @@ namespace ProIdeas.UI.Services
         private readonly AuthMessageSenderOptions _options;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly AuthenticationHeaderValue _authorizationHeader;
-        public AuthMessageSender(AuthMessageSenderOptions options, IJsonSerializer jsonSerializer)
+        private readonly ILogger _logger;
+        public AuthMessageSender(AuthMessageSenderOptions options, IJsonSerializer jsonSerializer, ILoggerFactory loggerFactory)
         {
             _options = options;
             _jsonSerializer = jsonSerializer;
             _authorizationHeader = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{options.MailJetApiKey}:{options.MailJetApiSecret}")));
+
+            _logger = loggerFactory.CreateLogger<AuthMessageSender>();
         }
 
         async public Task SendEmailAsync(string email, string subject, string message)
         {
-            using (var client = new HttpClient())
+            try
             {
-
-                var emailMessage = new MailMessage
+                using (var client = new HttpClient())
                 {
-                    FromEmail = _options.DefaultSenderEmail,
-                    FromName = _options.DefaultSenderName,
-                    Html = message,
-                    Recepients = new[] { new MailRecipient
+                    _logger.LogInformation("Sending mail to: {0}, subject: {1}", email, subject);
+                    var emailMessage = new MailMessage
+                    {
+                        FromEmail = _options.DefaultSenderEmail,
+                        FromName = _options.DefaultSenderName,
+                        Html = message,
+                        Recepients = new[] { new MailRecipient
                     {
                         Email = email
                     }}
-                };
+                    };
 
-                client.DefaultRequestHeaders.Authorization = _authorizationHeader;
+                    client.DefaultRequestHeaders.Authorization = _authorizationHeader;
 
-                var messageContent = _jsonSerializer.Serialize(emailMessage);
+                    var messageContent = _jsonSerializer.Serialize(emailMessage);
 
-                await client.PostAsync("https://api.mailjet.com/v3/send", new StringContent(messageContent, Encoding.UTF8, "application/json"));
+                    await client.PostAsync("https://api.mailjet.com/v3/send", new StringContent(messageContent, Encoding.UTF8, "application/json"));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.ToString());
+                throw;
             }
 
 
