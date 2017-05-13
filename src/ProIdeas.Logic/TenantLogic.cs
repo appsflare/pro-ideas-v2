@@ -1,6 +1,7 @@
-﻿using ProIdeas.Logic.Contracts;
+﻿using ProIdeas.DataMappings.Data.Mappings.Contracts;
 using ProIdeas.DTO;
-using ProIdeas.DataMappings.Data.Mappings.Contracts;
+using ProIdeas.Logic.Contracts;
+using System.Collections.Generic;
 
 namespace ProIdeas.Logic
 {
@@ -14,10 +15,19 @@ namespace ProIdeas.Logic
             _dataMapper = dataMapper;
         }
 
+        public IEnumerable<TenantSettingsDto> GetAllTenants()
+        {
+            return _dataMapper.Map<IEnumerable<TenantSettingsDto>>(_tenantStore.GetAllTenants());
+        }
+
         public TenantSettingsDto GetTenant(string uniqueKey)
         {
-            return default(TenantSettingsDto);
-            //return _dataMapper.Map<TenantSettingsDto>(_tenantStore.GetTenant(uniqueKey));
+            return _dataMapper.Map<TenantSettingsDto>(_tenantStore.GetTenant(uniqueKey));
+        }
+
+        public TenantSettingsDto GetTenantByHostName(string hostName)
+        {
+            return _dataMapper.Map<TenantSettingsDto>(_tenantStore.GetTenantByHostName(hostName));
         }
     }
 }

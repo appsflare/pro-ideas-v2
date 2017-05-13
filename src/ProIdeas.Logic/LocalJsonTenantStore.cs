@@ -1,33 +1,35 @@
-﻿using ProIdeas.Logic.Contracts;
-using ProIdeas.Files.Contracts;
+﻿using ProIdeas.Domain.Entities;
+using ProIdeas.Logic.Contracts;
 using ProIdeas.Serializers.Contracts;
-using ProIdeas.Domain.Entities;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ProIdeas.Logic
 {
     public class LocalJsonTenantStore : ITenantStore
     {
-        private readonly IFileStorage _storageProvider;
         private readonly IJsonSerializer _jsonSerializer;
-        public LocalJsonTenantStore(IFileStorage storageProvider, IJsonSerializer jsonSerializer)
+        private readonly IEnumerable<TenantSettings> _tenants;
+        public LocalJsonTenantStore(IJsonSerializer jsonSerializer)
         {
-            _storageProvider = storageProvider;
             _jsonSerializer = jsonSerializer;
+            _tenants = _jsonSerializer.Deserialize<IEnumerable<TenantSettings>>(File.ReadAllText("tenants.json"));
+        }
+
+        public TenantSettings GetTenantByHostName(string hostName)
+        {
+            return _tenants.FirstOrDefault(i => i.Hostnames.Any(h => h.Equals(hostName)));
         }
 
         public TenantSettings GetTenant(string uniqueKey)
         {
+            return _tenants.FirstOrDefault(i => i.Id == uniqueKey);
+        }
 
-            //using (var streamReader = new StreamReader(_storageProvider.GetFileStream("tenants.json")))
-            //{
-            //   var data = _jsonSerializer.Deserialize<IEnumerable<TenantSettings>>(streamReader.ReadToEnd());
-
-            //   return  data.FirstOrDefault(i => i.Id == uniqueKey);
-            //}
-
-            return default(TenantSettings);
-
-                
+        public IEnumerable<TenantSettings> GetAllTenants()
+        {
+            return _tenants;
         }
     }
 }

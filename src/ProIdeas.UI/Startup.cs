@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -141,7 +142,7 @@ namespace ProIdeas.UI
             services.AddSingleton(mappingProvider.CreateMapper());
             services.AddSingleton<IUserIdentityProvider, AspNetUserIdentityProvider>();
             services.AddSingleton<IJsonSerializer, JsonSerializer>();
-            services.AddMultitenancy<TenantSettingsDto, CachingTenantResolver>();
+            //services.AddMultitenancy<TenantSettingsDto, CachingTenantResolver>();
 
             var dbHost = Environment.GetEnvironmentVariable("DB_HOSTS");
             services.AddSingleton(new ConnectionOptions
@@ -251,7 +252,10 @@ namespace ProIdeas.UI
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-            }
+
+                var options = new RewriteOptions().AddRedirectToHttps();
+                app.UseRewriter(options);
+            }            
 
             app.UseStaticFiles();
 

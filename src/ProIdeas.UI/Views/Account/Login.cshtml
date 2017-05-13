@@ -15,33 +15,33 @@
             <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form">
                 <div class="header header-primary text-center">
                     <h4 class="card-title">@ViewData["Title"]</h4>
-                    <div class="social-line">
-                        <a href="#pablo" class="btn btn-just-icon btn-simple">
-                            <i class="fa fa-facebook-square"></i>
-                        </a>
-                        <a href="#pablo" class="btn btn-just-icon btn-simple">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                        <a href="#pablo" class="btn btn-just-icon btn-simple">
-                            <i class="fa fa-google-plus"></i>
-                        </a>
-                    </div>
+                    @*<div class="social-line">
+                            <a href="#pablo" class="btn btn-just-icon btn-simple">
+                                <i class="fa fa-facebook-square"></i>
+                            </a>
+                            <a href="#pablo" class="btn btn-just-icon btn-simple">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                            <a href="#pablo" class="btn btn-just-icon btn-simple">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        </div>*@
                 </div>
-                <p class="description text-center">Or Be Classical</p>
+                @*<p class="description text-center">Or Be Classical</p>*@
 
 
 
                 @if (ViewBag.ErrorMessage != null)
                 {
-                <div class="alert alert-danger">
-                    <div class="alert-icon">
-                        <i class="material-icons">error_outline</i>
+                    <div class="alert alert-danger">
+                        <div class="alert-icon">
+                            <i class="material-icons">error_outline</i>
+                        </div>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span><i class="material-icons">clear</i></span>
+                        </button>
+                        <div>@ViewBag.ErrorMessage</div>
                     </div>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span><i class="material-icons">clear</i></span>
-                    </button>
-                    <div>@ViewBag.ErrorMessage</div>
-                </div>
                 }
 
                 <div class="content">
