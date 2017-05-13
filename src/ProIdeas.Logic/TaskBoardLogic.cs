@@ -8,11 +8,11 @@ using ProIdeas.Domain.Repositories;
 using ProIdeas.DTO.Tasks;
 using ProIdeas.Exceptions;
 using ProIdeas.Infra.Commands.Tasks;
+using ProIdeas.Infra.Events.Tasks;
 using ProIdeas.Logic.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
-using ProIdeas.Infra.Events.Tasks;
 
 namespace ProIdeas.Logic
 {
@@ -79,6 +79,13 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IEnumerable<TaskItemDto>>(tasks);
         }
 
+        async public Task<TaskItemStateDto> GetTaskItemStateAsync(string stateId)
+        {
+            var taskState = await _repository.GetOneAsync<TaskItemState>(stateId);
+
+            return _dataMapper.Map<TaskItemStateDto>(taskState);
+        }
+
         async public Task<IEnumerable<TaskItemStateDto>> GetTaskItemStatesAsync(string boardId)
         {
             var tasks = await _repository.QueryAsync<TaskItem, GetTaskItemStatesByBoardId>(new GetTaskItemStatesByBoardId
@@ -87,6 +94,14 @@ namespace ProIdeas.Logic
             });
 
             return _dataMapper.Map<IEnumerable<TaskItemStateDto>>(tasks);
+        }
+
+        async public Task<TaskItemTypeDto> GetTaskItemTypeAsync(string typeId)
+        {
+
+            var taskType = await _repository.GetOneAsync<TaskItemType>(typeId);
+
+            return _dataMapper.Map<TaskItemTypeDto>(taskType);
         }
 
         async public Task<IEnumerable<TaskItemTypeDto>> GetTaskItemTypesAsync(string boardId)

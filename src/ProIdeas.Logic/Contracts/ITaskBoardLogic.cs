@@ -12,6 +12,10 @@ namespace ProIdeas.Logic.Contracts
 
         Task<IEnumerable<TaskItemStateDto>> GetTaskItemStatesAsync(string boardId);
 
+        Task<TaskItemStateDto> GetTaskItemStateAsync(string stateId);
+
+        Task<TaskItemTypeDto> GetTaskItemTypeAsync(string typeId);
+
         Task<TaskItemDto> GetTaskItemAsync(string taskItemId);
 
         Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(string boardId, string taskItemStateId);
