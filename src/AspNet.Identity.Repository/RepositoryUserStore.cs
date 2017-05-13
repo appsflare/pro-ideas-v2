@@ -36,12 +36,14 @@
 
         }
 
-        public virtual Task CreateAsync(TUser user, CancellationToken cancellationToken)
+        async public virtual Task CreateAsync(TUser user, CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+            var addUser = await Task.Run(() =>
             {
-                _repository.Add(user);
-            }); // _Context.Connection.Run(TableUsers.Insert(user)));
+                return _repository.AddAsync(user);
+            }, cancellationToken);
+
+            user.Id = addUser.Id;
         }
 
         public virtual Task UpdateAsync(TUser user, CancellationToken cancellationToken)
@@ -308,6 +310,7 @@
             {
 
                 var addedUser = _repository.Add(user);
+                user.Id = addedUser.Id;
                 return IdentityResult.Success;
             }, cancellationToken);
         }

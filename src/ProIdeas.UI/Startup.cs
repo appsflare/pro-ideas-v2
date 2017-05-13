@@ -146,8 +146,8 @@ namespace ProIdeas.UI
 
             services.AddSingleton(new AuthMessageSenderOptions
             {
-                DefaultSenderEmail = Environment.GetEnvironmentVariable("EMAIL_DEFAULT_SENDER_EMAIL"),
-                DefaultSenderName = Environment.GetEnvironmentVariable("EMAIL_DEFAULT_SENDER_NAME"),
+                DefaultSenderEmail = Environment.GetEnvironmentVariable("EMAIL_DEFAULT_SENDER_EMAIL") ?? "noreply@lotofideas.com",
+                DefaultSenderName = Environment.GetEnvironmentVariable("EMAIL_DEFAULT_SENDER_NAME") ?? "Lot Of Ideas",
                 MailJetApiKey = Environment.GetEnvironmentVariable("EMAIL_MAILJET_API_KEY"),
                 MailJetApiSecret = Environment.GetEnvironmentVariable("EMAIL_MAILJET_API_SECRET")
             });

@@ -45,13 +45,16 @@
             // no need to dispose of anything, mongodb handles connection pooling automatically
         }
 
-        public virtual Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken)
+        async public virtual Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(() =>
+            var result = await Task.Run(() =>
             {
-                _repository.Add(role);
-                return IdentityResult.Success;
+                return _repository.AddAsync(role);
             }, cancellationToken);
+
+            role.Id = result.Id;
+
+            return IdentityResult.Success;
         }
 
         public virtual Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken)
@@ -101,7 +104,7 @@
         }
 
         public Task<string> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken)
-        {            
+        {
             return Task.FromResult(role.Name);
         }
 
