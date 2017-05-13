@@ -194,7 +194,18 @@ namespace ProIdeas.UI
 
             // Add framework services.           
 
-            services.AddIdentity<ApplicationUser, RepositoryIdentityRole>()
+            services.AddIdentity<ApplicationUser, RepositoryIdentityRole>(options =>
+            {
+
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+
+                options.SignIn.RequireConfirmedEmail = true;
+
+
+
+            })
                 .AddRoleStore<RepositoryRoleStore<RepositoryIdentityRole>>()
                 .AddUserStore<RepositoryUserStore<ApplicationUser>>()
                 .AddDefaultTokenProviders();

@@ -137,13 +137,8 @@ namespace ProIdeas.UI.Controllers
                     //await _signInManager.SignInAsync(user, isPersistent: false);
 
                     _logger.LogInformation(3, "User created a new account with password.");
-                    return await Login(new LoginViewModel
-                    {
-                        Email = model.Email,
-                        Password = model.Password,
-                        RememberMe = false
-                    }, returnUrl);
-
+                    
+                    ViewBag.SuccessMessage = string.Join(Environment.NewLine, "Account successfully created. Please confirm your email by clicking the confirmation link sent to your email");
 
 
                 }
@@ -475,6 +470,9 @@ namespace ProIdeas.UI.Controllers
 
         private void AddErrors(IdentityResult result)
         {
+            if (!result.Errors.Any())
+            { return; }
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);

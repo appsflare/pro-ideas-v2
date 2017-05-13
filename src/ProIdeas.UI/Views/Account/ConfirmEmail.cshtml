@@ -1,10 +1,26 @@
 ﻿@{
     ViewData["Title"] = "Confirm Email";
+    Layout = "_LayoutSignIn";
 }
 
-<h2>@ViewData["Title"].</h2>
-<div>
-    <p>
-        Thank you for confirming your email. Please <a asp-controller="Account" asp-action="Login">Click here to Log in</a>.
-    </p>
+<div class="row">
+    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+        <div class="card card-signup">
+
+            <form asp-controller="Account" asp-action="ForgotPassword" method="post" class="form">
+                <div class="header header-primary text-center">
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+                </div>
+
+
+                <p class="content text-center">
+                    Thank you for confirming your email. Please <a asp-controller="Account" asp-action="Login">Click here to Log in</a>.
+                </p>
+            </form>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="~/Scripts/pages/generic.bundle.js"></script>
+}

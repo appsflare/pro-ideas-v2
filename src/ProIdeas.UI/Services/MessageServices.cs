@@ -33,10 +33,10 @@ namespace ProIdeas.UI.Services
 
         public string FromName { get; set; }
 
-        [JsonProperty("Html_part")]
+        [JsonProperty("Html-part")]
         public string Html { get; set; }
 
-        public IEnumerable<MailRecipient> Recepients { get; set; }
+        public IEnumerable<MailRecipient> Recipients { get; set; }
 
     }
 
@@ -69,8 +69,9 @@ namespace ProIdeas.UI.Services
                     {
                         FromEmail = _options.DefaultSenderEmail,
                         FromName = _options.DefaultSenderName,
+                        Subject = subject,
                         Html = message,
-                        Recepients = new[] { new MailRecipient
+                        Recipients = new[] { new MailRecipient
                     {
                         Email = email
                     }}
@@ -80,7 +81,9 @@ namespace ProIdeas.UI.Services
 
                     var messageContent = _jsonSerializer.Serialize(emailMessage);
 
-                    await client.PostAsync("https://api.mailjet.com/v3/send", new StringContent(messageContent, Encoding.UTF8, "application/json"));
+                    var response = await client.PostAsync("https://api.mailjet.com/v3/send", new StringContent(messageContent, Encoding.UTF8, "application/json"));
+
+                    response.EnsureSuccessStatusCode();
                 }
             }
             catch (Exception ex)

@@ -1,8 +1,21 @@
 ﻿@{
     ViewData["Title"] = "Locked out";
+    Layout = "_LayoutSignIn";
 }
 
-<header>
-    <h1 class="text-danger">Locked out.</h1>
-    <p class="text-danger">This account has been locked out, please try again later.</p>
-</header>
+
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+        <div class="card card-signup">
+            <header>
+                <h1 class="text-danger">Locked out.</h1>
+                <p class="text-danger">This account has been locked out, please try again later.</p>
+            </header>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/pages/generic.bundle.js"></script>
+}
