@@ -18,7 +18,8 @@
     <Content Include="Scripts\lib\material-kit.js" />
     <Content Include="Scripts\lib\material.min.js" />
     <Content Include="Scripts\lib\index.js" />
-    <Content Include="Scripts\lib\nouislider.min.js" />   
+    <Content Include="Scripts\lib\nouislider.min.js" />
+    <Content Include="wwwroot\90f8315a71a4f2e653d4fcfb5c1c6653.txt" />   
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
