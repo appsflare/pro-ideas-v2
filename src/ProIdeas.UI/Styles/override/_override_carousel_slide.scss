@@ -1,0 +1,37 @@
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+    height: 300px;    
+    width: 50%;
+}
+
+.carousel .carousel-indicators {
+    bottom: -5px;
+
+    > li {
+        border-radius: 12px;
+        background: $brand-primary;
+    }
+}
+
+/*.carousel .carousel-caption {
+    padding-bottom: 200px;
+}*/
+
+.blur{
+    filter: blur(5px);
+}
+
+
+.carousel-caption {
+
+    > .idea-title {
+        margin-left: 34%;
+        width: 100%;
+        background: $brand-primary;
+
+
+
+        & > h2 {
+            color: #FFF;
+        }
+    }
+}

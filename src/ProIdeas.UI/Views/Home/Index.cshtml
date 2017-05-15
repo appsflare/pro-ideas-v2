@@ -28,8 +28,9 @@
         </div>
     </div>
 </script>
-
-
+<div class="row s-top-margin">
+    @await Component.InvokeAsync("IdeaBanner")
+</div>
 <div class="row">
     <div class="container create-idea" id="ideas-search-container">
         <div class="row">
@@ -39,5 +40,4 @@
         </div>
     </div>
 </div>
-
 @await Html.PartialAsync("_FloatingButtons")

@@ -62,6 +62,16 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IEnumerable<IdeaDto>>(result);
         }
 
+        async public Task<IEnumerable<IdeaDto>> GetTopIdeas(int count)
+        {
+            var result = await _repository.QueryAsync<Idea, GetTopIdeaQuery>(new GetTopIdeaQuery
+            {
+                Count = count
+            });
+
+            return _dataMapper.Map<IEnumerable<IdeaDto>>(result);
+        }
+
 
         public Task<IEnumerable<IdeaCommentDto>> GetIdeaComments(string ideaId, int pageSize, int page)
         {
@@ -77,6 +87,7 @@ namespace ProIdeas.Logic
                 return _dataMapper.Map<IEnumerable<IdeaCommentDto>>(_repository.Query(query));
             });
         }
+
 
         public Task<IEnumerable<IdeaLikeDto>> GetFollowers(string ideaId)
         {
@@ -200,6 +211,8 @@ namespace ProIdeas.Logic
 
             return _bus.RaiseEvent(new IdeaPublishedEvent(idea.Id));
         }
+
+      
         #endregion
 
 

@@ -9401,6 +9401,29 @@ h2.title {
     color: #7e8bda;
     border-bottom: 1px solid #7e8bda; }
 
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+  height: 300px;
+  width: 50%; }
+
+.carousel .carousel-indicators {
+  bottom: -5px; }
+  .carousel .carousel-indicators > li {
+    border-radius: 12px;
+    background: #ff9800; }
+
+/*.carousel .carousel-caption {
+    padding-bottom: 200px;
+}*/
+.blur {
+  filter: blur(5px); }
+
+.carousel-caption > .idea-title {
+  margin-left: 34%;
+  width: 100%;
+  background: #ff9800; }
+  .carousel-caption > .idea-title > h2 {
+    color: #FFF; }
+
 /*
 == malihu jquery custom scrollbar plugin ==
 Plugin URI: http://manos.malihu.gr/jquery-custom-content-scroller
@@ -11848,6 +11871,12 @@ textarea {
 .s-margin {
   margin: 5px; }
 
+.s-top-margin {
+  margin-top: 5px; }
+
+.s-bottom-margin {
+  margin-bottom: 5px; }
+
 .m-margin {
   margin: 10px; }
 
@@ -11857,8 +11886,14 @@ textarea {
 .m-right-margin {
   margin-right: 10px; }
 
+.l-margin {
+  margin: 20px; }
+
 .l-top-margin {
   margin-top: 20px; }
+
+.l-bottom-margin {
+  margin-bottom: 20px; }
 
 .create-idea .nav-pills-vertical {
   margin-bottom: 30px; }

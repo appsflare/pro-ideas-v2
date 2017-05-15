@@ -5,6 +5,7 @@ using ProIdeas.Logic.Contracts;
 using System.Threading.Tasks;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Commands.Ideas;
+using System;
 
 namespace ProIdeas.Services
 {
@@ -40,6 +41,11 @@ namespace ProIdeas.Services
             return _ideaLogic.GetIdea(ideaId);
         }
 
+        public Task<IEnumerable<IdeaDto>> GetTopIdeasAsync(int count)
+        {
+            return _ideaLogic.GetTopIdeas(count);
+        }
+
         public Task<IEnumerable<IdeaDto>> GetIdeasAsync(int pageSize, int page)
         {
             return _ideaLogic.GetIdeas(pageSize, page, string.Empty);
@@ -69,5 +75,7 @@ namespace ProIdeas.Services
         {
             return _ideaLogic.GetUserIdeas(userId, pageSize, page, keyword);
         }
+
+
     }
 }

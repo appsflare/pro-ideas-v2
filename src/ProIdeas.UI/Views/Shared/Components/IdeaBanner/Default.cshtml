@@ -1,0 +1,38 @@
+﻿@model  IdeaBannerViewModel
+
+<div class="card card-carousel">
+    <div id="top-ideas" class="carousel slide" data-cycle="true" data-interval="5000" data-ride="carousel">
+        <div class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                @for (int i = 0; i < Model.Ideas.Count; i++)
+                {
+                    <li data-target="#top-ideas" data-slide-to="@i" class="@(@i==0?"active":"")"></li>
+                }
+            </ol>
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                @for (int i = 0; i < Model.Ideas.Count; i++)
+                {
+                    <div class="item @(@i==0?"active":"")">
+                        <div class="carousel-caption">
+                            <div class="idea-title">
+                                <h2>@Model.Ideas[i].IdeaName</h2>
+                                <div class="blur"></div>
+                            </div>
+                        </div>
+                        <img alt="@Model.Ideas[i].IdeaName" src="/api/ideas/@Model.Ideas[i].IdeaId/banner" />
+                    </div>
+                }
+            </div>
+            <!-- Controls -->
+            <a class="left carousel-control" href="#top-ideas" data-slide="prev">
+                <i class="material-icons">keyboard_arrow_left</i>
+            </a>
+            <a class="right carousel-control" href="#top-ideas" data-slide="next">
+                <i class="material-icons">keyboard_arrow_right</i>
+            </a>
+        </div>
+
+    </div>
+</div>
