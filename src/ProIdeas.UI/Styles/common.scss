@@ -15,15 +15,21 @@ textarea {
     min-height: 90px;
 }
 
-
 .s-margin {
     margin: 5px;
+}
+
+.s-top-margin {
+    margin-top: 5px;
+}
+
+.s-bottom-margin {
+    margin-bottom: 5px;
 }
 
 .m-margin {
     margin: 10px;
 }
-
 
 .m-left-margin {
     margin-left: 10px;
@@ -33,6 +39,18 @@ textarea {
     margin-right: 10px;
 }
 
+.l-margin {
+    margin: 20px;
+}
+
+
 .l-top-margin {
     margin-top: 20px;
 }
+
+
+.l-bottom-margin {
+    margin-bottom: 20px;
+}
+
+

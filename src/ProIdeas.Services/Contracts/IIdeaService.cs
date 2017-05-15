@@ -8,6 +8,8 @@ namespace ProIdeas.Services.Contracts
     {
         Task<IdeaDto> GetIdeaAsync(string ideaId);
 
+        Task<IEnumerable<IdeaDto>> GetTopIdeasAsync(int count);
+
         Task<IdeaDto> CreateAsync(IdeaDto idea);
 
         Task UpdateAsync(IdeaDto idea);
@@ -23,6 +25,6 @@ namespace ProIdeas.Services.Contracts
         Task<IEnumerable<IdeaDto>> GetIdeasAsync(int pageSize, int page);
 
         Task<IEnumerable<IdeaDto>> SearchIdeasAsync(string keyword, int pageSize, int page);
-
+ 
     }
 }
