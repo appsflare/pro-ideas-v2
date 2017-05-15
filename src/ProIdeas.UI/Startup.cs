@@ -287,11 +287,10 @@ namespace ProIdeas.UI
             if (Environment.GetEnvironmentVariable("COCKPIT_AUTH_ENABLED") == "true")
             {
                 var openIdConnectOptions = new OpenIdConnectOptions
-                {
+                {                    
                     Authority = Configuration.GetValue<string>("Cockpit.Authority") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_IDENTITY_SERVER_URL"),
                     AuthenticationScheme = "Agile Cockpit",
-                    AutomaticChallenge = false,
-                    AuthenticationMethod = OpenIdConnectRedirectBehavior.RedirectGet,
+                    AutomaticChallenge = false,                    
                     ClientId = Configuration.GetValue<string>("Cockpit.ClientId") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_ID"),
                     ClientSecret = Configuration.GetValue<string>("Cockpit.ClientSecret") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_SECRET"),
                     DisplayName = "Agile Cockpit Identity",
