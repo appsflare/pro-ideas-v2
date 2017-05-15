@@ -39,6 +39,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ProIdeas.UI
 {
@@ -287,16 +288,32 @@ namespace ProIdeas.UI
             {
                 var openIdConnectOptions = new OpenIdConnectOptions
                 {
-                    DisplayName = "Agile Cockpit Identity",
+                    Authority = Configuration.GetValue<string>("Cockpit.Authority") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_IDENTITY_SERVER_URL"),
                     AuthenticationScheme = "Agile Cockpit",
                     AutomaticChallenge = false,
                     AuthenticationMethod = OpenIdConnectRedirectBehavior.RedirectGet,
                     ClientId = Configuration.GetValue<string>("Cockpit.ClientId") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_ID"),
                     ClientSecret = Configuration.GetValue<string>("Cockpit.ClientSecret") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_SECRET"),
-                    Authority = Configuration.GetValue<string>("Cockpit.Authority") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_IDENTITY_SERVER_URL"),
+                    DisplayName = "Agile Cockpit Identity",
                     ResponseType = OpenIdConnectResponseType.Code,
                     GetClaimsFromUserInfoEndpoint = true,
                     RequireHttpsMetadata = env.IsProduction()
+                };
+                openIdConnectOptions.Events = new OpenIdConnectEvents
+                {
+                    OnRedirectToIdentityProvider = context =>
+                    {
+                        if (openIdConnectOptions.RequireHttpsMetadata)
+                        {
+                            var uri = new Uri(context.ProtocolMessage.RedirectUri);
+                            if (uri.Scheme != "https")
+                            {
+                                context.ProtocolMessage.RedirectUri = $"https://{uri.Authority}{uri.PathAndQuery}";
+                            }
+                        }
+
+                        return Task.FromResult(0);
+                    }
                 };
                 openIdConnectOptions.Scope.Add("email");
                 openIdConnectOptions.Scope.Add("profile");
