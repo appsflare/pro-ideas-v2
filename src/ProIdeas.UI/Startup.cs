@@ -289,13 +289,13 @@ namespace ProIdeas.UI
                 {
                     DisplayName = "Agile Cockpit Identity",
                     AuthenticationScheme = "Agile Cockpit",
-                    AutomaticChallenge = false,                    
+                    AutomaticChallenge = false,
                     ClientId = Configuration.GetValue<string>("Cockpit.ClientId") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_ID"),
                     ClientSecret = Configuration.GetValue<string>("Cockpit.ClientSecret") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_SECRET"),
                     Authority = Configuration.GetValue<string>("Cockpit.Authority") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_IDENTITY_SERVER_URL"),
                     ResponseType = OpenIdConnectResponseType.Code,
-                    GetClaimsFromUserInfoEndpoint = true,
-                    RequireHttpsMetadata = false
+                    GetClaimsFromUserInfoEndpoint = true,                    
+                    RequireHttpsMetadata = env.IsProduction()
                 };
                 openIdConnectOptions.Scope.Add("email");
                 openIdConnectOptions.Scope.Add("profile");
