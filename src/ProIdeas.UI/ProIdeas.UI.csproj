@@ -18,8 +18,7 @@
     <Content Include="Scripts\lib\material-kit.js" />
     <Content Include="Scripts\lib\material.min.js" />
     <Content Include="Scripts\lib\index.js" />
-    <Content Include="Scripts\lib\nouislider.min.js" />
-    <Content Include="wwwroot\img\icons\cockpit-icon.png" />       
+    <Content Include="Scripts\lib\nouislider.min.js" />    
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
