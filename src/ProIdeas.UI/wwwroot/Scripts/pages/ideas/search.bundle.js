@@ -2351,6 +2351,8 @@ var SearchIdeasPage = function (_BasePage) {
         value: function onReady() {
             var _this2 = this;
 
+            $('.carousel').carousel();
+
             this._viewModel = new SearchIdeasViewModel({
                 keyword: '',
                 actions: {
