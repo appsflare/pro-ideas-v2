@@ -1,0 +1,33 @@
+.card-raised {
+    @include box-shadow(none);
+    background: $white;
+    border-radius: 5px;
+}
+
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+    height: 300px !important;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.carousel .carousel-indicators {
+    bottom: -5px;
+
+}
+
+/*.carousel .carousel-caption {
+    padding-bottom: 200px;
+}*/
+
+.carousel-caption > .idea-title {
+    color: #FFF !important;
+    margin-left: 25%;
+    width: 50% !important;
+    background: rgba(255,140, 0, 0.5);
+    border-radius: 5px;
+
+    & > h4 {
+        color: #FFF !important;
+        text-shadow: 1px 1px #000;
+    }
+}
