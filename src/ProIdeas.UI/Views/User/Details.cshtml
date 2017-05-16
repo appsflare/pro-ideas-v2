@@ -12,12 +12,17 @@
                 <div class="tab-content">
                     @*User Actions*@
                     <div class="s-margin tab-pane active" id="contributions">
+                        @if (!Model.UserContributions.Any())
+                        {
+                            <div class="alert alert-nocontent nocontent-padding" role="alert">It seems you don't have any contributions. Good time to start!!</div>
+                        }
                         <ul class="timeline timeline-inverse">
                             @foreach (var activity in Model.UserContributions)
                             {
                                 <li class="time-label">
                                     <span class="bg-red">@activity.ActivityDate</span>
                                 </li>
+
                                 @foreach (var item in activity.ActivityTimeLine)
                                 {
                                     @await Html.PartialAsync(item.Activity.ActivityType, item);
@@ -28,6 +33,10 @@
 
                     @*User Timeline*@
                     <div class="s-margin tab-pane" id="timeline">
+                        @if (!Model.UserActivities.Any())
+                        {
+                            <div class="alert alert-nocontent nocontent-padding " role="alert">It seems you don't have any activities. Good time to start!!</div>
+                        }
                         <ul class="timeline timeline-inverse">
                             @foreach (var activity in Model.UserActivities)
                             {
