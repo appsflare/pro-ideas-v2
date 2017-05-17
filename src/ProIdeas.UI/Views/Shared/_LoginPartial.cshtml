@@ -11,6 +11,7 @@
     {
         <li><a asp-area="" asp-controller="Home" asp-action="MyIdeas">My Ideas</a></li>
     }
+    <li><a asp-area="" asp-controller="Ideas" asp-action="Create">Add Idea</a></li>
 </ul>
 
 @if (SignInManager.IsSignedIn(User))
@@ -36,7 +37,7 @@
                     <li>
                         <a asp-area="" asp-controller="User" asp-action="Details" asp-route-id="@userInfo.Id" title="View your profiles">
                             @*<i class="material-icons">account_circle</i>*@
-                            My Profile
+                            My Innovation Profile
                             <div class="ripple-container"></div>
                         </a>
                     </li>
