@@ -146,7 +146,7 @@ namespace ProIdeas.Logic
 
             await _repository.AddAsync(new Activity
             {
-                Type = Activity.IDEAS_COMMENTS_CREATE,
+                Type = Activity.IDEAS_PUBLISH,
                 Body = string.Empty,
                 OwnerId = _userIdentityProvider.GetUserId(),
                 CreatedAt = DateTime.UtcNow,
