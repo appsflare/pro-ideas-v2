@@ -167,6 +167,7 @@ namespace ProIdeas.UI
 
             services.AddScoped<ITenantLogic, TenantLogic>();
             services.AddScoped<IIdeaLogic, IdeaLogic>();
+            services.AddScoped<ITeamLogic, TeamLogic>();
             services.AddScoped<IIdeaCollaborationLogic, IdeaCollaborationLogic>();
             services.AddScoped<IUserProfileLogic, UserProfileLogic>();
             services.AddScoped<IActivityLogic, ActivityLogic>();
@@ -181,6 +182,7 @@ namespace ProIdeas.UI
 
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IIdeaService, IdeaService>();
+            services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IIdeaCollaborationService, IdeaCollaborationService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<ITaskBoardService, TaskBoardService>();
@@ -244,6 +246,7 @@ namespace ProIdeas.UI
                        nameof(Idea),
                        nameof(IdeaComment),
                        nameof(IdeaLike),
+                       nameof(Team),
                        nameof(Page),
                        nameof(StoredEvent),
                        nameof(UserProfile),

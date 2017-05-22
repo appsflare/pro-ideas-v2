@@ -49,7 +49,12 @@
                             </div>
                         }
                     </div>
-                }
+                    }
+                    else
+                    {
+                        @await Component.InvokeAsync("TeamMemberStatus", new { userId = UserManager.GetUserId(User), ideaId = Model.Id })
+
+                    }
                 </div>
             </div>
             <div class="row">
