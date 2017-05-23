@@ -4,6 +4,11 @@ namespace ProIdeas.UI.Models.User
 {
     public class UserProfileViewModel
     {
+        private static int GetInnovationPoints(UserProfileDto model)
+        {
+            return model.CommentsCount + (model.IdeasCount * 10);
+        }
+
         public int Ideas { get; set; }
 
         public int Comments { get; set; }
@@ -18,6 +23,8 @@ namespace ProIdeas.UI.Models.User
 
         public string FullName { get; set; }
 
+        public int InnovationPoints { get; set; }
+
         public static UserProfileViewModel MapFrom(UserProfileDto model)
         {
             return new UserProfileViewModel
@@ -29,6 +36,7 @@ namespace ProIdeas.UI.Models.User
                 Ideas = model.IdeasCount,
                 OwnerId = model.OwnerId,
                 LikedIdeas = model.LikesCount,
+                InnovationPoints = GetInnovationPoints(model)
             };
         }
     }

@@ -167,6 +167,7 @@ namespace ProIdeas.UI
 
             services.AddScoped<ITenantLogic, TenantLogic>();
             services.AddScoped<IIdeaLogic, IdeaLogic>();
+            services.AddScoped<ITeamLogic, TeamLogic>();
             services.AddScoped<IIdeaCollaborationLogic, IdeaCollaborationLogic>();
             services.AddScoped<IUserProfileLogic, UserProfileLogic>();
             services.AddScoped<IActivityLogic, ActivityLogic>();
@@ -181,6 +182,7 @@ namespace ProIdeas.UI
 
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IIdeaService, IdeaService>();
+            services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IIdeaCollaborationService, IdeaCollaborationService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<ITaskBoardService, TaskBoardService>();
@@ -244,6 +246,7 @@ namespace ProIdeas.UI
                        nameof(Idea),
                        nameof(IdeaComment),
                        nameof(IdeaLike),
+                       nameof(Team),
                        nameof(Page),
                        nameof(StoredEvent),
                        nameof(UserProfile),
@@ -288,21 +291,34 @@ namespace ProIdeas.UI
             if (Environment.GetEnvironmentVariable("COCKPIT_AUTH_ENABLED") == "true")
             {
                 var openIdConnectOptions = new OpenIdConnectOptions
-                {                    
+                {
                     Authority = Configuration.GetValue<string>("Cockpit.Authority") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_IDENTITY_SERVER_URL"),
                     AuthenticationScheme = "Agile Cockpit",
-                    AutomaticChallenge = false,                    
+                    AutomaticChallenge = false,
                     ClientId = Configuration.GetValue<string>("Cockpit.ClientId") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_ID"),
                     ClientSecret = Configuration.GetValue<string>("Cockpit.ClientSecret") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_SECRET"),
                     DisplayName = "Agile Cockpit Identity",
                     ResponseType = OpenIdConnectResponseType.Code,
-                    GetClaimsFromUserInfoEndpoint = true,
+                    GetClaimsFromUserInfoEndpoint = true,                    
                     RequireHttpsMetadata = env.IsProduction()
                 };
                 openIdConnectOptions.Events = new OpenIdConnectEvents
-                {
+                {                    
                     OnRedirectToIdentityProvider = context =>
                     {
+                        
+                        //send the saved id_token to identity provider so that it can detect the client and redirect after successfull logout
+                        if (context.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
+                        {
+                            var idTokenHint = context.HttpContext.User.FindFirst("id_token");
+
+                            if (idTokenHint != null)
+                            {
+                                context.ProtocolMessage.IdTokenHint = idTokenHint.Value;
+                            }
+                        }
+
+
                         if (openIdConnectOptions.RequireHttpsMetadata)
                         {
                             var uri = new Uri(context.ProtocolMessage.RedirectUri);
