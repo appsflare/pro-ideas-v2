@@ -9,8 +9,7 @@ $(function () {
 
     Turbolinks.start();
 
-    const $window = $(window),
-        $body = $(document.body);
+    const $window = $(window);
 
     $window
         .on('turbolinks:visit', (e) => {

@@ -2268,16 +2268,8 @@ $(function () {
     window.__turbo__ = true;
 
     turbolinks.start();
-    //$(document).off('turbolinks:before-cache')
-    //    .off('turbolinks:before-render')
-    //    .on('turbolinks:before-cache', (e) => {
-    //        $('.custom-scrollable').mCustomScrollbar('destroy');
-    //        $('body').addClass('animated fadeOut');
-    //    }).on('turbolinks:before-render', () => {
-    //        $(event.data.newBody).removeClass('fadeOut').addClass('animated fadeIn');
-    //    });
-    var $window = $(window),
-        $body = $(document.body);
+
+    var $window = $(window);
 
     $window.on('turbolinks:visit', function (e) {
         //$('.custom-scrollable').mCustomScrollbar('destroy');
