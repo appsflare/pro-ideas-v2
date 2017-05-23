@@ -48,7 +48,7 @@ export default class IdeaImagesViewModel {
 
             }
         };
-        const fileUrl = `/api/ideas/${this._ideaId}/banner`;
+        const fileUrl = `/api/ideas/${this._ideaId}/banner.png`;
         this.form.file.selectedFile = asyncComputed(function () {
             const file = this.value();
             if (!file) {

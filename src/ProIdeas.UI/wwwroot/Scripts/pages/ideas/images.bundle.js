@@ -3521,7 +3521,7 @@ var IdeaImagesViewModel = function () {
 
                 }
             };
-            var fileUrl = '/api/ideas/' + this._ideaId + '/banner';
+            var fileUrl = '/api/ideas/' + this._ideaId + '/banner.png';
             this.form.file.selectedFile = asyncComputed(function () {
                 var file = this.value();
                 if (!file) {
