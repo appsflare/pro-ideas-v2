@@ -29,7 +29,7 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpPut, Route("boards/{boardId}")]
-        async public Task<IActionResult> UpdateTaskBoard(TaskBoardDto board)
+        public async Task<IActionResult> UpdateTaskBoard(TaskBoardDto board)
         {
             await _taskBoardService.UpdateBoardAsync(board);
             return Json(new { message = "Task board successfully updated" });
@@ -44,7 +44,7 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpPut, Route("boards/{boardId}/states")]
-        async public Task<IActionResult> UpdateTaskItemState(string boardId, TaskItemStateDto state)
+        public async Task<IActionResult> UpdateTaskItemState(string boardId, TaskItemStateDto state)
         {
             state.TaskBoardId = boardId;
             await _taskBoardService.UpdateTaskItemState(state);
@@ -79,7 +79,7 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpPut, Route("boards/{boardId}/tasks")]
-        async public Task<IActionResult> UpdateTaskItem(string boardId, TaskItemDto item)
+        public async Task<IActionResult> UpdateTaskItem(string boardId, TaskItemDto item)
         {
             item.TaskBoardId = boardId;
             await _taskBoardService.UpdateTaskAsync(item);
@@ -89,7 +89,7 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpDelete, Route("tasks/{taskItemId}")]
-        async public Task<IActionResult> UpdateTaskItem(string taskItemId)
+        public async Task<IActionResult> UpdateTaskItem(string taskItemId)
         {
             
             await _taskBoardService.DeleteTaskAsync(taskItemId);
@@ -107,7 +107,7 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpPut, Route("boards/{boardId}/types")]
-        async public Task<IActionResult> UpdateTaskItemType(string boardId, TaskItemTypeDto type)
+        public async Task<IActionResult> UpdateTaskItemType(string boardId, TaskItemTypeDto type)
         {
             type.TaskBoardId = boardId;
             await _taskBoardService.UpdateTaskItemType(type);

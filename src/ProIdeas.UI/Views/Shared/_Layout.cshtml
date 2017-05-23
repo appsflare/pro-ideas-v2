@@ -7,6 +7,7 @@
     <meta name="description" content="An realtime dashboard application to share and track ideas" />
     <title>@ViewData["Title"] - Lot Of Ideas</title>
     <link rel="shortcut icon" type="image/png" href="/favicon.ico?v1" sizes="16x16 32x32 64x64" />
+    <meta name="turbolinks-cache-control" content="no-cache"/>
     <!-- Material Design fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
@@ -22,8 +23,8 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body>
 
+<body data-no-transition-cache>
     @RenderSection("Styles", required: false)
 
     <div class="app-page">
@@ -55,7 +56,7 @@
             </div>
         </div>
         <footer>
-            <p class="copyright">&copy; 2017 - ProIdeas.UI</p>
+            <p class="copyright">&copy; 2017 - Lot Of Ideas</p>
         </footer>
     </div>
     @await Html.PartialAsync("_CommonLibImports")

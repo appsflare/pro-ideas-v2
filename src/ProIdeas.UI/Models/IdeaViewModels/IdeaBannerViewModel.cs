@@ -1,8 +1,6 @@
 ﻿using ProIdeas.DTO;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using System.Threading.Tasks;
 
 namespace ProIdeas.UI.Models.IdeaViewModels
 {
@@ -17,6 +15,9 @@ namespace ProIdeas.UI.Models.IdeaViewModels
                 {
                     IdeaId = idea.Id,
                     IdeaName = idea.Title,
+                    IdeaDescription = idea.Description,
+                    Owner = IdeaOwnerInfo.CreateFrom(idea.Owner)
+
                 }).ToList().AsReadOnly()
             };
         }
@@ -25,6 +26,11 @@ namespace ProIdeas.UI.Models.IdeaViewModels
         {
             public string IdeaId { get; set; }
             public string IdeaName { get; set; }
+
+            public string IdeaDescription { get; set; }
+
+            public IdeaOwnerInfo Owner { get; set; }
+
         }
     }
 }

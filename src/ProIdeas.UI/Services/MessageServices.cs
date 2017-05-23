@@ -58,7 +58,7 @@ namespace ProIdeas.UI.Services
             _logger = loggerFactory.CreateLogger<AuthMessageSender>();
         }
 
-        async public Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
             try
             {

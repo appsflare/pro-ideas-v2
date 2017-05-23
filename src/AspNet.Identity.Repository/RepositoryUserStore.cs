@@ -36,7 +36,7 @@
 
         }
 
-        async public virtual Task CreateAsync(TUser user, CancellationToken cancellationToken)
+        public virtual async Task CreateAsync(TUser user, CancellationToken cancellationToken)
         {
             var addUser = await Task.Run(() =>
             {

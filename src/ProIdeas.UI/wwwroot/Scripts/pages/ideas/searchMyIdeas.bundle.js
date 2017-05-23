@@ -1903,7 +1903,7 @@ var knockout = createCommonjsModule(function (module, exports) {
   })();
 });
 
-var template = "﻿<div class=\"idea-card\">\r\n    <div class=\"card-image\"><img data-bind=\"attr:{src: banner}\" /></div>\r\n    <div class=\"card-content-container\">\r\n        <h3 class=\"card-header\">\r\n            <a data-bind=\"attr:{href: detailsUrl}, text: title\"></a>\r\n        </h3>\r\n        <span class=\"author-wrap\">Share by <span class=\"author\" data-bind=\"text: owner.fullName\"></span></span>\r\n        <p class=\"card-content\" data-bind=\"text: description\"></p>\r\n    </div>\r\n    <div class=\"card-footer\">\r\n        <button class=\"btn btn-simple idea-like\" data-bind=\"click: actions.like\"><i class=\"material-icons\">favorite</i><span data-bind=\"text: likes\"></span></button>\r\n        <a class=\"btn btn-simple idea-comment\" data-bind=\"attr:{href: detailsUrl}\"><i class=\"material-icons\">insert_comment</i><span data-bind=\"text: comments\"></span></a>\r\n    </div>\r\n</div>";
+var template = "﻿<div class=\"idea-card\">\r\n    <div class=\"card-image\"><a data-bind=\"attr:{href: detailsUrl}\"><img data-bind=\"attr:{src: banner}\" /></a></div>\r\n    <div class=\"card-content-container\">\r\n        <h3 class=\"card-header\">\r\n            <a data-bind=\"attr:{href: detailsUrl}, text: title\"></a>\r\n        </h3>\r\n        <span class=\"author-wrap\">Share by <span class=\"author\" data-bind=\"text: owner.fullName\"></span></span>\r\n        <p class=\"card-content\" data-bind=\"text: description\"></p>\r\n    </div>\r\n    <div class=\"card-footer\">\r\n        <button class=\"btn btn-simple idea-like\" data-bind=\"click: actions.like\"><i class=\"material-icons\">favorite</i><span data-bind=\"text: likes\"></span></button>\r\n        <a class=\"btn btn-simple idea-comment\" data-bind=\"attr:{href: detailsUrl}\"><i class=\"material-icons\">insert_comment</i><span data-bind=\"text: comments\"></span></a>\r\n    </div>\r\n</div>";
 
 var IdeaCardViewModel = function () {
     function IdeaCardViewModel(_ref) {
@@ -2262,12 +2262,31 @@ var o,i,s,a,u;return i=null!=n?n:{},a=i.restorationIdentifier,s=i.restorationDat
 //import Barba from 'barba.js';
 //import FadeTransition from './transitions/fade';
 $(function () {
+    if (window.__turbo__) {
+        return;
+    }
+    window.__turbo__ = true;
+
     turbolinks.start();
-    $(document).off('turbolinks:before-cache').off('turbolinks:before-render').on('turbolinks:before-cache', function (e) {
+    //$(document).off('turbolinks:before-cache')
+    //    .off('turbolinks:before-render')
+    //    .on('turbolinks:before-cache', (e) => {
+    //        $('.custom-scrollable').mCustomScrollbar('destroy');
+    //        $('body').addClass('animated fadeOut');
+    //    }).on('turbolinks:before-render', () => {
+    //        $(event.data.newBody).removeClass('fadeOut').addClass('animated fadeIn');
+    //    });
+    var $window = $(window),
+        $body = $(document.body);
+
+    $window.on('turbolinks:visit', function (e) {
+        //$('.custom-scrollable').mCustomScrollbar('destroy');
+        $('body').removeClass('animated fadeIn').addClass('animated fadeOut');
+    }).on('turbolinks:before-cache', function (e) {
         $('.custom-scrollable').mCustomScrollbar('destroy');
-        $('body').addClass('animated fadeOut');
-    }).on('turbolinks:before-render', function () {
-        $(event.data.newBody).removeClass('fadeOut').addClass('animated fadeIn');
+        //$('body').removeClass('animated fadeIn').addClass('animated fadeOut');
+    }).on('turbolinks:before-render', function (e) {
+        $(event.data.newBody).removeClass('animated fadeOut').addClass('animated fadeIn');
     });
 });
 
@@ -2279,18 +2298,17 @@ $.material.init();
 
 var BasePage = function () {
     function BasePage() {
-
-        //this._url = Barba.Pjax.getCurrentUrl();
-
         classCallCheck(this, BasePage);
     }
 
+    //this._url = Barba.Pjax.getCurrentUrl();
+
+
+    //getTransition() {
+    //    return FadeTransition;
+    //}
+
     createClass(BasePage, [{
-        key: 'getTransition',
-        value: function getTransition() {
-            return FadeTransition;
-        }
-    }, {
         key: 'configure',
         value: function configure() {
             //Barba.Pjax.getTransition = () => this.getTransition();
@@ -2300,7 +2318,7 @@ var BasePage = function () {
         value: function init() {
             this.configure();
 
-            $('.custom-scrollable').mCustomScrollbar();
+            $('.custom-scrollable').mCustomScrollbar({ scrollInertia: 0 });
 
             this.onReady().then(function () {
                 $.material.init();

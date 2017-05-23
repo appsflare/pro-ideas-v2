@@ -14,7 +14,7 @@ class SearchIdeasPage extends BasePage {
 
     onReady() {
 
-        $('.carousel').carousel();
+        //$('.carousel').carousel();
 
         this._viewModel = new SearchIdeasViewModel({
             keyword: '',

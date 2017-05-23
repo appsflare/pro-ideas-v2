@@ -20,12 +20,12 @@ namespace ProIdeas.Services
             _teamLogic = teamLogic;
         }
 
-        async public Task<TeamDto> GetTeamAsync(string ideaId)
+        public async Task<TeamDto> GetTeamAsync(string ideaId)
         {
             return await _teamLogic.GetTeamAsync(ideaId);
         }
 
-        async public Task<TeamMemberDto> GetTeamMemberAsync(string userId, string ideaId)
+        public async Task<TeamMemberDto> GetTeamMemberAsync(string userId, string ideaId)
         {
             return await _teamLogic.GetTeamMemberAsync(userId, ideaId);
         }

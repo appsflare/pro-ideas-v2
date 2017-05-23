@@ -31,7 +31,7 @@ namespace ProIdeas.Logic
             _bus = bus;
         }
 
-        async public Task<TeamDto> GetTeamAsync(string ideaId)
+        public async Task<TeamDto> GetTeamAsync(string ideaId)
         {
             return await GetTeam(ideaId);
         }
@@ -54,7 +54,7 @@ namespace ProIdeas.Logic
             });
         }
 
-        async public Task<TeamMemberDto> GetTeamMemberAsync(string userId, string ideaId)
+        public async Task<TeamMemberDto> GetTeamMemberAsync(string userId, string ideaId)
         {
             var teamMember = await _repository.QueryOneAsync<TeamMember, GetTeamMemberByUserIdQuery>(new GetTeamMemberByUserIdQuery
             {
@@ -70,7 +70,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<TeamMemberDto>(teamMember);
         }
 
-        async public Task Handle(JoinTeamRequestCommand message)
+        public async Task Handle(JoinTeamRequestCommand message)
         {
             var team = await GetTeamByIdeaId(message.IdeaId);
             if (team == null)
@@ -91,7 +91,7 @@ namespace ProIdeas.Logic
             await _bus.RaiseEvent(new TeamChangedEvent(_dataMapper.Map<TeamDto>(team)));
         }
 
-        async public Task Handle(ApproveJoinTeamRequestCommand message)
+        public async Task Handle(ApproveJoinTeamRequestCommand message)
         {
             var team = await GetTeamByIdeaId(message.IdeaId);
             if (team == null)
@@ -103,7 +103,7 @@ namespace ProIdeas.Logic
             await _bus.RaiseEvent(new TeamChangedEvent(_dataMapper.Map<TeamDto>(team)));
         }
 
-        async public Task Handle(RejectJoinTeamRequestCommand message)
+        public async Task Handle(RejectJoinTeamRequestCommand message)
         {
             var team = await GetTeamByIdeaId(message.IdeaId);
             if (team == null)
@@ -116,7 +116,7 @@ namespace ProIdeas.Logic
             await _bus.RaiseEvent(new TeamChangedEvent(_dataMapper.Map<TeamDto>(team)));
         }
 
-        async public Task Handle(IdeaCreatedEvent message)
+        public async Task Handle(IdeaCreatedEvent message)
         {
             var team = new Team
             {

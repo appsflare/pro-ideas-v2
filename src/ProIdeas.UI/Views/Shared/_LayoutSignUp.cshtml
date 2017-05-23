@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, minimal-ui, maximum-scale=1, minimum-scale=1" />
     <meta name="description" content="An realtime dashboard application to share and track ideas" />
+    <meta name="turbolinks-cache-control" content="no-cache" />
 
     <title>@ViewData["Title"] - Lot Of Ideas</title>
 
@@ -25,7 +26,7 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body>    
+<body data-no-transition-cache>    
     @RenderSection("Styles", required: false)
     <div class="signup-page">
 

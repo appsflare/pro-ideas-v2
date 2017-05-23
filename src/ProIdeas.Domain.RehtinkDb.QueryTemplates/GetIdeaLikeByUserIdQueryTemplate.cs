@@ -9,7 +9,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
     public class GetIdeaLikeByUserIdQueryTemplate : BaseRethinkQueryTemplate<IdeaLike, GetIdeaLikeByUserIdQuery>
     {
-        async protected override Task<IEnumerable<IdeaLike>> ExecuteAsync(QueryTemplateContext<GetIdeaLikeByUserIdQuery> context)
+        protected override async Task<IEnumerable<IdeaLike>> ExecuteAsync(QueryTemplateContext<GetIdeaLikeByUserIdQuery> context)
         {
             var queryParam = context.Parameter;
 

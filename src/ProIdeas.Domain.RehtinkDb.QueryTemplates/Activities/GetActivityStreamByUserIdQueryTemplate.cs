@@ -34,7 +34,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates.Activities
               .Or(activity.GetField(nameof(Activity.IdeaOwnerId)).Eq(queryParam.UserId));
         }
 
-        async protected override Task<IEnumerable<Activity>> ExecuteAsync(QueryTemplateContext<GetActivityStreamByUserId> context)
+        protected override async Task<IEnumerable<Activity>> ExecuteAsync(QueryTemplateContext<GetActivityStreamByUserId> context)
         {
             var r = RethinkDB.R;
             var queryParam = context.Parameter;

@@ -30,28 +30,28 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpGet, Route("{id}/details")]
-        async public Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             var model = TeamDetailsViewModel.MapFrom(await _teamService.GetTeamAsync(id));
             return View(model);
         }
 
         [HttpPost, Route("{id}/{userId}/register")]
-        async public Task<IActionResult> Register(string id, string userId)
+        public async Task<IActionResult> Register(string id, string userId)
         {
             await _teamService.RequestToJoinTeamAsync(userId, id);
             return GoToIdeaDetails(id);
         }
 
         [HttpPost, Route("{id}/{userId}/approve")]
-        async public Task<IActionResult> Approve(string id,string userId)
+        public async Task<IActionResult> Approve(string id,string userId)
         {
             await _teamService.ApproveJoinRequestAsync(userId, id);
             return GoToTeamDetails(id);
         }
 
         [HttpPost, Route("{id}/{userId}/reject")]
-        async public Task<IActionResult> Reject(string id,string userId)
+        public async Task<IActionResult> Reject(string id,string userId)
         {
             await _teamService.RejectJoinRequestAsync(userId, id);
             return GoToTeamDetails(id);

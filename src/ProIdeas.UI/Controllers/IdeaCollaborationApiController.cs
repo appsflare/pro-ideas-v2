@@ -34,7 +34,7 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpPost, Route("ideas/{ideaId}/comments")]
-        async public Task<IdeaCommentDto> CreateComment(string ideaId, [FromBody] IdeaCommentDto comment)
+        public async Task<IdeaCommentDto> CreateComment(string ideaId, [FromBody] IdeaCommentDto comment)
         {
             comment.IdeaId = ideaId;
             comment.OwnerId = _userIdentityProvider.GetUserId();
@@ -43,7 +43,7 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpPut, Route("comments")]
-        async public Task<IActionResult> UpdateComment([FromBody] IdeaCommentDto comment)
+        public async Task<IActionResult> UpdateComment([FromBody] IdeaCommentDto comment)
         {
             comment.OwnerId = _userIdentityProvider.GetUserId();
             await _ideaCommentService.UpdateAsync(comment);
@@ -52,28 +52,28 @@ namespace ProIdeas.UI.Controllers
 
 
         [HttpDelete, Route("ideas/comments/{id}")]
-        async public Task<IActionResult> DeleteComment(string id)
+        public async Task<IActionResult> DeleteComment(string id)
         {
             await _ideaCommentService.DeleteCommentAsync(id);
             return Json(new { message = "Comment deleted successfully" });
         }
 
         [HttpPut, Route("ideas/{ideaId}/likes/{like}")]
-        async public Task<IdeaCollaborationStatsDto> Update(string ideaId, bool like)
+        public async Task<IdeaCollaborationStatsDto> Update(string ideaId, bool like)
         {
             await _ideaCommentService.UpdateAsync(ideaId, _userIdentityProvider.GetUserId(), like);
             return await _ideaCommentService.GetStatsAsync(ideaId);
         }
 
         [HttpPost, Route("ideas/{ideaId}/team")]
-        async public Task<TeamDto> CreateTeam(string ideaId, TeamDto team)
+        public async Task<TeamDto> CreateTeam(string ideaId, TeamDto team)
         {
             team.IdeaId = ideaId;
             return await _ideaCommentService.CreateTeamAsync(team);
         }
 
         [HttpPut, Route("ideas/{ideaId}/team/{teamId}")]
-        async public Task<TeamDto> CreateTeam(string ideaId, string teamId, TeamDto team)
+        public async Task<TeamDto> CreateTeam(string ideaId, string teamId, TeamDto team)
         {
             team.IdeaId = ideaId;
             team.Id = teamId;
@@ -83,7 +83,7 @@ namespace ProIdeas.UI.Controllers
 
 
         [HttpGet, Route("users/{userId}/activities")]
-        async public Task<IEnumerable<ActivityDto>> GetActivities(string userId)
+        public async Task<IEnumerable<ActivityDto>> GetActivities(string userId)
         {            
             return await _ideaCommentService.GetActivitiesAsync(userId);
         }

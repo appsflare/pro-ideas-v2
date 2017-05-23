@@ -20,7 +20,7 @@ namespace ProIdeas.UI.Controllers
         }
         // GET: /<controller>/
         [Route("profile/:id")]
-        async public Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
           var model = UserActivityViewModel.MapFrom(
               await _collaborationService.GetActivitiesAsync(id),

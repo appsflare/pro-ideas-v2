@@ -28,7 +28,7 @@ namespace ProIdeas.UI.Controllers
             return View(IndexIdeasViewModel.MapFrom(Enumerable.Empty<IdeaDto>()));
         }
 
-        async public Task<IActionResult> MyIdeas()
+        public async Task<IActionResult> MyIdeas()
         {
             var ideas = await _ideaService.GetUserIdeasAsync(_userIdentityProvider.GetUserId(), 10, 1, string.Empty);
 

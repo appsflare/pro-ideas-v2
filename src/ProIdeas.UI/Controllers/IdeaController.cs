@@ -21,7 +21,7 @@ namespace ProIdeas.UI.Controllers
 
         // GET: Idea/Details/5
         [HttpGet, Route("{id}/details")]
-        async public Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             var idea = await _ideaService.GetIdeaAsync(id);
 
@@ -43,7 +43,7 @@ namespace ProIdeas.UI.Controllers
 
         [HttpGet, Route("{id}/edit")]
         // GET: Idea/Edit
-        async public Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
             var idea = await _ideaService.GetIdeaAsync(id);
 
@@ -53,7 +53,7 @@ namespace ProIdeas.UI.Controllers
 
         [HttpGet, Route("{id}/images")]
         // GET: Idea/Images
-        async public Task<IActionResult> Images(string id)
+        public async Task<IActionResult> Images(string id)
         {
             var idea = await _ideaService.GetIdeaAsync(id);
 
@@ -62,7 +62,7 @@ namespace ProIdeas.UI.Controllers
 
         [HttpGet, Route("{id}/pages")]
         // GET: Idea/Pages
-        async public Task<IActionResult> Pages(string id)
+        public async Task<IActionResult> Pages(string id)
         {
             var idea = await _ideaService.GetIdeaAsync(id);
 

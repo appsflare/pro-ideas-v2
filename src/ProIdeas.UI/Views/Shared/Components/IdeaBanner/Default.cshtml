@@ -1,7 +1,7 @@
 ﻿@model  IdeaBannerViewModel
 
 <div class="card card-carousel">
-    <div id="top-ideas" class="carousel slide" data-cycle="true" data-interval="5000" data-ride="carousel">
+    <div id="top-ideas" class="carousel slide" data-cycle="true" data-interval="50000" data-ride="carousel">
         <div class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
@@ -14,24 +14,28 @@
             <div class="carousel-inner">
                 @for (int i = 0; i < Model.Ideas.Count; i++)
                 {
-                    <div class="item @(@i==0?"active":"")">
-                        <div class="carousel-caption">
+                    var idea = Model.Ideas.ElementAt(i);
+                    <div class="item @(@i == 0 ? "active" : "")">
+                        <img class="pull-left" alt="@idea.IdeaName" src="/api/ideas/@idea.IdeaId/banner" />
+                        <div class="pull-left content">
                             <div class="idea-title">
-                                <h2>@Model.Ideas[i].IdeaName</h2>
-                                <div class="blur"></div>
+                                <h2>@idea.IdeaName</h2>
+                                <h5>By @idea.Owner.FullName</h5>
+                                <p>@idea.IdeaDescription</p>
+                                
+                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-controller="Idea" asp-route-id="@idea.IdeaId">View Idea</a>
                             </div>
                         </div>
-                        <img alt="@Model.Ideas[i].IdeaName" src="/api/ideas/@Model.Ideas[i].IdeaId/banner" />
                     </div>
                 }
             </div>
             <!-- Controls -->
-            <a class="left carousel-control" href="#top-ideas" data-slide="prev">
-                <i class="material-icons">keyboard_arrow_left</i>
-            </a>
-            <a class="right carousel-control" href="#top-ideas" data-slide="next">
-                <i class="material-icons">keyboard_arrow_right</i>
-            </a>
+            @*<a class="left carousel-control" href="#top-ideas" data-slide="prev">
+                    <i class="material-icons">keyboard_arrow_left</i>
+                </a>
+                <a class="right carousel-control" href="#top-ideas" data-slide="next">
+                    <i class="material-icons">keyboard_arrow_right</i>
+                </a>*@
         </div>
 
     </div>
