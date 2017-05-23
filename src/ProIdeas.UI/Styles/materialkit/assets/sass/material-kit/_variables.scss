@@ -23,7 +23,7 @@ $white-color: #FFFFFF !default;
 
 $gray-color:  #999999 !default;
 
-$brand-primary: $orange !default;
+$brand-primary: $blue-900 !default;
 $brand-success: $green !default;
 $brand-danger: $red !default;
 $brand-warning: $yellow !default;
@@ -52,7 +52,7 @@ $body-bg: #ffffff !default;
 @import 'variables_bootstrap';
 
 // Bootstrap Material Design variables start with mdb-
-$mdb-brand-inverse: $indigo !default;
+$mdb-brand-inverse: $blue-900 !default;
 
 
 /* ANIMATION */
