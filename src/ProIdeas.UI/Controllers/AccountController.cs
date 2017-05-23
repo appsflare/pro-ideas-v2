@@ -11,6 +11,9 @@ using ProIdeas.UI.Models;
 using ProIdeas.UI.Models.AccountViewModels;
 using ProIdeas.UI.Services;
 using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http.Authentication;
 using ProIdeas.Services.Contracts;
 
 namespace ProIdeas.UI.Controllers
@@ -155,19 +158,39 @@ namespace ProIdeas.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
+            //if user is logged in using any external provider then end the session and handle the rest of the execution to external auth middlewares
+            var token = User.FindFirst("id_token");
+            if (token != null)
+            { return RedirectToAction(nameof(LogoutExternal)); }
+
+
             await _signInManager.SignOutAsync();
+
+            _logger.LogInformation(4, "User logged out.");
+
+            return RedirectToAction(nameof(Login));
+        }
+
+        [HttpGet]
+        public async Task LogoutExternal()
+        {
             var schemes = HttpContext.Authentication.GetAuthenticationSchemes();
             foreach (var scheme in schemes)
             {
                 var info = await HttpContext.Authentication.GetAuthenticateInfoAsync(scheme.AuthenticationScheme);
                 if (info == null)
-                { continue; }
+                {
+                    continue;
+                }
 
-                await HttpContext.Authentication.SignOutAsync(scheme.AuthenticationScheme);
+                await HttpContext.Authentication.SignOutAsync(scheme.AuthenticationScheme,
+                    new AuthenticationProperties
+                    {
+                        RedirectUri = Url.Action("Login")
+                    });
             }
 
-            _logger.LogInformation(4, "User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            await _signInManager.SignOutAsync();
         }
 
         //
@@ -197,6 +220,7 @@ namespace ProIdeas.UI.Controllers
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
+
                 return RedirectToAction(nameof(Login));
             }
 
@@ -204,6 +228,18 @@ namespace ProIdeas.UI.Controllers
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (result.Succeeded)
             {
+
+                var token = info.Principal.FindFirst("id_token");
+                if (token != null)
+                {
+                    var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                    var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
+                    ((ClaimsIdentity)claimsPrincipal.Identity).AddClaim(token);
+                    await HttpContext.Authentication.SignInAsync("Identity.Application", claimsPrincipal);
+                }
+
+
+
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
                 return RedirectToLocal(returnUrl);
             }
