@@ -63,28 +63,43 @@
                     <div class="nav-align-left">
                         <ul class="nav nav-pills nav-pills-grey" role="tablist">
                             @foreach (var page in Model.Pages)
-                        {
-                            <li class="@(page.IsActive ? "active" : string.Empty)">
-                                <a href="#@page.Id" role="tab" data-toggle="tab">
-                                    @page.Name
-                                </a>
-                            </li>
-                        }
+                            {
+                                <li class="@(page.IsActive ? "active" : string.Empty)">
+                                    <a href="#@page.Id" role="tab" data-toggle="tab">
+                                        @page.Name
+                                    </a>
+                                </li>
+                            }
+
+                            @if (Model.IsFundingRequired)
+                            {
+                                <li>
+                                    <a href="#fundingdetails" role="tab" data-toggle="tab">
+                                        Funding Details
+                                    </a>
+                                </li>
+
+                            }
                         </ul>
 
                         <div class="tab-content gallery">
                             @foreach (var page in Model.Pages)
-                        {
-                            <div class="tab-pane @(page.IsActive ? "active" : string.Empty)" id="@page.Id">
-                                <div class="col-sm-10">
-                                    @Html.Raw(page.Content)
+                            {
+                                <div class="tab-pane @(page.IsActive ? "active" : string.Empty)" id="@page.Id">
+                                    <div class="col-sm-10">
+                                        @Html.Raw(page.Content)
+                                    </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                            @if (Model.IsFundingRequired)
+                            {
+                                <div class="tab-pane" id="fundingdetails">
+                                    <div class="col-sm-10">
+                                        @Html.Raw(Model.FundingRequirement)
+                                    </div>
+                                </div>
 
-
-
-
+                            }
                         </div>
                     </div>
                 </div>
