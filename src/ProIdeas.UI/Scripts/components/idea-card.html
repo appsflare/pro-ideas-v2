@@ -4,7 +4,7 @@
         <h3 class="card-header">
             <a data-bind="attr:{href: detailsUrl}, text: title"></a>
         </h3>
-        <span class="author-wrap">Share by <span class="author" data-bind="text: owner.fullName"></span></span>
+        <span class="author-wrap">Shared by <a class="author" data-bind="attr:{href: ownerProfileUrl}, text: owner().fullName"></a></span>
         <p class="card-content" data-bind="text: description"></p>
     </div>
     <div class="card-footer">

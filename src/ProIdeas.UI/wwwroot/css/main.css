@@ -8241,6 +8241,9 @@ legend {
     width: 100%;
     z-index: 3;
     transition: all 0.3s; }
+  .navbar .exclusive-item {
+    border: none;
+    border-bottom: solid 1px #ff6e00; }
 
 .dropdown-menu {
   border: 0;
@@ -8750,6 +8753,9 @@ h2.title {
     margin-top: -30px; }
   .card-nav-tabs .nav-tabs {
     background: transparent; }
+
+.card-noshadow {
+  box-shadow: none; }
 
 .card-plain {
   background: transparent;
@@ -11997,9 +12003,10 @@ textarea {
 
 idea-card, .idea-card {
   display: block;
-  -webkit-box-shadow: 0px 0 5px 0 rgba(51, 51, 51, 0.35) ;
-  -moz-box-shadow: 0px 0 5px 0 rgba(51, 51, 51, 0.35) ;
-  box-shadow: 0px 0 5px 0 rgba(51, 51, 51, 0.35) ;
+  transition: all ease-in 250ms;
+  -webkit-box-shadow: 0px 0 1px 0 rgba(51, 51, 51, 0.35) ;
+  -moz-box-shadow: 0px 0 1px 0 rgba(51, 51, 51, 0.35) ;
+  box-shadow: 0px 0 1px 0 rgba(51, 51, 51, 0.35) ;
   height: 450px;
   background: #ffffff;
   border-radius: 5px; }

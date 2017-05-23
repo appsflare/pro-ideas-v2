@@ -79,7 +79,7 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpGet]
-        [Route("{id}/banner")]
+        [Route("{id}/banner.png")]
         [AllowAnonymous]
         public async Task<IActionResult> GetBannerImage(string id)
         {

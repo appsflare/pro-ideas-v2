@@ -5,8 +5,8 @@
 
 idea-card, .idea-card {
     display: block;
-
-    @include box-shadow($top: 0px, $left: 0, $blur: 5px, $spread: 0, $color: rgba(51, 51, 51, 0.35));
+    transition: all ease-in 250ms;
+    @include box-shadow($top: 0px, $left: 0, $blur: 1px, $spread: 0, $color: rgba(51, 51, 51, 0.35));
     height: 450px;
     background: $white;
     border-radius: 5px;

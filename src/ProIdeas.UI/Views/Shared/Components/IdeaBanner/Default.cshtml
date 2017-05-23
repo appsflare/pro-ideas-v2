@@ -1,7 +1,7 @@
 ﻿@model  IdeaBannerViewModel
 
-<div class="card card-carousel">
-    <div id="top-ideas" class="carousel slide" data-cycle="true" data-interval="50000" data-ride="carousel">
+<div class="card card-noshadow card-carousel">
+    <div id="top-ideas" class="carousel slide" data-cycle="true" data-interval="5000" data-ride="carousel">
         <div class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
@@ -16,14 +16,14 @@
                 {
                     var idea = Model.Ideas.ElementAt(i);
                     <div class="item @(@i == 0 ? "active" : "")">
-                        <img class="pull-left" alt="@idea.IdeaName" src="/api/ideas/@idea.IdeaId/banner" />
+                        <img class="pull-left" alt="@idea.Name" src="/api/ideas/@idea.Id/banner.png" />
                         <div class="pull-left content">
                             <div class="idea-title">
-                                <h2>@idea.IdeaName</h2>
-                                <h5>By @idea.Owner.FullName</h5>
-                                <p>@idea.IdeaDescription</p>
-                                
-                                <a class="btn btn-sm btn-exclusive" asp-action="Details" asp-controller="Idea" asp-route-id="@idea.IdeaId">View Idea</a>
+                                <h2><a asp-controller="Idea" asp-action="Details" asp-route-id="@idea.Id"> @idea.Name</a></h2>
+                                <span class="author-wrap">By <a asp-controller="User" asp-action="Details" asp-route-id="@idea.OwnerId" class="author">@idea.Owner.FullName</a></span>
+                                <p>@idea.Description</p>
+
+                                <a class="btn btn-sm btn-exclusive" asp-action="Details" asp-controller="Idea" asp-route-id="@idea.Id">View Idea</a>
                             </div>
                         </div>
                     </div>

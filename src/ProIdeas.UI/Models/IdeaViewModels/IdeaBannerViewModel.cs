@@ -13,9 +13,10 @@ namespace ProIdeas.UI.Models.IdeaViewModels
             {
                 Ideas = ideas.Select(idea => new IdeaBannerItem
                 {
-                    IdeaId = idea.Id,
-                    IdeaName = idea.Title,
-                    IdeaDescription = idea.Description,
+                    Id = idea.Id,
+                    Name = idea.Title,
+                    Description = idea.Description,
+                    OwnerId = idea.OwnerId,
                     Owner = IdeaOwnerInfo.CreateFrom(idea.Owner)
 
                 }).ToList().AsReadOnly()
@@ -24,11 +25,10 @@ namespace ProIdeas.UI.Models.IdeaViewModels
 
         public class IdeaBannerItem
         {
-            public string IdeaId { get; set; }
-            public string IdeaName { get; set; }
-
-            public string IdeaDescription { get; set; }
-
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string OwnerId { get; set; }
             public IdeaOwnerInfo Owner { get; set; }
 
         }

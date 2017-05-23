@@ -156,15 +156,15 @@ namespace ProIdeas.UI.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            //var schemes = HttpContext.Authentication.GetAuthenticationSchemes();
-            //foreach (var scheme in schemes)
-            //{
-            //    var info = await HttpContext.Authentication.GetAuthenticateInfoAsync(scheme.AuthenticationScheme);
-            //    if (info == null)
-            //    { continue; }
+            var schemes = HttpContext.Authentication.GetAuthenticationSchemes();
+            foreach (var scheme in schemes)
+            {
+                var info = await HttpContext.Authentication.GetAuthenticateInfoAsync(scheme.AuthenticationScheme);
+                if (info == null)
+                { continue; }
 
-            //    await HttpContext.Authentication.SignOutAsync(scheme.AuthenticationScheme);
-            //}
+                await HttpContext.Authentication.SignOutAsync(scheme.AuthenticationScheme);
+            }
 
             _logger.LogInformation(4, "User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");

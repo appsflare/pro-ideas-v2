@@ -24,7 +24,7 @@
                                     <p>
                                         @foreach (var provider in loginProviders)
                                         {
-                                            <button type="submit" class="btn btn-primary xl-left-margin" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">
+                                            <button type="submit" class="btn btn-info xl-left-margin" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">
                                                 <img src="~/img/icons/cockpit-icon.png" alt="Agile Cockpit Identity" />
                                                 Login With Agile Cockpit
                                             </button>
@@ -99,7 +99,7 @@
 
                 </div>
                 <div class="footer text-center">
-                    <button class="btn btn-primary btn-simple btn-wd btn-lg" type="submit">Get In</button>
+                    <button class="btn btn-exclusive btn-simple btn-wd btn-lg" type="submit">Get In</button>
                 </div>
             </form>
         </div>
