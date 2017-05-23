@@ -11,6 +11,16 @@
     margin: 30px 0;
 }
 
+.alert-nocontent {
+    background-color: $brand-primary;
+    color: #ffffff;
+    border-radius:5%;
+}
+
+.nocontent-padding {
+    padding: 10px 15px !important;
+}
+
 textarea {
     min-height: 90px;
 }
@@ -52,5 +62,9 @@ textarea {
 .l-bottom-margin {
     margin-bottom: 20px;
 }
+
+
+
+
 
 

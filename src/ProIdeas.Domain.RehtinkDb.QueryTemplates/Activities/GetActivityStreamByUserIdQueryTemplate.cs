@@ -29,7 +29,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates.Activities
 
         Or GetFilter(ReqlExpr activity, GetActivityStreamByUserId queryParam)
         {
-            return activity.Or(activity.GetField(nameof(Activity.OwnerId)).Eq(queryParam.UserId))
+            return activity.GetField(nameof(Activity.OwnerId)).Eq(queryParam.UserId)
                  .Or(activity.GetField(nameof(Activity.ItemOwnerId)).Eq(queryParam.UserId))
               .Or(activity.GetField(nameof(Activity.IdeaOwnerId)).Eq(queryParam.UserId));
         }

@@ -1,7 +1,9 @@
 @model IdeaInfoViewModel
 
 <div class="row">
-    <h4 class="common-page-header">Post your new idea</h4>
+    <h4 class="common-page-header">
+        @(string.IsNullOrEmpty(Model.Id) ? "Post New Idea" : "Edit Idea")
+    </h4>
     <section>
         <ul class="nav nav-pills nav-pills-vertical" role="tablist">
             <li class="active"><a href="javascript:void()">Basic Information</a></li>
@@ -33,7 +35,7 @@
                     <div class="form-group is-empty" data-bind="validationElement: form().description">
                         <textarea class="form-control" value="" placeholder="Description your idea *" autocomplete="off" data-bind="value: form().description"></textarea>
                         <span class="material-icons form-control-feedback">clear</span>
-                        <span class="material-input"></span>                        
+                        <span class="material-input"></span>
                     </div>
                 </div>
                 <div class="col-sm-12 input-group">

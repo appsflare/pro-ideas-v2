@@ -11865,6 +11865,14 @@ yx-axis
   font-weight: 500;
   margin: 30px 0; }
 
+.alert-nocontent {
+  background-color: #ff9800;
+  color: #ffffff;
+  border-radius: 5%; }
+
+.nocontent-padding {
+  padding: 10px 15px !important; }
+
 textarea {
   min-height: 90px; }
 
