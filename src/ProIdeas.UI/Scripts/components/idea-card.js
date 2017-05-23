@@ -30,5 +30,5 @@ ko.components.register('idea-card', {
             return new IdeaCardViewModel(params);
         }
     },
-    template
+    template: template.substr(1) //To remove the white-space
 });

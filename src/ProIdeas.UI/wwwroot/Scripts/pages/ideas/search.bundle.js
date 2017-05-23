@@ -1903,7 +1903,7 @@ var knockout = createCommonjsModule(function (module, exports) {
   })();
 });
 
-var template = "﻿<div class=\"idea-card\">\r\n    <div class=\"card-image\"><a data-bind=\"attr:{href: detailsUrl}\"><img data-bind=\"attr:{src: banner}\" /></a></div>\r\n    <div class=\"card-content-container\">\r\n        <h3 class=\"card-header\">\r\n            <a data-bind=\"attr:{href: detailsUrl}, text: title\"></a>\r\n        </h3>\r\n        <span class=\"author-wrap\">Share by <span class=\"author\" data-bind=\"text: owner.fullName\"></span></span>\r\n        <p class=\"card-content\" data-bind=\"text: description\"></p>\r\n    </div>\r\n    <div class=\"card-footer\">\r\n        <button class=\"btn btn-simple idea-like\" data-bind=\"click: actions.like\"><i class=\"material-icons\">favorite</i><span data-bind=\"text: likes\"></span></button>\r\n        <a class=\"btn btn-simple idea-comment\" data-bind=\"attr:{href: detailsUrl}\"><i class=\"material-icons\">insert_comment</i><span data-bind=\"text: comments\"></span></a>\r\n    </div>\r\n</div>";
+var template = "﻿<div>\r\n    <div class=\"card-image\"><a data-bind=\"attr:{href: detailsUrl}\"><img data-bind=\"attr:{src: banner}\" /></a></div>\r\n    <div class=\"card-content-container\">\r\n        <h3 class=\"card-header\">\r\n            <a data-bind=\"attr:{href: detailsUrl}, text: title\"></a>\r\n        </h3>\r\n        <span class=\"author-wrap\">Share by <span class=\"author\" data-bind=\"text: owner.fullName\"></span></span>\r\n        <p class=\"card-content\" data-bind=\"text: description\"></p>\r\n    </div>\r\n    <div class=\"card-footer\">\r\n        <button class=\"btn btn-simple idea-like\" data-bind=\"click: actions.like\"><i class=\"material-icons\">favorite</i><span data-bind=\"text: likes\"></span></button>\r\n        <a class=\"btn btn-simple idea-comment\" data-bind=\"attr:{href: detailsUrl}\"><i class=\"material-icons\">insert_comment</i><span data-bind=\"text: comments\"></span></a>\r\n    </div>\r\n</div>";
 
 var IdeaCardViewModel = function () {
     function IdeaCardViewModel(_ref) {
@@ -1959,7 +1959,7 @@ knockout.components.register('idea-card', {
             return new IdeaCardViewModel(params);
         }
     },
-    template: template
+    template: template.substr(1) //To remove the white-space
 });
 
 function asyncComputed(evaluator, owner) {
@@ -2141,7 +2141,7 @@ var SearchIdeasViewModel = function () {
     function SearchIdeasViewModel(_ref) {
         var keyword = _ref.keyword,
             _ref$rateLimit = _ref.rateLimit,
-            rateLimit = _ref$rateLimit === undefined ? 500 : _ref$rateLimit,
+            rateLimit = _ref$rateLimit === undefined ? 1000 : _ref$rateLimit,
             _ref$actions = _ref.actions,
             search = _ref$actions.search,
             like = _ref$actions.like,

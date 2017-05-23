@@ -38,10 +38,8 @@
                         <span class="material-input"></span>
                     </div>
                 </div>
-                <div class="col-sm-12 input-group">
-                    <div class="form-group is-empty" data-bind="validationElement: form().fundingRequirement">
-                        <textarea class="form-control" value="" placeholder="Describe if  require funding for your idea." data-bind="value: form().fundingRequirement"></textarea>
-                    </div>
+                <div class="col-sm-12 input-group" data-bind="validationElement: form().fundingRequirement">
+                    <rich-text-editor params="placeholder:'Describe if your idea require funding.',mode:'all',value: form().fundingRequirement"></rich-text-editor>
                 </div>
                 <button class="btn btn-primary pull-right" type="submit">Next</button>
             </form>

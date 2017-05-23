@@ -1,5 +1,6 @@
 ﻿import ApiClient from '../../modules/api';
 import ko from 'knockout';
+import '../../components/rich-text-editor';
 
 import IdeaBasicInfoViewModel from '../../modules/ideas/ideaBasicInfoViewModel';
 import BasePage from '../../basePage';

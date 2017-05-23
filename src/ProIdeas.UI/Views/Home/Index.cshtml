@@ -8,21 +8,17 @@
 
 
 <script type="text/html" id="search-page-template">
-
-    <div class="col-lg-12">
-        <form class="form" data-bind="submit: search">
-            <div class="input-group input-group-sm">
-                <input class="form-control" placeholder="Search for ideas..." data-bind="textInput: keyword" />
-                <span class="input-group-btn input-group-addon">
-                    <button type="submit" class="btn btn-simple">
-                        <i class="material-icons">search</i>
-                    </button>
-                </span>
-            </div>
+    <div class="col-lg-8">
+        <h3 class="search-title">Explore Ideas</h3>
+    </div>
+    <div class="col-lg-4">
+        <form class="form search-box-wrap l-top-margin" data-bind="submit: search">
+            <input class="search-box" placeholder="Search for ideas..." data-bind="textInput: keyword" />
+            <i class="search-icon material-icons">search</i>
         </form>
     </div>
 
-    <div class="content col-lg-12" data-bind="foreach: collection">
+    <div class="col-lg-12" data-bind="foreach: collection">
         <div class="col-sm-4 idea-card-wrap">
             <idea-card params="idea: $data, like: $parent.like, comment: $parent.comment"></idea-card>
         </div>
@@ -32,10 +28,9 @@
     @await Component.InvokeAsync("IdeaBanner")
 </div>
 <div class="row">
-    <div class="container create-idea" id="ideas-search-container">
+    <div id="ideas-search-container">
         <div class="row">
-            <h2>Explore Ideas</h2>
-            <div data-bind="template: {name:'search-page-template'}">
+            <div class="search-form-container" data-bind="template: {name:'search-page-template'}">
             </div>
         </div>
     </div>

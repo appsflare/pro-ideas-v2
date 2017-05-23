@@ -14,6 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Styles\NewFolder\**" />
+    <Content Remove="Styles\NewFolder\**" />
+    <EmbeddedResource Remove="Styles\NewFolder\**" />
+    <None Remove="Styles\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Scripts\lib\bootstrap-datepicker.js" />
     <Content Include="Scripts\lib\material-kit.js" />
     <Content Include="Scripts\lib\material.min.js" />

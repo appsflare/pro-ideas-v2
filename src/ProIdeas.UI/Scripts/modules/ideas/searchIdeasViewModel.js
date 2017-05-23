@@ -6,7 +6,7 @@ import KnockoutForEachCssTransition from '../../transitions/KnockoutForEachCssTr
 
 export default class SearchIdeasViewModel {
 
-    constructor({keyword, rateLimit = 500, actions: { search, like, viewComments }}) {
+    constructor({keyword, rateLimit = 1000, actions: { search, like, viewComments }}) {
         this.keyword = ko.observable(keyword).extend({ rateLimit, method: "notifyWhenChangesStop" });
         this._currentPage = 1;
         const transition = new KnockoutForEachCssTransition({});
