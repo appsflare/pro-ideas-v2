@@ -4,6 +4,8 @@ using ProIdeas.Services.Contracts;
 using ProIdeas.UI.Models.IdeaViewModels;
 using System.Threading.Tasks;
 using System.Linq;
+using ProIdeas.UI.Models.TeamViewModels;
+using ProIdeas.Services;
 
 namespace ProIdeas.UI.Controllers
 {
@@ -91,6 +93,12 @@ namespace ProIdeas.UI.Controllers
         {
             _ideaService.UnpublishAsync(id);
             return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpGet, Route("{id}/teamdetails")]
+        public IActionResult Teamdetails(string id)
+        {
+            return RedirectToAction(nameof(TeamController.Details), "Team", new { id });
         }
 
     }

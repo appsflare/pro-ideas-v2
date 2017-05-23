@@ -1,0 +1,73 @@
+@model TeamDetailsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container create-idea">
+    <h4 class="common-page-header">Team Details</h4>
+
+    <div>
+        <section class="row">
+            <ul class="nav nav-pills nav-pills-vertical" role="tablist">
+                <li class="complete"><a href="/ideas/@Model.IdeaId/edit">Basic Information</a></li>
+                <li class="complete"><a href="/ideas/@Model.IdeaId/images">Images</a></li>
+                <li class="active"><a href="/ideas/@Model.IdeaId/teamdetails">Team</a></li>
+                <li class=""><a href="/ideas/@Model.IdeaId/pages">Pages</a></li>
+                @*<li class=""><a href="#payments">Review</a></li>*@
+            </ul>
+        </section>
+        <section class="content" id="idea-team">
+            @if (Model.Members.Count == 0)
+            {
+                <div class="bg-info">Oops!! We currenlty do not have team members to display</div>
+            }
+
+            @foreach (var item in Model.Members)
+            {
+                <div class="row m-margin">
+                    <div class="col-sm-offset-2">
+                        <div class="pull-left image">
+                            <img src="http://bootdey.com/img/Content/user_1.jpg" class="img-circle avatar" alt="user profile image">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="l-margin">
+                            <h3 class="title">@item.Name</h3>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 l-margin">
+                        @if (item.Status == MemberStatus.Request)
+                        {
+                            <form class="form-inline" method="post" asp-controller="team"
+                                  asp-action="Approve"
+                                  asp-route-id="@Model.IdeaId"
+                                  asp-route-userId="@item.UserId">
+                                <button class="btn btn-sm btn-primary pull-left">
+                                    Approve
+                                </button>
+                            </form>
+                            <form class="form-inline" method="post" asp-controller="team"
+                                  asp-action="Reject"
+                                  asp-route-id="@Model.IdeaId"
+                                  asp-route-userId="@item.UserId">
+                                <button class="btn btn-sm btn-default pull-left">
+                                    Reject
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-primary pull-left" disabled="disabled">
+                                Team Member
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+    <div class="row hidden">
+        <button class="btn btn-primary pull-right" data-bind="click: save">Next</button>
+        <a asp-controller="Idea" asp-action="Edit" asp-route-id="@Model.IdeaId" class="btn btn-secondary pull-right">Previous</a>
+    </div>
+</div>

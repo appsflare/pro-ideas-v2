@@ -13,7 +13,7 @@ namespace ProIdeas.Infra.Commands.Collaboration
 
         public override bool IsValid()
         {
-            return !string.IsNullOrEmpty(Team.IdeaId?.Trim()) && !string.IsNullOrEmpty(Team.Name?.Trim());
+            return !string.IsNullOrEmpty(Team.IdeaId?.Trim());
         }
     }
 }
