@@ -8,14 +8,16 @@
             @if (string.IsNullOrEmpty(Model.Id))
             {
                 <li class="disabled"><a href="javascript:void()">Images</a></li>
-                <li class="disabled"><a href="javascript:void()">Pages</a></li>                
+                <li class="disabled"><a href="javascript:void()">Team</a></li>
+                <li class="disabled"><a href="javascript:void()">Pages</a></li>
             }
             else
             {
                 <li class=""><a href="/ideas/@Model.Id/images">Images</a></li>
+                <li class=""><a href="/ideas/@Model.Id/teamdetails">Team</a></li>
                 <li class=""><a href="/ideas/@Model.Id/pages">Pages</a></li>
             }
-            
+
             @*<li class=""><a href="#payments">Review</a></li>*@
         </ul>
         <div class="content">

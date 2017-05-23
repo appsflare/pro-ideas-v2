@@ -1,4 +1,4 @@
-﻿@model  TeamMemberStatusViewModel
+﻿@model  TeamMemberViewModel
 
 @switch (Model.Status)
 {
@@ -6,6 +6,9 @@
         <button class="btn btn-warning" disabled="disabled" >Pending</button>
         break;
     case MemberStatus.Approved:
+        <button class="btn btn-primary pull-left" disabled="disabled">
+            Team Member
+        </button>
         break;
     default:
 

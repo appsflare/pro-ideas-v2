@@ -15,7 +15,7 @@ namespace ProIdeas.UI.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(string userId,string ideaId)
         {
-            var model = TeamMemberStatusViewModel.MapFrom(await _teamService.GetTeamMemberAsync(userId, ideaId), ideaId, userId);
+            var model = TeamMemberViewModel.MapFrom(await _teamService.GetTeamMemberAsync(userId, ideaId), ideaId, userId);
             return View(model);
         }
     }

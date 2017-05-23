@@ -11,18 +11,21 @@ namespace ProIdeas.UI.Models.TeamViewModels
         Rejected
     }
 
-    public class TeamMemberStatusViewModel
+    public class TeamMemberViewModel
     {
         public string UserId { get; set; }
+
+        public string Name { get; set; }
         public string IdeaId { get; set; }
         public MemberStatus Status { get; set; }
 
-        public static TeamMemberStatusViewModel MapFrom(TeamMemberDto teamMemberDto, string ideaId,string userId)
+        public static TeamMemberViewModel MapFrom(TeamMemberDto teamMemberDto, string ideaId, string userId)
         {
-            return new TeamMemberStatusViewModel()
+            return new TeamMemberViewModel()
             {
                 IdeaId = ideaId,
                 UserId = userId,
+                Name = teamMemberDto != null ? teamMemberDto?.Member.FullName : string.Empty,
                 Status = teamMemberDto?.Status != null ? (MemberStatus)teamMemberDto.Status : MemberStatus.None
             };
         }

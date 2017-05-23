@@ -99,7 +99,7 @@ namespace ProIdeas.Logic
                 throw new LogicalException(ErrorCategory.NotFound, "Team not found");
             }
             team.Members.FirstOrDefault(x => x.MemberUserId.Equals(message.UserId)).Status = Domain.Entities.MemberStatus.Approved;
-            _repository.Update(team);
+            await _repository.UpdateAsync(team);
             await _bus.RaiseEvent(new TeamChangedEvent(_dataMapper.Map<TeamDto>(team)));
         }
 
