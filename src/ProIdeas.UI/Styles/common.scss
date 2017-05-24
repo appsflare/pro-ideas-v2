@@ -4,11 +4,16 @@
     box-shadow: $top $left $blur $spread $color #{$inset};
 }
 
-    .common-page-header {
-        font-size: 2.1em;
-        font-weight: 500;
-        margin: 30px 0;
-    }
+
+.display-inline{
+    display:inline-block !important;
+}
+
+.common-page-header {
+    font-size: 2.1em;
+    font-weight: 500;
+    margin: 30px 0;
+}
 
     .alert-nocontent {
         background-color: $brand-primary;
