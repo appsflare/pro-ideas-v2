@@ -162,7 +162,7 @@ namespace ProIdeas.UI
             var dbHost = Environment.GetEnvironmentVariable("DB_HOSTS");
             services.AddSingleton(new ConnectionOptions
             {
-                DBName = "ideas",
+                DBName = Environment.GetEnvironmentVariable("DB_NAME") ?? "ideas",
                 HostNames = string.IsNullOrEmpty(dbHost) ? new[] { "localhost" } : Environment.GetEnvironmentVariable("DB_HOSTS").Split(';'),
                 Port = 28015
             });
