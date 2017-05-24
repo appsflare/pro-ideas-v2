@@ -6,6 +6,12 @@
     </div>
     <div class="profile-body">
         <h3 class="profile-username text-center">@Model.FullName</h3>
+        <div class="ranking-container center-block l-margin">
+            <img class="display-inline ranking img-rounded img-responsive @(Model.Ranking==0?"ranking-disabled":"")" src="~/logos/Silver.svg" />
+            <img class="display-inline ranking img-rounded img-responsive @(Model.Ranking<1?"ranking-disabled":"")" src="~/logos/Bronze.svg" />
+            <img class="display-inline ranking img-rounded img-responsive @(Model.Ranking<2?"ranking-disabled":"")" src="~/logos/Gold.svg" />
+            <img class="display-inline ranking img-rounded img-responsive @(Model.Ranking<3?"ranking-disabled":"")" src="~/logos/Platinum.svg" />
+        </div>
         <ul class="list-group list-group-unbordered">
             <li class="list-group-item">
                 <b>Ideas</b>

@@ -1,0 +1,66 @@
+<svg width="88" height="129" viewBox="0 0 88 129" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>Bronze</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(-530 347)">
+<g id="Bronze">
+<g id="Rectangle">
+<use xlink:href="#path0_fill" transform="translate(540 -347)" fill="#BFC2E5"/>
+<mask id="mask0_outline_ins">
+<use xlink:href="#path0_fill" fill="white" transform="translate(540 -347)"/>
+</mask>
+<g mask="url(#mask0_outline_ins)">
+<use xlink:href="#path1_stroke_2x" transform="translate(540 -347)" fill="#4A53B7"/>
+</g>
+</g>
+<g id="Rectangle 2">
+<use xlink:href="#path2_fill" transform="translate(530 -323)" fill="#E6E6E6"/>
+<mask id="mask1_outline_ins">
+<use xlink:href="#path2_fill" fill="white" transform="translate(530 -323)"/>
+</mask>
+<g mask="url(#mask1_outline_ins)">
+<use xlink:href="#path3_stroke_2x" transform="translate(530 -323)" fill="#B46D33"/>
+</g>
+</g>
+<g id="Ellipse">
+<use xlink:href="#path4_fill" transform="translate(565 -312)" fill="#E6E6E6"/>
+<mask id="mask2_outline_ins">
+<use xlink:href="#path4_fill" fill="white" transform="translate(565 -312)"/>
+</mask>
+<g mask="url(#mask2_outline_ins)">
+<use xlink:href="#path5_stroke_2x" transform="translate(565 -312)" fill="#B46D33"/>
+</g>
+</g>
+<g id="Ellipse 2">
+<use xlink:href="#path6_fill" transform="translate(536 -295)" fill="url(#paint6_linear)"/>
+<mask id="mask3_outline_ins">
+<use xlink:href="#path6_fill" fill="white" transform="translate(536 -295)"/>
+</mask>
+<g mask="url(#mask3_outline_ins)">
+<use xlink:href="#path7_stroke_2x" transform="translate(536 -295)" fill="#B46D33"/>
+</g>
+</g>
+<g id="Star 2">
+<use xlink:href="#path8_fill" transform="translate(547 -291)" fill="url(#paint8_radial)"/>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint6_linear" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(44 69 -69 44 56 -14)">
+<stop offset="0" stop-color="#FB7200" stop-opacity="0"/>
+<stop offset="1" stop-color="#FB7200"/>
+</linearGradient>
+<radialGradient id="paint8_radial" cx="0.5" cy="0.5" r="0.5" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.59204e-15 26 -26 1.59204e-15 26 -1.59204e-15)">
+<stop offset="0" stop-color="#FFFFFF"/>
+<stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+</radialGradient>
+<path id="path0_fill" d="M 0 2C 0 0.895431 0.895431 0 2 0L 66 0C 67.1046 0 68 0.895431 68 2L 68 27C 68 28.1046 67.1046 29 66 29L 2 29C 0.895431 29 0 28.1046 0 27L 0 2Z"/>
+<path id="path1_stroke_2x" d="M 2 5L 66 5L 66 -5L 2 -5L 2 5ZM 63 2L 63 27L 73 27L 73 2L 63 2ZM 66 24L 2 24L 2 34L 66 34L 66 24ZM 5 27L 5 2L -5 2L -5 27L 5 27ZM 2 -5C -1.86599 -5 -5 -1.86599 -5 2L 5 2C 5 3.65685 3.65685 5 2 5L 2 -5ZM 66 5C 64.3431 5 63 3.65685 63 2L 73 2C 73 -1.86599 69.866 -5 66 -5L 66 5ZM 63 27C 63 25.3431 64.3431 24 66 24L 66 34C 69.866 34 73 30.866 73 27L 63 27ZM 2 24C 3.65685 24 5 25.3431 5 27L -5 27C -5 30.866 -1.86599 34 2 34L 2 24Z"/>
+<path id="path2_fill" d="M 0 9C 0 4.02944 4.02944 0 9 0L 79 0C 83.9706 0 88 4.02944 88 9L 88 9C 88 13.9706 83.9706 18 79 18L 9 18C 4.02944 18 0 13.9706 0 9L 0 9Z"/>
+<path id="path3_stroke_2x" d="M 9 5L 79 5L 79 -5L 9 -5L 9 5ZM 79 13L 9 13L 9 23L 79 23L 79 13ZM 9 -5C 1.26801 -5 -5 1.26801 -5 9L 5 9C 5 6.79086 6.79086 5 9 5L 9 -5ZM 79 5C 81.2091 5 83 6.79086 83 9L 93 9C 93 1.26801 86.732 -5 79 -5L 79 5ZM 83 9C 83 11.2091 81.2091 13 79 13L 79 23C 86.732 23 93 16.732 93 9L 83 9ZM 9 13C 6.79086 13 5 11.2091 5 9L -5 9C -5 16.732 1.26801 23 9 23L 9 13Z"/>
+<path id="path4_fill" d="M 19 9.5C 19 14.7467 14.7467 19 9.5 19C 4.25329 19 0 14.7467 0 9.5C 0 4.25329 4.25329 0 9.5 0C 14.7467 0 19 4.25329 19 9.5Z"/>
+<path id="path5_stroke_2x" d="M 14 9.5C 14 11.9853 11.9853 14 9.5 14L 9.5 24C 17.5081 24 24 17.5081 24 9.5L 14 9.5ZM 9.5 14C 7.01472 14 5 11.9853 5 9.5L -5 9.5C -5 17.5081 1.49187 24 9.5 24L 9.5 14ZM 5 9.5C 5 7.01472 7.01472 5 9.5 5L 9.5 -5C 1.49187 -5 -5 1.49187 -5 9.5L 5 9.5ZM 9.5 5C 11.9853 5 14 7.01472 14 9.5L 24 9.5C 24 1.49187 17.5081 -5 9.5 -5L 9.5 5Z"/>
+<path id="path6_fill" d="M 77 38.5C 77 59.763 59.763 77 38.5 77C 17.237 77 0 59.763 0 38.5C 0 17.237 17.237 0 38.5 0C 59.763 0 77 17.237 77 38.5Z"/>
+<path id="path7_stroke_2x" d="M 72 38.5C 72 57.0015 57.0015 72 38.5 72L 38.5 82C 62.5244 82 82 62.5244 82 38.5L 72 38.5ZM 38.5 72C 19.9985 72 5 57.0015 5 38.5L -5 38.5C -5 62.5244 14.4756 82 38.5 82L 38.5 72ZM 5 38.5C 5 19.9985 19.9985 5 38.5 5L 38.5 -5C 14.4756 -5 -5 14.4756 -5 38.5L 5 38.5ZM 38.5 5C 57.0015 5 72 19.9985 72 38.5L 82 38.5C 82 14.4756 62.5244 -5 38.5 -5L 38.5 5Z"/>
+<path id="path8_fill" d="M 13 0L 14.1815 11.3737L 25.3637 8.98278L 14.9118 13.6212L 20.6412 23.5172L 13 15.0102L 5.35879 23.5172L 11.0882 13.6212L 0.636265 8.98278L 11.8185 11.3737L 13 0Z"/>
+</defs>
+</svg>
