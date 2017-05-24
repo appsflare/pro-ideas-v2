@@ -53,7 +53,6 @@
 
 .idea-details-page {
     overflow: hidden;
-    border: #efefef 1px solid;
 }
 
 .panel-white {
@@ -188,4 +187,14 @@ iframe.ql-video{
     font-weight: bold;
     margin-left: 10px;
     font-size: large;
+}
+
+.nav-align-left {
+    &>ul{
+        height:75px;
+
+        &>li{
+            margin-top:28px;
+        }
+    }
 }
