@@ -18,7 +18,11 @@
     <Content Include="Scripts\lib\material-kit.js" />
     <Content Include="Scripts\lib\material.min.js" />
     <Content Include="Scripts\lib\index.js" />
-    <Content Include="Scripts\lib\nouislider.min.js" />    
+    <Content Include="Scripts\lib\nouislider.min.js" />
+    <Content Include="wwwroot\logos\Bronze.svg" />
+    <Content Include="wwwroot\logos\Gold.svg" />
+    <Content Include="wwwroot\logos\Platinum.svg" />
+    <Content Include="wwwroot\logos\Silver.svg" />    
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
