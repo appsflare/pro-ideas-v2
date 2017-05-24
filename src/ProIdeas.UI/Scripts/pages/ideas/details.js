@@ -2,6 +2,7 @@
 import ko from 'knockout';
 
 import '../../components/comments-list';
+import '../../components/idea-like';
 
 import BasePage from '../../basePage';
 
