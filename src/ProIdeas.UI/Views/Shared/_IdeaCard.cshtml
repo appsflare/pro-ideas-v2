@@ -1,6 +1,6 @@
 ﻿@model IdeaInfoViewModel
-<div class="col-sm-4 idea-card-wrap">
-    <div class="idea-card">
+<div class="col-sm-4 idea-card-wrap idea-card">
+    
         <div class="card-image"><img src="/api/ideas/@Model.Id/banner" /></div>
         <div class="card-content-container">
             <h3 class="card-header">
@@ -15,6 +15,6 @@
             <button class="btn btn-simple idea-like"><i class="material-icons">favorite</i><span>@Model.Likes</span></button>
             <button class="btn btn-simple idea-comment"><i class="material-icons">insert_comment</i><span>@Model.Comments</span></button>
         </div>
-    </div>
+  
 
 </div>

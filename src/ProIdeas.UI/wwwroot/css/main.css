@@ -9492,8 +9492,8 @@ h2.title {
     border-bottom: 1px solid #7e8bda; }
 
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {
-  height: 300px;
-  width: 50%; }
+  height: 400px;
+  width: 555px; }
 
 .carousel .carousel-indicators {
   bottom: -5px;
@@ -12016,13 +12016,13 @@ idea-card, .idea-card {
     box-shadow: 0px 0 7px 0 rgba(51, 51, 51, 0.45) ; }
   idea-card img, .idea-card img {
     border-radius: 5px 5px 0 0;
-    height: 188px; }
+    height: 260px; }
 
 .search-form-container .search-title {
   color: #015276; }
 
 .search-form-container .search-box-wrap {
-  border: solid 2px #99aeb8;
+  border: solid 1px #99aeb8;
   color: #7b96a3;
   border-radius: 5px; }
   .search-form-container .search-box-wrap .search-box {
@@ -12313,7 +12313,7 @@ html, body {
 
 .app-page {
   height: 100%;
-  padding-top: 75px; }
+  padding-top: 100px; }
 
 .container-wrap {
   height: calc(100% - 60px);
@@ -12334,8 +12334,8 @@ footer {
 
 .button-floater {
   position: fixed;
-  bottom: 10%;
-  right: 10%; }
+  bottom: 3%;
+  right: 2%; }
 
 .turbolinks-progress-bar {
   height: 5px;
