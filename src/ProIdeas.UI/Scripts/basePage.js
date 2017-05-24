@@ -55,7 +55,7 @@ export default class BasePage {
     init() {
         this.configure();
 
-        $('.custom-scrollable').mCustomScrollbar({ scrollInertia: 0 });
+        $('.custom-scrollable').mCustomScrollbar({ scrollInertia: 0, autoHideScrollbar: true });
 
         this.onReady()
             .then(() => {

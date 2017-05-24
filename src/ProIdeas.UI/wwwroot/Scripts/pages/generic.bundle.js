@@ -139,7 +139,7 @@ var BasePage = function () {
         value: function init() {
             this.configure();
 
-            $('.custom-scrollable').mCustomScrollbar({ scrollInertia: 0 });
+            $('.custom-scrollable').mCustomScrollbar({ scrollInertia: 0, autoHideScrollbar: true });
 
             this.onReady().then(function () {
                 $.material.init();

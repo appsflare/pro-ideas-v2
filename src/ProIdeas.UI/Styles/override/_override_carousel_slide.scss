@@ -1,6 +1,7 @@
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {
-    height: 400px;    
+    height: 400px;
     width: 555px;
+    border-radius: 3px 0 0 3px;
 }
 
 .carousel .carousel-indicators {
@@ -18,6 +19,7 @@
 .carousel {
     .idea-title h2 {
         color: darken($light-blue, 25% );
+        margin-bottom: 0;
     }
 }
 

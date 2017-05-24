@@ -2,6 +2,7 @@
 
 @import 'override/_override_pills.scss';
 @import 'override/_override_carousel_slide.scss';
+@import 'override/_override_custom_scroll.scss';
 
 @import '_custom-scroll.scss';
 @import '_transitions.scss';
@@ -28,11 +29,15 @@ html, body {
 
 .app-page {
     height: 100%;
-    padding-top: 100px;
+    padding-top: 70px;
+}
+
+.body-content {
+    margin-top: 24px;
 }
 
 .container-wrap {
-    height: calc(100% - 60px);
+    height: 100%;
     overflow: auto;
 }
 

@@ -1,7 +1,8 @@
 .search-form-container {
 
     .search-title {
-        color: darken($light-blue, 25% );
+        color: $brand-primary;
+        font-weight: 400;
     }
 
     .search-box-wrap {
