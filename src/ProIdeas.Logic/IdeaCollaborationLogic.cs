@@ -26,7 +26,9 @@ namespace ProIdeas.Logic
         IHandler<IdeaLikeChangedEvent>,
         IHandler<IdeaCommentCreatedEvent>,
         IHandler<IdeaCommentUpdatedEvent>,
-        IHandler<IdeaCommentDeletedEvent>
+        IHandler<IdeaCommentDeletedEvent>,
+        IHandler<IdeaPublishedEvent>,
+        IHandler<IdeaUnpublishedEvent>
     {
         #region Private readonly fields
         private readonly IRepository _repository;
@@ -219,9 +221,16 @@ namespace ProIdeas.Logic
 
             await _bus.RaiseEvent(new IdeaStatsChangedEvent(_dataMapper.Map<IdeaDto>(idea)));
         }
+
+        public Task Handle(IdeaPublishedEvent message)
+        {
+            return UpdateIdeaStats(message.IdeaId);
+        }
+
+        public Task Handle(IdeaUnpublishedEvent message)
+        {
+            return UpdateIdeaStats(message.IdeaId);
+        }
         #endregion
-
-
-
     }
 }

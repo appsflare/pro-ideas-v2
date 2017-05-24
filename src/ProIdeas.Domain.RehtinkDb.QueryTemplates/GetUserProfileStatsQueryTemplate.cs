@@ -25,7 +25,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 
             var ideaCommentsQuery = ideaCommentTable.Filter(x => x[nameof(IdeaComment.OwnerId)].Eq(queryParam.UserId)).Count();
 
-            var ideasQuery = ideaTable.Filter(x => x[nameof(Idea.OwnerId)].Eq(queryParam.UserId)).Count();
+            var ideasQuery = ideaTable.Filter(x => x[nameof(Idea.OwnerId)].Eq(queryParam.UserId)).Filter(x => x.GetField(nameof(Idea.Status)).Eq(Status.Published.ToString())).Count();
 
 
             var stats = await usersTable.Get(queryParam.UserId).Pluck("id")

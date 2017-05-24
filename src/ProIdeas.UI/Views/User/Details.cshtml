@@ -1,56 +1,56 @@
 @model  UserActivityViewModel
 
-<div class="wrapper">
-    <div class="main">
-        <div class="container m-margin">
-            <div class="col-md-3">
-                @await Component.InvokeAsync("Profile", new { userId = Model.OwnerId })
+@section Scripts{
+    <script src="~/Scripts/pages/generic.bundle.js"></script>
+}
+
+<div class="container m-margin white-background">
+    <div class="col-md-3">
+        @await Component.InvokeAsync("Profile", new { userId = Model.OwnerId })
+    </div>
+    <div class="col-md-9">
+        @await Html.PartialAsync("_NavigationBar", Model)
+
+        <div class="tab-content">
+            @*User Actions*@
+            <div class="s-margin tab-pane active" id="contributions">
+                @if (!Model.UserContributions.Any())
+                {
+                    <div class="alert alert-nocontent nocontent-padding" role="alert">It seems you don't have any contributions. Good time to start!!</div>
+                }
+                <ul class="timeline timeline-inverse">
+                    @foreach (var activity in Model.UserContributions)
+                    {
+                        <li class="time-label">
+                            <span class="bg-red">@activity.ActivityDate</span>
+                        </li>
+
+                        @foreach (var item in activity.ActivityTimeLine)
+                        {
+                            @await Html.PartialAsync(item.Activity.ActivityType, item);
+                        }
+                    }
+                </ul>
             </div>
-            <div class="col-md-9">
-                @await Html.PartialAsync("_NavigationBar", Model)
 
-                <div class="tab-content">
-                    @*User Actions*@
-                    <div class="s-margin tab-pane active" id="contributions">
-                        @if (!Model.UserContributions.Any())
+            @*User Timeline*@
+            <div class="s-margin tab-pane" id="timeline">
+                @if (!Model.UserActivities.Any())
+                {
+                    <div class="alert alert-nocontent nocontent-padding " role="alert">It seems you don't have any activities. Good time to start!!</div>
+                }
+                <ul class="timeline timeline-inverse">
+                    @foreach (var activity in Model.UserActivities)
+                    {
+                        <li class="time-label">
+                            <span class="bg-red">@activity.ActivityDate</span>
+                        </li>
+                        @foreach (var item in activity.ActivityTimeLine)
                         {
-                            <div class="alert alert-nocontent nocontent-padding" role="alert">It seems you don't have any contributions. Good time to start!!</div>
+                            @await Html.PartialAsync(item.Activity.ActivityType, item);
                         }
-                        <ul class="timeline timeline-inverse">
-                            @foreach (var activity in Model.UserContributions)
-                            {
-                                <li class="time-label">
-                                    <span class="bg-red">@activity.ActivityDate</span>
-                                </li>
-
-                                @foreach (var item in activity.ActivityTimeLine)
-                                {
-                                    @await Html.PartialAsync(item.Activity.ActivityType, item);
-                                }
-                            }
-                        </ul>
-                    </div>
-
-                    @*User Timeline*@
-                    <div class="s-margin tab-pane" id="timeline">
-                        @if (!Model.UserActivities.Any())
-                        {
-                            <div class="alert alert-nocontent nocontent-padding " role="alert">It seems you don't have any activities. Good time to start!!</div>
-                        }
-                        <ul class="timeline timeline-inverse">
-                            @foreach (var activity in Model.UserActivities)
-                            {
-                                <li class="time-label">
-                                    <span class="bg-red">@activity.ActivityDate</span>
-                                </li>
-                                @foreach (var item in activity.ActivityTimeLine)
-                                {
-                                    @await Html.PartialAsync(item.Activity.ActivityType, item);
-                                }
-                            }
-                        </ul>
-                    </div>
-                </div>
+                    }
+                </ul>
             </div>
         </div>
     </div>

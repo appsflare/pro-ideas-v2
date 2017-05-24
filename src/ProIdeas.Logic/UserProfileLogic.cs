@@ -17,6 +17,7 @@ namespace ProIdeas.Logic
     public class UserProfileLogic : IUserProfileLogic,
         IHandler<CreateUserProfileCommand>,
         IHandler<IdeaStatsChangedEvent>
+        
     {
         private readonly IRepository _repository;
         private readonly IBus _bus;
@@ -82,6 +83,5 @@ namespace ProIdeas.Logic
             });
         }
 
-      
     }
 }
