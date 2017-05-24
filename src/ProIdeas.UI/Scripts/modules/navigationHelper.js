@@ -13,7 +13,9 @@ const navigationHelper = {
     toIdeaPages(id) {
         Turbolinks.visit(`/ideas/${id}/pages`);
     },
-
+    toTeamDetails(id) {
+        Turbolinks.visit(`/ideas/${id}/teamdetails`);
+    },
     toIdeaDetails(id) {
         Turbolinks.visit(`/ideas/${id}/details`);
     }

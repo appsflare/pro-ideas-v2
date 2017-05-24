@@ -46,6 +46,15 @@ textarea {
     margin-bottom: 5px;
 }
 
+
+.s-left-margin {
+    margin-left: 5px;
+}
+
+.s-right-margin {
+    margin-right: 5px;
+}
+
 .m-margin {
     margin: 10px;
 }
@@ -81,19 +90,27 @@ textarea {
     margin-left: 20px;
 }
 
+.l-padding{
+    padding: 20px;
+}
+
 .xl-margin {
-    margin: 30px !important;
+    margin: 30px;
 }
 
 .xl-left-margin {
-    margin-left: 30px !important;
-}
-.xl-right-margin {
-    margin-right: 30px !important;
+    margin-left: 30px;
 }
 
-.btn-simple-border {
-    background-color: #CCC !important;
-    font-size: medium;
-    color: #FFF !important;
+.xl-right-margin {
+    margin-right: 30px;
 }
+
+.xl-top-margin {
+    margin-top: 30px;
+}
+
+.xl-bottom-margin {
+    margin-bottom: 30px;
+}
+

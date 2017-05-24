@@ -7,7 +7,7 @@
     <script src="~/Scripts/pages/ideas/images.bundle.js" asp-append-version="true"></script>
 }
 <input id="IdeaId" type="hidden" value="@Model.Id" />
-<div class="container create-idea">
+<div class="container create-idea l-padding white-background">
     <div class="row">
         <h4 class="common-page-header">Post your new idea</h4>
         <section>
@@ -19,7 +19,7 @@
                 @*<li class=""><a href="#payments">Review</a></li>*@
             </ul>
             <div class="content" id="idea-image-upload-form">
-                <div data-bind="with: form" class="row">
+                <div data-bind="with: form">
                     <file-uploader params="icon: file.icon, value: file.value"></file-uploader>
                     <div data-bind="if: file.selectedFile" class="card card-profile card-plain">
                         <div class="card-image">
@@ -36,7 +36,7 @@
                     </div>
 
                 </div>
-                <div class="row">
+                <div>
                     <button class="btn btn-primary pull-right" data-bind="click: save">Next</button>
                     <a asp-controller="Idea" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary pull-right">Previous</a>
                 </div>

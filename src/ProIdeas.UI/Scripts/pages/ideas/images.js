@@ -29,7 +29,7 @@ class ImagesPage extends BasePage {
                             });
                     }
 
-                    navigate.toIdeaPages(id);
+                    navigate.toTeamDetails(id);
                     return Promise.resolve(true);
                 }
             }

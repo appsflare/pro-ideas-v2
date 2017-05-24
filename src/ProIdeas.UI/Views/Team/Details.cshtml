@@ -3,7 +3,7 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="container create-idea">
+<div class="container create-idea l-padding white-background">
     <h4 class="common-page-header">Team Details</h4>
 
     <div>
@@ -66,8 +66,8 @@
             }
         </section>
     </div>
-    <div class="row hidden">
-        <button class="btn btn-primary pull-right" data-bind="click: save">Next</button>
+    <div class="row">
+        <a asp-controller="Idea" asp-action="Pages" asp-route-id="@Model.IdeaId" class="btn btn-primary pull-right">Next</a>
         <a asp-controller="Idea" asp-action="Edit" asp-route-id="@Model.IdeaId" class="btn btn-secondary pull-right">Previous</a>
     </div>
 </div>
