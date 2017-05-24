@@ -35,7 +35,7 @@
             color: inherit;
             padding-top: 17px;
             padding-bottom: 12px;
-            text-transform: uppercase;
+            //text-transform: uppercase;
             border-radius: $border-radius-base;
 
             &:hover,
@@ -291,7 +291,6 @@
     }
 
     .exclusive-item {
-        border: none;
-        border-bottom: solid 1px $orange;
+        color: darken($yellow,5%);
     }
 }

@@ -1903,7 +1903,7 @@ var knockout = createCommonjsModule(function (module, exports) {
   })();
 });
 
-var template = "﻿<div>\r\n    <div class=\"card-image\"><a data-bind=\"attr:{href: detailsUrl}\"><img data-bind=\"attr:{src: banner}\" /></a></div>\r\n    <div class=\"card-content-container\">\r\n        <h3 class=\"card-header\">\r\n            <a data-bind=\"attr:{href: detailsUrl}, text: title\"></a>\r\n        </h3>\r\n        <span class=\"author-wrap\">Shared by <a class=\"author\" data-bind=\"attr:{href: ownerProfileUrl}, text: owner().fullName\"></a></span>\r\n        <p class=\"card-content\" data-bind=\"text: description\"></p>\r\n    </div>\r\n    <div class=\"card-footer\">\r\n        <button class=\"btn btn-simple idea-like\" data-bind=\"click: actions.like\"><i class=\"material-icons\">favorite</i><span data-bind=\"text: likes\"></span></button>\r\n        <a class=\"btn btn-simple idea-comment\" data-bind=\"attr:{href: detailsUrl}\"><i class=\"material-icons\">insert_comment</i><span data-bind=\"text: comments\"></span></a>\r\n    </div>\r\n</div>";
+var template = "﻿<div>\r\n    <div class=\"card-image\"><a data-bind=\"attr:{href: detailsUrl}\"><img data-bind=\"attr:{src: banner}\" /></a></div>\r\n    <div class=\"card-content-container\">\r\n        <h4 class=\"card-header\">\r\n            <a data-bind=\"attr:{href: detailsUrl}, text: title\"></a>\r\n        </h4>\r\n        <span class=\"author-wrap\">By <a class=\"author\" data-bind=\"attr:{href: ownerProfileUrl}, text: owner().fullName\"></a></span>\r\n        <p class=\"card-content\" data-bind=\"text: description\"></p>\r\n    </div>\r\n    <div class=\"card-footer\">\r\n        <button class=\"btn btn-simple idea-like\" data-bind=\"click: actions.like\"><i class=\"material-icons\">favorite</i><span data-bind=\"text: likes\"></span></button>\r\n        <a class=\"btn btn-simple idea-comment\" data-bind=\"attr:{href: detailsUrl}\"><i class=\"material-icons\">insert_comment</i><span data-bind=\"text: comments\"></span></a>\r\n    </div>\r\n</div>";
 
 var IdeaCardViewModel = function () {
     function IdeaCardViewModel(_ref) {
@@ -2311,7 +2311,7 @@ var BasePage = function () {
         value: function init() {
             this.configure();
 
-            $('.custom-scrollable').mCustomScrollbar({ scrollInertia: 0 });
+            $('.custom-scrollable').mCustomScrollbar({ scrollInertia: 0, autoHideScrollbar: true });
 
             this.onReady().then(function () {
                 $.material.init();
