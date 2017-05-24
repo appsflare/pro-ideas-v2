@@ -26,10 +26,6 @@
     <Content Include="Scripts\lib\material.min.js" />
     <Content Include="Scripts\lib\index.js" />
     <Content Include="Scripts\lib\nouislider.min.js" />
-    <Content Include="wwwroot\logos\Bronze.svg" />
-    <Content Include="wwwroot\logos\Gold.svg" />
-    <Content Include="wwwroot\logos\Platinum.svg" />
-    <Content Include="wwwroot\logos\Silver.svg" />    
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ElasticEmail.WebApiClient" Version="1.3.102" />
