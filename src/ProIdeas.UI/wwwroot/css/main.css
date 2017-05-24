@@ -8812,8 +8812,7 @@ h2.title {
 
 .panel {
   border-radius: 2px;
-  border: 0;
-  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12); }
+  border: 0; }
   .panel > .panel-heading,
   .panel.panel-default > .panel-heading {
     background-color: #eeeeee; }
@@ -11955,6 +11954,9 @@ yx-axis
 .display-inline {
   display: inline-block !important; }
 
+.white-background {
+  background: #FFF; }
+
 .common-page-header {
   font-size: 2.1em;
   font-weight: 500;
@@ -11998,15 +12000,25 @@ textarea {
 .l-bottom-margin {
   margin-bottom: 20px; }
 
+.l-right-margin {
+  margin-right: 20px; }
+
+.l-left-margin {
+  margin-left: 20px; }
+
 .xl-margin {
   margin: 30px !important; }
 
 .xl-left-margin {
   margin-left: 30px !important; }
 
+.xl-right-margin {
+  margin-right: 30px !important; }
+
 .btn-simple-border {
-  border: 1px solid #808080;
-  color: #666; }
+  background-color: #CCC !important;
+  font-size: medium;
+  color: #FFF !important; }
 
 .idea-card-wrap {
   padding: 23px; }
@@ -12095,8 +12107,7 @@ idea-card, .idea-card {
     padding-left: 6px; }
 
 .idea-details-page {
-  overflow: hidden;
-  border: #efefef 1px solid; }
+  overflow: hidden; }
 
 .panel-white {
   border: 1px solid #dddddd; }
@@ -12183,6 +12194,11 @@ iframe.ql-video {
   font-weight: bold;
   margin-left: 10px;
   font-size: large; }
+
+.nav-align-left > ul {
+  height: 75px; }
+  .nav-align-left > ul > li {
+    margin-top: 28px; }
 
 .profile-card {
   -webkit-box-shadow: 0px 0 5px 0 rgba(51, 51, 51, 0.35) ;

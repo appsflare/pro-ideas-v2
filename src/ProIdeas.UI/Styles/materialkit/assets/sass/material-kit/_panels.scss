@@ -5,7 +5,6 @@
   border: 0;
 
   @include variations(unquote(".panel"), unquote(" > .panel-heading"), background-color, $grey-200);
-  @include shadow-z-1;
 }
 
 
