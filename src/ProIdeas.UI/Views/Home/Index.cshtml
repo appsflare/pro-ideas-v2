@@ -8,17 +8,18 @@
 
 
 <script type="text/html" id="search-page-template">
-    <div class="col-lg-8">
-        <h3 class="search-title">Explore Ideas</h3>
+    <div class="row l-top-margin l-bottom-margin">
+        <div class="col-sm-8">
+            <h3 class="search-title">Explore Ideas</h3>
+        </div>
+        <div class="col-sm-4">
+            <form class="form search-box-wrap l-top-margin" data-bind="submit: search">
+                <input class="search-box" placeholder="Search for ideas..." data-bind="textInput: keyword" />
+                <i class="search-icon material-icons">search</i>
+            </form>
+        </div>
     </div>
-    <div class="col-lg-4">
-        <form class="form search-box-wrap l-top-margin" data-bind="submit: search">
-            <input class="search-box" placeholder="Search for ideas..." data-bind="textInput: keyword" />
-            <i class="search-icon material-icons">search</i>
-        </form>
-    </div>
-
-    <div class="col-lg-12" data-bind="foreach: collection">
+    <div class="row"  data-bind="foreach: collection">
         <div class="col-sm-4 idea-card-wrap">
             <idea-card params="idea: $data, like: $parent.like, comment: $parent.comment"></idea-card>
         </div>
@@ -27,12 +28,12 @@
 <div class="row s-top-margin">
     @await Component.InvokeAsync("IdeaBanner")
 </div>
-<div class="row">
+
     <div id="ideas-search-container">
         <div class="row">
             <div class="search-form-container" data-bind="template: {name:'search-page-template'}">
             </div>
         </div>
     </div>
-</div>
+
 @await Html.PartialAsync("_FloatingButtons")
