@@ -1,6 +1,6 @@
 ﻿@model  IdeaBannerViewModel
 
-<div class="card card-carousel">
+<div class="card card-noshadow card-carousel">
     <div id="top-ideas" class="carousel slide" data-cycle="true" data-interval="5000" data-ride="carousel">
         <div class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
@@ -11,27 +11,33 @@
                 }
             </ol>
             <!-- Wrapper for slides -->
-            <div class="carousel-inner">
-                @for (int i = 0; i < Model.Ideas.Count; i++)
-                {
-                    <div class="item @(@i==0?"active":"")">
-                        <div class="carousel-caption">
-                            <div class="idea-title">
-                                <h2>@Model.Ideas[i].IdeaName</h2>
-                                <div class="blur"></div>
+           
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.Ideas.Count; i++)
+                    {
+                        var idea = Model.Ideas.ElementAt(i);
+                        <div class="item @(@i == 0 ? "active" : "")">
+                            <img class="pull-left" alt="@idea.Name" src="/api/ideas/@idea.Id/banner.png" />
+                            <div class="pull-left content">
+                                <div class="idea-title">
+                                    <h2><a asp-controller="Idea" asp-action="Details" asp-route-id="@idea.Id"> @idea.Name</a></h2>
+                                    <span class="author-wrap">By <a asp-controller="User" asp-action="Details" asp-route-id="@idea.OwnerId" class="author">@idea.Owner.FullName</a></span>
+                                    <p>@idea.Description</p>
+
+                                    <a class="btn btn-sm btn-exclusive" asp-action="Details" asp-controller="Idea" asp-route-id="@idea.Id">View Idea</a>
+                                </div>
                             </div>
                         </div>
-                        <img alt="@Model.Ideas[i].IdeaName" src="/api/ideas/@Model.Ideas[i].IdeaId/banner" />
-                    </div>
-                }
+                    }
+                
             </div>
             <!-- Controls -->
-            <a class="left carousel-control" href="#top-ideas" data-slide="prev">
-                <i class="material-icons">keyboard_arrow_left</i>
-            </a>
-            <a class="right carousel-control" href="#top-ideas" data-slide="next">
-                <i class="material-icons">keyboard_arrow_right</i>
-            </a>
+            @*<a class="left carousel-control" href="#top-ideas" data-slide="prev">
+                    <i class="material-icons">keyboard_arrow_left</i>
+                </a>
+                <a class="right carousel-control" href="#top-ideas" data-slide="next">
+                    <i class="material-icons">keyboard_arrow_right</i>
+                </a>*@
         </div>
 
     </div>

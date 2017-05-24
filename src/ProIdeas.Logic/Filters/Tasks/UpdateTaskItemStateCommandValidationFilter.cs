@@ -20,7 +20,7 @@ namespace ProIdeas.Logic.Filters.Tasks
             _repository = repository;
         }
 
-        async protected override Task Validate(FilterContext<UpdateTaskItemStateCommand> context)
+        protected override async Task Validate(FilterContext<UpdateTaskItemStateCommand> context)
         {
 
             var taskBoard = await _repository.GetOneAsync<TaskBoard>(context.Message.State.TaskBoardId);

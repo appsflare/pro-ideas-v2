@@ -2,15 +2,31 @@
 //import FadeTransition from './transitions/fade';
 import Turbolinks from 'turbolinks';
 $(function () {
+    if (window.__turbo__) {
+        return;
+    }
+    window.__turbo__ = true;
+
     Turbolinks.start();
-    $(document).off('turbolinks:before-cache')
-        .off('turbolinks:before-render')
+
+    const $window = $(window);
+
+    $window
+        .on('turbolinks:visit', (e) => {
+            //$('.custom-scrollable').mCustomScrollbar('destroy');
+            $('body').removeClass('animated fadeIn').addClass('animated fadeOut');
+        })
         .on('turbolinks:before-cache', (e) => {
-        $('.custom-scrollable').mCustomScrollbar('destroy');
-        $('body').addClass('animated fadeOut');
-    }).on('turbolinks:before-render', () => {
-        $(event.data.newBody).removeClass('fadeOut').addClass('animated fadeIn');
-    });
+            $('.custom-scrollable').mCustomScrollbar('destroy');
+            //$('body').removeClass('animated fadeIn').addClass('animated fadeOut');
+        })
+        .on('turbolinks:before-render', e => {
+            $(event.data.newBody).removeClass('animated fadeOut').addClass('animated fadeIn');
+        });
+
+
+
+
 });
 
 //Turbolinks would show progress bar automatically when page takes longer than 500ms to load
@@ -28,9 +44,9 @@ export default class BasePage {
         //this._url = Barba.Pjax.getCurrentUrl();
     }
 
-    getTransition() {
-        return FadeTransition;
-    }
+    //getTransition() {
+    //    return FadeTransition;
+    //}
 
     configure() {
         //Barba.Pjax.getTransition = () => this.getTransition();
@@ -39,7 +55,7 @@ export default class BasePage {
     init() {
         this.configure();
 
-        $('.custom-scrollable').mCustomScrollbar();
+        $('.custom-scrollable').mCustomScrollbar({ scrollInertia: 0 });
 
         this.onReady()
             .then(() => {

@@ -30,7 +30,7 @@ namespace ProIdeas.Services
             return GetCommentAsync(command.Comment.Id);
         }
 
-        async public Task<TeamDto> CreateTeamAsync(TeamDto team)
+        public async Task<TeamDto> CreateTeamAsync(TeamDto team)
         {
             await _bus.SendCommand(new CreateTeamCommand(team));
 

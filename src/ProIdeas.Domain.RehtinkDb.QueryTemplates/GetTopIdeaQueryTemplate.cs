@@ -9,18 +9,19 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
     public class GetTopIdeaQueryTemplate : BaseRethinkQueryTemplate<Idea, GetTopIdeaQuery>
     {
-        async protected override Task<IEnumerable<Idea>> ExecuteAsync(QueryTemplateContext<GetTopIdeaQuery> context)
+        protected override async Task<IEnumerable<Idea>> ExecuteAsync(QueryTemplateContext<GetTopIdeaQuery> context)
         {
             var queryParam = context.Parameter;
 
             var table = RethinkDB.R
              .Table(nameof(Idea));
-            
+
             var query = table
                 .OrderBy()
                 .OptArg("index", RethinkDB.R.Desc(nameof(Idea.Comments)))
                 .Limit(queryParam.Count)
-                .Filter(x=>x.HasFields(nameof(Idea.Title)));
+                .Filter(x => x.GetField(nameof(Idea.Status)).Eq(Status.Published.ToString()))
+                .Filter(x => x.HasFields(nameof(Idea.Title)));
 
             var finalQuery = query.Merge(idea => RethinkDB.R.HashMap(nameof(Idea.Owner), RethinkDB.R
             .Table("ApplicationUser")

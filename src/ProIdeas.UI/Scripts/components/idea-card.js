@@ -14,8 +14,9 @@ class IdeaCardViewModel {
             viewComments: () => viewComments(this.id())
         };
 
-        this.banner = `/api/ideas/${idea.id}/banner`;
+        this.banner = `/api/ideas/${idea.id}/banner.png`;
         this.detailsUrl = `/ideas/${idea.id}/details`;
+        this.ownerProfileUrl= `/profile/${idea.ownerId}`;
     }
 
     updateStats({likes, disLikes}) {
@@ -30,5 +31,5 @@ ko.components.register('idea-card', {
             return new IdeaCardViewModel(params);
         }
     },
-    template
+    template: template.substr(1) //To remove the white-space
 });

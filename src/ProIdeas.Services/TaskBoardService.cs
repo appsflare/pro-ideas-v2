@@ -20,28 +20,28 @@ namespace ProIdeas.Services
             _bus = bus;
         }
 
-        async public Task<TaskBoardDto> CreateBoardAsync(string ideaId, TaskBoardDto board)
+        public async Task<TaskBoardDto> CreateBoardAsync(string ideaId, TaskBoardDto board)
         {
             await _bus.SendCommand(new CreateTaskBoardCommand(ideaId, board));
 
             return await _taskBoardLogic.GetTaskBoardAsync(board.Id);
         }
 
-        async public Task<TaskItemDto> CreateTaskAsync(string boardId, TaskItemDto item)
+        public async Task<TaskItemDto> CreateTaskAsync(string boardId, TaskItemDto item)
         {
             await _bus.SendCommand(new AddTaskItemCommand(boardId, item));
 
             return await _taskBoardLogic.GetTaskItemAsync(item.Id);
         }
 
-        async public Task<TaskItemStateDto> CreateTaskItemState(string boardId, TaskItemStateDto state)
+        public async Task<TaskItemStateDto> CreateTaskItemState(string boardId, TaskItemStateDto state)
         {
             await _bus.SendCommand(new AddTaskItemStateCommand(boardId, state));
 
             return await _taskBoardLogic.GetTaskItemStateAsync(state.Id);
         }
 
-        async public Task<TaskItemTypeDto> CreateTaskItemType(string boardId, TaskItemTypeDto type)
+        public async Task<TaskItemTypeDto> CreateTaskItemType(string boardId, TaskItemTypeDto type)
         {
             await _bus.SendCommand(new AddTaskItemTypeCommand(boardId, type));
 

@@ -23,7 +23,7 @@ namespace ProIdeas.UI.Controllers
 
         [HttpPost]        
         [Produces("application/json")]
-        async public Task<IActionResult> Upload(ICollection<IFormFile> files)
+        public async Task<IActionResult> Upload(ICollection<IFormFile> files)
         {
             var addedFiles = new List<Guid>();
             foreach (var file in files)
@@ -39,7 +39,7 @@ namespace ProIdeas.UI.Controllers
         [HttpGet]
         [Route("{fileName}")]
         [AllowAnonymous]
-        async public Task<HttpResponseMessage> Serve(string fileName)
+        public async Task<HttpResponseMessage> Serve(string fileName)
         {
             var bytes = await _fileStorage.GetFileBytesAsync(fileName);
 

@@ -44,7 +44,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region ITaskBoardLogic Implementation
-        async public Task<TaskBoardDto> GetTaskBoardAsync(string boardId)
+        public async Task<TaskBoardDto> GetTaskBoardAsync(string boardId)
         {
             var taskBoard = await _repository.GetOneAsync<TaskBoard>(boardId);
 
@@ -56,7 +56,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<TaskBoardDto>(taskBoard);
         }
 
-        async public Task<TaskItemDto> GetTaskItemAsync(string taskItemId)
+        public async Task<TaskItemDto> GetTaskItemAsync(string taskItemId)
         {
             var taskItem = await _repository.GetOneAsync<TaskItem>(taskItemId);
 
@@ -68,7 +68,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<TaskItemDto>(taskItem);
         }
 
-        async public Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(string boardId, string taskItemStateId)
+        public async Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(string boardId, string taskItemStateId)
         {
             var tasks = await _repository.QueryAsync<TaskItem, GetTaskBoardTasksByStateId>(new GetTaskBoardTasksByStateId
             {
@@ -79,14 +79,14 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IEnumerable<TaskItemDto>>(tasks);
         }
 
-        async public Task<TaskItemStateDto> GetTaskItemStateAsync(string stateId)
+        public async Task<TaskItemStateDto> GetTaskItemStateAsync(string stateId)
         {
             var taskState = await _repository.GetOneAsync<TaskItemState>(stateId);
 
             return _dataMapper.Map<TaskItemStateDto>(taskState);
         }
 
-        async public Task<IEnumerable<TaskItemStateDto>> GetTaskItemStatesAsync(string boardId)
+        public async Task<IEnumerable<TaskItemStateDto>> GetTaskItemStatesAsync(string boardId)
         {
             var tasks = await _repository.QueryAsync<TaskItem, GetTaskItemStatesByBoardId>(new GetTaskItemStatesByBoardId
             {
@@ -96,7 +96,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IEnumerable<TaskItemStateDto>>(tasks);
         }
 
-        async public Task<TaskItemTypeDto> GetTaskItemTypeAsync(string typeId)
+        public async Task<TaskItemTypeDto> GetTaskItemTypeAsync(string typeId)
         {
 
             var taskType = await _repository.GetOneAsync<TaskItemType>(typeId);
@@ -104,7 +104,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<TaskItemTypeDto>(taskType);
         }
 
-        async public Task<IEnumerable<TaskItemTypeDto>> GetTaskItemTypesAsync(string boardId)
+        public async Task<IEnumerable<TaskItemTypeDto>> GetTaskItemTypesAsync(string boardId)
         {
             var tasks = await _repository.QueryAsync<TaskItem, GetTaskItemTypesByBoardId>(new GetTaskItemTypesByBoardId
             {
@@ -116,7 +116,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region AddTaskItemCommand Implementation
-        async public Task Handle(AddTaskItemCommand message)
+        public async Task Handle(AddTaskItemCommand message)
         {
             var task = _dataMapper.Map<TaskItem>(message.Item);
 
@@ -133,7 +133,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region UpdateTaskItemCommand Implementation
-        async public Task Handle(UpdateTaskItemCommand message)
+        public async Task Handle(UpdateTaskItemCommand message)
         {
             var task = _dataMapper.Map<TaskItem>(message.Item);
 
@@ -150,7 +150,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region DeleteTaskItemCommand Implementation
-        async public Task Handle(DeleteTaskItemCommand message)
+        public async Task Handle(DeleteTaskItemCommand message)
         {
             var existingTask = await _repository.GetOneAsync<TaskItem>(message.TaskItemId);
 
@@ -162,7 +162,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region AddTaskItemStateCommand Implementation
-        async public Task Handle(AddTaskItemStateCommand message)
+        public async Task Handle(AddTaskItemStateCommand message)
         {
             var taskItemState = _dataMapper.Map<TaskItemState>(message.State);
 
@@ -179,7 +179,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region UpdateTaskItemStateCommand Implementation
-        async public Task Handle(UpdateTaskItemStateCommand message)
+        public async Task Handle(UpdateTaskItemStateCommand message)
         {
             var state = _dataMapper.Map<TaskItemState>(message.State);
 
@@ -198,7 +198,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region AddTaskItemTypeCommand Implementation
-        async public Task Handle(AddTaskItemTypeCommand message)
+        public async Task Handle(AddTaskItemTypeCommand message)
         {
             var taskItemType = _dataMapper.Map<TaskItemType>(message.Type);
 
@@ -215,7 +215,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region UpdateTaskItemTypeCommand Implementation
-        async public Task Handle(UpdateTaskItemTypeCommand message)
+        public async Task Handle(UpdateTaskItemTypeCommand message)
         {
             var type = _dataMapper.Map<TaskItemType>(message.Type);
 

@@ -40,7 +40,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region IActivityLogic Implementations
-        async public Task<IEnumerable<ActivityDto>> GetActivitiesAsync(string userId)
+        public async Task<IEnumerable<ActivityDto>> GetActivitiesAsync(string userId)
         {
             return await GetActivities(userId);
         }
@@ -70,7 +70,7 @@ namespace ProIdeas.Logic
 
         #region Domain Event Handler Implementations
 
-        async public Task Handle(IdeaLikeChangedEvent message)
+        public async Task Handle(IdeaLikeChangedEvent message)
         {
             var idea = await GetIdea(message.IdeaId);
             if (idea == null)
@@ -98,7 +98,7 @@ namespace ProIdeas.Logic
             return await _repository.GetOneAsync<Idea>(id);
         }
 
-        async public Task Handle(IdeaCommentCreatedEvent message)
+        public async Task Handle(IdeaCommentCreatedEvent message)
         {
             var idea = await GetIdea(message.Comment.IdeaId);
             if (idea == null)
@@ -118,7 +118,7 @@ namespace ProIdeas.Logic
             });
         }
 
-        async public Task Handle(IdeaPagesUpdatedEvent message)
+        public async Task Handle(IdeaPagesUpdatedEvent message)
         {
             var idea = await GetIdea(message.IdeaId);
             if (idea == null)
@@ -138,7 +138,7 @@ namespace ProIdeas.Logic
             });
         }
 
-        async public Task Handle(IdeaPublishedEvent message)
+        public async Task Handle(IdeaPublishedEvent message)
         {
             var idea = await GetIdea(message.IdeaId);
             if (idea == null)
@@ -158,7 +158,7 @@ namespace ProIdeas.Logic
             });
         }
 
-        async public Task Handle(IdeaUpdatedEvent message)
+        public async Task Handle(IdeaUpdatedEvent message)
         {
             var idea = await GetIdea(message.Idea.Id);
             if (idea == null)

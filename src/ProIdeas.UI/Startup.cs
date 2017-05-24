@@ -39,7 +39,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting.Internal;
 
 namespace ProIdeas.UI
 {
@@ -149,8 +152,7 @@ namespace ProIdeas.UI
             {
                 DefaultSenderEmail = Environment.GetEnvironmentVariable("EMAIL_DEFAULT_SENDER_EMAIL") ?? "noreply@lotofideas.com",
                 DefaultSenderName = Environment.GetEnvironmentVariable("EMAIL_DEFAULT_SENDER_NAME") ?? "Lot Of Ideas",
-                MailJetApiKey = Environment.GetEnvironmentVariable("EMAIL_MAILJET_API_KEY"),
-                MailJetApiSecret = Environment.GetEnvironmentVariable("EMAIL_MAILJET_API_SECRET")
+                ElasticEmailApiKey = Environment.GetEnvironmentVariable("EMAIL_ELASTICEMAIL_API_KEY")
             });
 
             // Add application services.
@@ -299,26 +301,38 @@ namespace ProIdeas.UI
                     ClientSecret = Configuration.GetValue<string>("Cockpit.ClientSecret") ?? Environment.GetEnvironmentVariable("COCKPIT_AUTH_CLIENT_SECRET"),
                     DisplayName = "Agile Cockpit Identity",
                     ResponseType = OpenIdConnectResponseType.Code,
-                    GetClaimsFromUserInfoEndpoint = true,                    
+                    GetClaimsFromUserInfoEndpoint = true,
                     RequireHttpsMetadata = env.IsProduction()
                 };
                 openIdConnectOptions.Events = new OpenIdConnectEvents
-                {                    
-                    OnRedirectToIdentityProvider = context =>
+                {
+                    OnTokenValidated = context =>
                     {
-                        
-                        //send the saved id_token to identity provider so that it can detect the client and redirect after successfull logout
-                        if (context.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
-                        {
-                            var idTokenHint = context.HttpContext.User.FindFirst("id_token");
+                        var claimsIdenitity = new ClaimsIdentity(context.Ticket.Principal.Claims);
 
-                            if (idTokenHint != null)
-                            {
-                                context.ProtocolMessage.IdTokenHint = idTokenHint.Value;
-                            }
+                        claimsIdenitity.AddClaim(new Claim("id_token", context.TokenEndpointResponse.IdToken));
+
+                        context.Ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdenitity),
+                            context.Ticket.Properties, context.Ticket.AuthenticationScheme);
+
+                        return Task.FromResult(0);
+                    },
+                    OnRedirectToIdentityProviderForSignOut = context =>
+                    {
+
+                        //send the saved id_token to identity provider so that it can detect the client and redirect after successfull logout
+
+                        var idTokenHint = context.HttpContext.User.FindFirst("id_token");
+
+                        if (idTokenHint != null)
+                        {
+                            context.ProtocolMessage.IdTokenHint = idTokenHint.Value;
                         }
 
-
+                        return Task.FromResult(0);
+                    },
+                    OnRedirectToIdentityProvider = context =>
+                    {
                         if (openIdConnectOptions.RequireHttpsMetadata)
                         {
                             var uri = new Uri(context.ProtocolMessage.RedirectUri);

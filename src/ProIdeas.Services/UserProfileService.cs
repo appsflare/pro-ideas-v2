@@ -20,12 +20,12 @@ namespace ProIdeas.Services
             _bus = bus;
         }
 
-        async private Task EnsureUserProfile(string userId)
+        private async Task EnsureUserProfile(string userId)
         {
             await _bus.SendCommand(new CreateUserProfileCommand(userId));
         }
 
-        async public Task<UserProfileDto> GetUserProfileAsync(string userId)
+        public async Task<UserProfileDto> GetUserProfileAsync(string userId)
         {
             await EnsureUserProfile(userId);
 

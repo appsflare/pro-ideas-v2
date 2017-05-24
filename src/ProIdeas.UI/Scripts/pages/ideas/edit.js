@@ -1,5 +1,6 @@
 ﻿import ApiClient from '../../modules/api';
 import ko from 'knockout';
+import '../../components/rich-text-editor';
 
 import IdeaBasicInfoViewModel from '../../modules/ideas/ideaBasicInfoViewModel';
 import BasePage from '../../basePage';
@@ -21,8 +22,8 @@ class EditPage extends BasePage {
                 actions: {
                     save: (idea) => {
                         return this._client.updateIdea(idea)
-                            .then(data => {                                
-                                navigate.toIdeaImages(idea.id)
+                            .then(data => {
+                                navigate.toIdeaImages(idea.id);
                             });
                     }
                 }

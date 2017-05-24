@@ -24,7 +24,7 @@ namespace ProIdeas.Logic
             _bus = bus;
 
         }
-        async public Task Handle(SaveIdeaPagesCommand message)
+        public async Task Handle(SaveIdeaPagesCommand message)
         {
             var idea = _repository.GetOne<Idea>(message.IdeaId);
 

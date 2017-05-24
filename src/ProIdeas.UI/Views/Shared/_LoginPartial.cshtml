@@ -11,7 +11,7 @@
     {
         <li><a asp-area="" asp-controller="Home" asp-action="MyIdeas">My Ideas</a></li>
     }
-    <li><a asp-area="" asp-controller="Ideas" asp-action="Create">Add Idea</a></li>
+    <li class="exclusive-item"><a asp-area="" asp-controller="Ideas" asp-action="Create"><i class="material-icons">add</i>Add Idea</a></li>
 </ul>
 
 @if (SignInManager.IsSignedIn(User))
@@ -28,17 +28,11 @@
                 <ul class="dropdown-menu" role="menu">
                     @*<li><a href="/profile">Profile</a></li>*@
                     <li>
-                        <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">
-                            @*<i class="material-icons">account_circle</i>*@
-                            Account
-                            <div class="ripple-container"></div>
-                        </a>
+                        <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Account</a>
                     </li>
                     <li>
                         <a asp-area="" asp-controller="User" asp-action="Details" asp-route-id="@userInfo.Id" title="View your profiles">
-                            @*<i class="material-icons">account_circle</i>*@
                             My Innovation Profile
-                            <div class="ripple-container"></div>
                         </a>
                     </li>
                     <li role="separator" class="divider"></li>

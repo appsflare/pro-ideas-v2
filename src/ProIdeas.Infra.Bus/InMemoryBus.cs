@@ -33,7 +33,7 @@ namespace ProIdeas.Infra.Bus
             return Publish(theEvent);
         }
 
-        async private Task Publish<T>(T message) where T : Message
+        private async Task Publish<T>(T message) where T : Message
         {
             if (_container == null) return;
 

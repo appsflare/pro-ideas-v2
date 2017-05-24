@@ -33,7 +33,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
 
 
-        async public Task<bool> CheckIfExistsAsync(Guid fileId)
+        public async Task<bool> CheckIfExistsAsync(Guid fileId)
         {
 
             try
@@ -50,7 +50,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
 
         }
 
-        async public Task<bool> CheckIfExistsAsync(string fileName)
+        public async Task<bool> CheckIfExistsAsync(string fileName)
         {
             try
             {
@@ -66,13 +66,13 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             }
         }
 
-        async public Task<IEnumerable<IFileInfo>> GetAllRevisionsAsync(string fileName)
+        public async Task<IEnumerable<IFileInfo>> GetAllRevisionsAsync(string fileName)
         {
             var revisions = await _bucket.GetAllRevisionsAsync(fileName);
             return revisions.ToList().Select(CreateInternalFile).ToList();
         }
 
-        async public Task<IFileInfo> GetFileInfoAsync(Guid fileId)
+        public async Task<IFileInfo> GetFileInfoAsync(Guid fileId)
         {
             var file = await _bucket.GetFileInfoAsync(fileId);
 
@@ -85,14 +85,14 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
         }
 
 
-        async public Task<IFileInfo> GetFileInfoAsync(string fileName)
+        public async Task<IFileInfo> GetFileInfoAsync(string fileName)
         {
             var file = await _bucket.GetFileInfoByNameAsync(fileName);
 
             return CreateInternalFile(file);
         }
 
-        async public Task<bool> DeleteRevisionAsync(Guid fileId)
+        public async Task<bool> DeleteRevisionAsync(Guid fileId)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             return true;
         }
 
-        async public Task<bool> DeleteAllRevisionsAsync(string fileName)
+        public async Task<bool> DeleteAllRevisionsAsync(string fileName)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
             return true;
         }
 
-        async public Task<Stream> GetFileStreamAsync(string fileName)
+        public async Task<Stream> GetFileStreamAsync(string fileName)
         {
             if (!await CheckIfExistsAsync(fileName))
             {

@@ -3,7 +3,7 @@
 .navbar {
     //   background-color: $brand-primary;
     border: 0;
-    border-radius: $border-radius-base;    
+    border-radius: $border-radius-base;
 
     @extend .animation-transition-fast;
     padding: 10px 0;
@@ -244,7 +244,7 @@
 
 
     &-inverse {
-        background-color: $indigo;
+        background-color: $blue;
     }
 
     &.navbar-transparent {
@@ -288,5 +288,10 @@
         width: 100%;
         z-index: 3;
         transition: all 0.3s;
+    }
+
+    .exclusive-item {
+        border: none;
+        border-bottom: solid 1px $orange;
     }
 }

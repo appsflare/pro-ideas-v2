@@ -3521,7 +3521,7 @@ var IdeaImagesViewModel = function () {
 
                 }
             };
-            var fileUrl = '/api/ideas/' + this._ideaId + '/banner';
+            var fileUrl = '/api/ideas/' + this._ideaId + '/banner.png';
             this.form.file.selectedFile = asyncComputed(function () {
                 var file = this.value();
                 if (!file) {
@@ -3569,12 +3569,23 @@ var o,i,s,a,u;return i=null!=n?n:{},a=i.restorationIdentifier,s=i.restorationDat
 //import Barba from 'barba.js';
 //import FadeTransition from './transitions/fade';
 $(function () {
+    if (window.__turbo__) {
+        return;
+    }
+    window.__turbo__ = true;
+
     turbolinks.start();
-    $(document).off('turbolinks:before-cache').off('turbolinks:before-render').on('turbolinks:before-cache', function (e) {
+
+    var $window = $(window);
+
+    $window.on('turbolinks:visit', function (e) {
+        //$('.custom-scrollable').mCustomScrollbar('destroy');
+        $('body').removeClass('animated fadeIn').addClass('animated fadeOut');
+    }).on('turbolinks:before-cache', function (e) {
         $('.custom-scrollable').mCustomScrollbar('destroy');
-        $('body').addClass('animated fadeOut');
-    }).on('turbolinks:before-render', function () {
-        $(event.data.newBody).removeClass('fadeOut').addClass('animated fadeIn');
+        //$('body').removeClass('animated fadeIn').addClass('animated fadeOut');
+    }).on('turbolinks:before-render', function (e) {
+        $(event.data.newBody).removeClass('animated fadeOut').addClass('animated fadeIn');
     });
 });
 
@@ -3586,18 +3597,17 @@ $.material.init();
 
 var BasePage = function () {
     function BasePage() {
-
-        //this._url = Barba.Pjax.getCurrentUrl();
-
         classCallCheck(this, BasePage);
     }
 
+    //this._url = Barba.Pjax.getCurrentUrl();
+
+
+    //getTransition() {
+    //    return FadeTransition;
+    //}
+
     createClass(BasePage, [{
-        key: 'getTransition',
-        value: function getTransition() {
-            return FadeTransition;
-        }
-    }, {
         key: 'configure',
         value: function configure() {
             //Barba.Pjax.getTransition = () => this.getTransition();
@@ -3607,7 +3617,7 @@ var BasePage = function () {
         value: function init() {
             this.configure();
 
-            $('.custom-scrollable').mCustomScrollbar();
+            $('.custom-scrollable').mCustomScrollbar({ scrollInertia: 0 });
 
             this.onReady().then(function () {
                 $.material.init();

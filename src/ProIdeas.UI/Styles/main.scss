@@ -7,14 +7,19 @@
 @import '_transitions.scss';
 @import 'common.scss';
 
+@import 'components/_idea-card.scss';
+@import 'components/_search.scss';
+
 @import 'pages/create.scss';
 @import 'pages/idea.scss';
 @import 'pages/profile.scss';
+
 
 @import 'timeline.scss';
 
 html, body {
     height: 100%;
+    background-color: $body-bg;
 }
 
 .logo img {
@@ -23,7 +28,7 @@ html, body {
 
 .app-page {
     height: 100%;
-    padding-top: 75px;
+    padding-top: 100px;
 }
 
 .container-wrap {
@@ -49,8 +54,8 @@ footer {
 
 .button-floater {
     position: fixed;
-    bottom: 10%;
-    right: 10%;
+    bottom: 3%;
+    right: 2%;
 }
 
 .turbolinks-progress-bar {

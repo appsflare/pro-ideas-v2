@@ -1,14 +1,23 @@
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {
-    height: 300px;    
-    width: 50%;
+    height: 400px;    
+    width: 555px;
 }
 
 .carousel .carousel-indicators {
     bottom: -5px;
+    right: 2%;
+    width: auto;
+    left: initial;
 
     > li {
         border-radius: 12px;
         background: $brand-primary;
+    }
+}
+
+.carousel {
+    .idea-title h2 {
+        color: darken($light-blue, 25% );
     }
 }
 
@@ -18,20 +27,4 @@
 
 .blur{
     filter: blur(5px);
-}
-
-
-.carousel-caption {
-
-    > .idea-title {
-        margin-left: 34%;
-        width: 100%;
-        background: $brand-primary;
-
-
-
-        & > h2 {
-            color: #FFF;
-        }
-    }
 }

@@ -40,7 +40,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region IIdeaLogic Implementation
-        async public Task<IdeaDto> GetIdea(string ideaId)
+        public async Task<IdeaDto> GetIdea(string ideaId)
         {
             return _dataMapper.Map<IdeaDto>(await _repository.QueryOneAsync<Idea, GetIdeaByIdQuery>(new GetIdeaByIdQuery
             {
@@ -48,7 +48,7 @@ namespace ProIdeas.Logic
             }));
         }
 
-        async public Task<IEnumerable<IdeaDto>> GetIdeas(int pageSize, int page, string keyword)
+        public async Task<IEnumerable<IdeaDto>> GetIdeas(int pageSize, int page, string keyword)
         {
             var result = await _repository.QueryAsync<Idea, FilterIdeaQuery>(new FilterIdeaQuery
             {
@@ -62,7 +62,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IEnumerable<IdeaDto>>(result);
         }
 
-        async public Task<IEnumerable<IdeaDto>> GetTopIdeas(int count)
+        public async Task<IEnumerable<IdeaDto>> GetTopIdeas(int count)
         {
             var result = await _repository.QueryAsync<Idea, GetTopIdeaQuery>(new GetTopIdeaQuery
             {
@@ -102,7 +102,7 @@ namespace ProIdeas.Logic
             });
         }
 
-        async public Task<IEnumerable<IdeaDto>> GetUserIdeas(string userId, int pageSize, int page, string keyword)
+        public async Task<IEnumerable<IdeaDto>> GetUserIdeas(string userId, int pageSize, int page, string keyword)
         {
             var result = await _repository.QueryAsync<Idea, FilterIdeaQuery>(new FilterIdeaQuery
             {

@@ -17,7 +17,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
             _logger = loggerFactory.CreateLogger<GetUserProfileByUserIdQueryTemplate>();
         }
 
-        async protected override Task<IEnumerable<UserProfile>> ExecuteAsync(QueryTemplateContext<GetUserProfileByUserIdQuery> context)
+        protected override async Task<IEnumerable<UserProfile>> ExecuteAsync(QueryTemplateContext<GetUserProfileByUserIdQuery> context)
         {
             var queryParam = context.Parameter;
 

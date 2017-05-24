@@ -147,7 +147,7 @@ namespace ProIdeas.Domain.Repositories.RethinkDb
         }
 
 
-        async public Task<TEntity> QueryOneAsync<TEntity, TQueryParam>(TQueryParam queryParam)
+        public async Task<TEntity> QueryOneAsync<TEntity, TQueryParam>(TQueryParam queryParam)
                 where TEntity : class, new()
                 where TQueryParam : class
         {

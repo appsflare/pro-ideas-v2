@@ -13,7 +13,7 @@ namespace ProIdeas.UI.ViewComponents
             _ideaService = ideaService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string userId)
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var model = IdeaBannerViewModel.MapFrom(await _ideaService.GetTopIdeasAsync(3));
             return View(model);

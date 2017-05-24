@@ -5,11 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, minimal-ui, maximum-scale=1, minimum-scale=1" />
     <meta name="description" content="An realtime dashboard application to share and track ideas" />
+    <meta name="turbolinks-cache-control" content="no-cache" />
 
     <title>@ViewData["Title"] - Lot Of Ideas</title>
 
 
-    <link rel="shortcut icon" type="image/png" href="/favicon.png?v1" sizes="16x16 32x32 64x64" />
+    <link rel="shortcut icon" type="image/png" href="/favicon.ico?v1" sizes="16x16 32x32 64x64" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
     <!-- Material Design fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" type="text/css" />
     @*<link rel="stylesheet" href="/styles/animate.css" />*@
@@ -23,7 +26,7 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body>    
+<body data-no-transition-cache>    
     @RenderSection("Styles", required: false)
     <div class="signup-page">
 

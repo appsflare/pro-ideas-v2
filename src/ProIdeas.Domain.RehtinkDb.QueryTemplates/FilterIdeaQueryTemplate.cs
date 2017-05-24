@@ -9,7 +9,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
     public class FilterIdeaQueryTemplate : BaseRethinkQueryTemplate<Idea, FilterIdeaQuery>
     {
-        async protected override Task<IEnumerable<Idea>> ExecuteAsync(QueryTemplateContext<FilterIdeaQuery> context)
+        protected override async Task<IEnumerable<Idea>> ExecuteAsync(QueryTemplateContext<FilterIdeaQuery> context)
         {
             var queryParam = context.Parameter;
 

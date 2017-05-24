@@ -8,7 +8,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
     public class GetCommentByIdQueryTemplate : BaseRethinkQueryTemplate<IdeaComment, GetCommentByIdQuery>
     {
-        async protected override Task<IEnumerable<IdeaComment>> ExecuteAsync(QueryTemplateContext<GetCommentByIdQuery> context)
+        protected override async Task<IEnumerable<IdeaComment>> ExecuteAsync(QueryTemplateContext<GetCommentByIdQuery> context)
         {
             var queryParam = context.Parameter;
 

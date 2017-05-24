@@ -24,19 +24,28 @@ h6, .h6{
     text-transform: uppercase;
 }
 
+h1, h2, .h1, .h2 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: 'Open Sans', sans-serif;
+}
+
 .title,
 .card-title,
 .info-title,
 .footer-brand,
 .footer-big h5,
 .footer-big h4,
-.media .media-heading{
+.media .media-heading {
     font-weight: $font-weight-extra-bold;
-    font-family: "Roboto Slab", "Times New Roman", serif;
+    font-family: "Open Sans","Roboto Slab", "Times New Roman", serif;
+
     &,
-    a{
+    a {
         color: $black-color;
-        text-decoration: none;    
+        text-decoration: none;
     }
 }
 

@@ -9,7 +9,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates.Tasks
 {
     public class GetTaskItemTypesByBoardIdQueryTemplate : BaseRethinkQueryTemplate<TaskItemType, GetTaskItemTypesByBoardId>
     {
-        async protected override Task<IEnumerable<TaskItemType>> ExecuteAsync(QueryTemplateContext<GetTaskItemTypesByBoardId> context)
+        protected override async Task<IEnumerable<TaskItemType>> ExecuteAsync(QueryTemplateContext<GetTaskItemTypesByBoardId> context)
         {
             var r = RethinkDB.R;
             var queryParam = context.Parameter;

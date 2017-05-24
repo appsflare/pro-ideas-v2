@@ -45,7 +45,7 @@
             // no need to dispose of anything, mongodb handles connection pooling automatically
         }
 
-        async public virtual Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken)
+        public virtual async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken)
         {
             var result = await Task.Run(() =>
             {

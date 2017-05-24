@@ -36,14 +36,14 @@ namespace ProIdeas.Logic
             });
         }
 
-        async public Task<UserProfileDto> GetUserProfileAsync(string userId)
+        public async Task<UserProfileDto> GetUserProfileAsync(string userId)
         {
             var profile = await GetUserProfile(userId);
 
             return _dataMapper.Map<UserProfileDto>(profile);
         }
 
-        async public Task Handle(IdeaStatsChangedEvent message)
+        public async Task Handle(IdeaStatsChangedEvent message)
         {
             var profile = await GetUserProfile(message.Idea.OwnerId);
 
@@ -67,7 +67,7 @@ namespace ProIdeas.Logic
 
         }
 
-        async public Task Handle(CreateUserProfileCommand message)
+        public async Task Handle(CreateUserProfileCommand message)
         {
             var userProfile = await GetUserProfile(message.UserId);
 

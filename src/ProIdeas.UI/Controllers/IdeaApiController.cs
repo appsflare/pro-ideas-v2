@@ -65,7 +65,7 @@ namespace ProIdeas.UI.Controllers
 
         // PUT: api/IdeaApi/5
         [HttpPut("{id}")]
-        async public Task<IActionResult> Put(string id, [FromBody]IdeaDto idea)
+        public async Task<IActionResult> Put(string id, [FromBody]IdeaDto idea)
         {
             await _ideaService.UpdateAsync(idea);
             return Json(new { message = "Idea updated successfully" });
@@ -79,9 +79,9 @@ namespace ProIdeas.UI.Controllers
         }
 
         [HttpGet]
-        [Route("{id}/banner")]
+        [Route("{id}/banner.png")]
         [AllowAnonymous]
-        async public Task<IActionResult> GetBannerImage(string id)
+        public async Task<IActionResult> GetBannerImage(string id)
         {
             var stream = await _fileStorage.GetFileStreamAsync($"{id}.png");
 
@@ -95,7 +95,7 @@ namespace ProIdeas.UI.Controllers
 
         [HttpPost]
         [Route("{id}/banner")]
-        async public Task<IActionResult> SetBannerImage([FromRoute]string id)
+        public async Task<IActionResult> SetBannerImage([FromRoute]string id)
         {
             var bannerImage = $"{id}.png";
             var addedFiles = new List<Guid>();
@@ -111,7 +111,7 @@ namespace ProIdeas.UI.Controllers
 
         [HttpGet]
         [Route("{id}/pages")]
-        async public Task<IActionResult> GetPages([FromRoute]string id)
+        public async Task<IActionResult> GetPages([FromRoute]string id)
         {
             var idea = await _ideaService.GetIdeaAsync(id);
 
@@ -121,7 +121,7 @@ namespace ProIdeas.UI.Controllers
 
         [HttpPut]
         [Route("{id}/pages")]
-        async public Task<IActionResult> SavePages([FromRoute]string id, [FromBody]IEnumerable<PageDto> pages)
+        public async Task<IActionResult> SavePages([FromRoute]string id, [FromBody]IEnumerable<PageDto> pages)
         {
             await _ideaService.SavePagesAsync(id, pages);
 

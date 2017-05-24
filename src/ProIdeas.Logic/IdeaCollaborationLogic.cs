@@ -46,7 +46,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region IIdeaCollaborationLogic Implementation
-        async public Task<IdeaCommentDto> GetCommentAsync(string commentId)
+        public async Task<IdeaCommentDto> GetCommentAsync(string commentId)
         {
             var comment = await _repository.QueryOneAsync<IdeaComment, GetCommentByIdQuery>(new GetCommentByIdQuery
             {
@@ -55,7 +55,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IdeaCommentDto>(comment);
         }
 
-        async public Task<IEnumerable<IdeaCommentDto>> GetCommentsAsync(string ideaId)
+        public async Task<IEnumerable<IdeaCommentDto>> GetCommentsAsync(string ideaId)
         {
             var comments = await _repository.QueryAsync<IdeaComment, GetIdeaCommentsByIdeaIdQuery>(new GetIdeaCommentsByIdeaIdQuery
             {
@@ -64,7 +64,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IEnumerable<IdeaCommentDto>>(comments);
         }
 
-        async public Task<IdeaCollaborationStatsDto> GetStatsAsync(string ideaId)
+        public async Task<IdeaCollaborationStatsDto> GetStatsAsync(string ideaId)
         {
             var stats = await _repository.QueryOneAsync<IdeaCollaborationStats, GetIdeaCollaborationStatsQuery>(new GetIdeaCollaborationStatsQuery
             {
@@ -74,7 +74,7 @@ namespace ProIdeas.Logic
             return _dataMapper.Map<IdeaCollaborationStatsDto>(stats);
         }
 
-        async public Task<TeamDto> GetTeamAsync(string ideaId)
+        public async Task<TeamDto> GetTeamAsync(string ideaId)
         {
             var team = await _repository.QueryOneAsync<Team, GetTeamByIdeaIdQuery>(new GetTeamByIdeaIdQuery
             {
@@ -130,7 +130,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region LikeIdeaCommand Implementation
-        async public Task Handle(LikeIdeaCommand message)
+        public async Task Handle(LikeIdeaCommand message)
         {
             var likeData = await _repository.QueryOneAsync<IdeaLike, GetIdeaLikeByUserIdQuery>(new GetIdeaLikeByUserIdQuery
             {
@@ -168,7 +168,7 @@ namespace ProIdeas.Logic
         #endregion
 
         #region CreateTeamCommand Implementation
-        async public Task Handle(CreateTeamCommand message)
+        public async Task Handle(CreateTeamCommand message)
         {
             var team = _dataMapper.Map<Team>(message.Team);
 
@@ -180,22 +180,22 @@ namespace ProIdeas.Logic
 
 
         #region IdeaLikeChangedEvent,IdeaCommentCreatedEvent,IdeaCommentUpdatedEvent,IdeaCommentDeletedEvent Implementation
-        async public Task Handle(IdeaLikeChangedEvent message)
+        public async Task Handle(IdeaLikeChangedEvent message)
         {
             await UpdateIdeaStats(message.IdeaId);
         }
 
-        async public Task Handle(IdeaCommentCreatedEvent message)
+        public async Task Handle(IdeaCommentCreatedEvent message)
         {
             await UpdateIdeaStats(message.Comment.IdeaId);
         }
 
-        async public Task Handle(IdeaCommentUpdatedEvent message)
+        public async Task Handle(IdeaCommentUpdatedEvent message)
         {
             await UpdateIdeaStats(message.Comment.IdeaId);
         }
 
-        async public Task Handle(IdeaCommentDeletedEvent message)
+        public async Task Handle(IdeaCommentDeletedEvent message)
         {
             await UpdateIdeaStats(message.Comment.IdeaId);
         }

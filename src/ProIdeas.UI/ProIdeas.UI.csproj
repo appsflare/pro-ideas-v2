@@ -14,6 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Styles\NewFolder\**" />
+    <Content Remove="Styles\NewFolder\**" />
+    <EmbeddedResource Remove="Styles\NewFolder\**" />
+    <None Remove="Styles\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Scripts\lib\bootstrap-datepicker.js" />
     <Content Include="Scripts\lib\material-kit.js" />
     <Content Include="Scripts\lib\material.min.js" />
@@ -25,6 +32,7 @@
     <Content Include="wwwroot\logos\Silver.svg" />    
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ElasticEmail.WebApiClient" Version="1.3.102" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />

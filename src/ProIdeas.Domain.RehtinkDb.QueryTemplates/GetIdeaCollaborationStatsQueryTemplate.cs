@@ -9,7 +9,7 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
 {
     public class GetIdeaCollaborationStatsQueryTemplate : BaseRethinkQueryTemplate<IdeaCollaborationStats, GetIdeaCollaborationStatsQuery>
     {
-        async protected override Task<IEnumerable<IdeaCollaborationStats>> ExecuteAsync(QueryTemplateContext<GetIdeaCollaborationStatsQuery> context)
+        protected override async Task<IEnumerable<IdeaCollaborationStats>> ExecuteAsync(QueryTemplateContext<GetIdeaCollaborationStatsQuery> context)
         {
 
             var queryParam = context.Parameter;

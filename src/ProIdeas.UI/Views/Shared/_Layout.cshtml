@@ -6,8 +6,11 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, minimal-ui, maximum-scale=1, minimum-scale=1" />
     <meta name="description" content="An realtime dashboard application to share and track ideas" />
     <title>@ViewData["Title"] - Lot Of Ideas</title>
-    <link rel="shortcut icon" type="image/png" href="/favicon.png?v1" sizes="16x16 32x32 64x64" />
+    <link rel="shortcut icon" type="image/png" href="/favicon.ico?v1" sizes="16x16 32x32 64x64" />
+    <meta name="turbolinks-cache-control" content="no-cache"/>
     <!-- Material Design fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" type="text/css" />
     @*<link rel="stylesheet" href="/styles/animate.css" />*@
     <!-- Font Awesome -->
@@ -20,8 +23,8 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body>
 
+<body data-no-transition-cache>
     @RenderSection("Styles", required: false)
 
     <div class="app-page">
@@ -53,7 +56,7 @@
             </div>
         </div>
         <footer>
-            <p class="copyright">&copy; 2017 - ProIdeas.UI</p>
+            <p class="copyright">&copy; 2017 - Lot Of Ideas</p>
         </footer>
     </div>
     @await Html.PartialAsync("_CommonLibImports")
