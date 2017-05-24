@@ -8626,19 +8626,13 @@ h2.title {
   bottom: 5px; }
   .carousel .carousel-indicators li,
   .carousel .carousel-indicators .active {
-    margin: 11px 10px; }
+    margin: 11px 2px; }
   .carousel .carousel-indicators li {
-    background: #FFFFFF;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    border-radius: 2px; }
+    background: #9e9e9e;
+    border-radius: 12px; }
   .carousel .carousel-indicators .active {
     margin-top: 10px;
-    -webkit-transform: scale(1.5);
-    -moz-transform: scale(1.5);
-    -o-transform: scale(1.5);
-    -ms-transform: scale(1.5);
-    transform: scale(1.5);
-    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2); }
+    background-color: #607d8b; }
 
 .carousel .carousel-caption {
   padding-bottom: 45px; }
@@ -9499,9 +9493,6 @@ h2.title {
   right: 2%;
   width: auto;
   left: initial; }
-  .carousel .carousel-indicators > li {
-    border-radius: 12px;
-    background: #2b4278; }
 
 .carousel .idea-title h2 {
   color: #015276;
@@ -9515,6 +9506,10 @@ h2.title {
 
 .mCSB_inside > .mCSB_container {
   margin-right: 0 !important; }
+
+a:hover {
+  text-decoration: none;
+  opacity: 0.8; }
 
 /*
 == malihu jquery custom scrollbar plugin ==
