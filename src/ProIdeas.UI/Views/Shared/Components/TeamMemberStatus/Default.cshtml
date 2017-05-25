@@ -3,10 +3,10 @@
 @switch (Model.Status)
 {
     case MemberStatus.Request:
-        <button class="btn btn-sm btn-warning" disabled="disabled" >Pending</button>
+        <button class="btn btn-warning" disabled="disabled" >Pending</button>
         break;
     case MemberStatus.Approved:
-        <button class="btn btn-sm btn-primary" disabled="disabled">
+        <button class="btn btn-success" disabled="disabled">
             Team Member
         </button>
         break;
@@ -16,7 +16,7 @@
                 asp-action="Register" 
                 asp-route-id ="@Model.IdeaId"
                 asp-route-userId ="@Model.UserId">
-            <button class="btn btn-sm btn-success">
+            <button class="btn btn-primary">
               <i class="material-icons">add</i>  Join Idea
             </button>
         </form>
