@@ -3,11 +3,13 @@
 @switch (Model.Status)
 {
     case MemberStatus.Request:
-        <button class="btn btn-warning" disabled="disabled" >Pending</button>
+        <button class="btn btn-simple">
+            <i class="material-icons">access_time</i> Awaiting Approval
+        </button>
         break;
     case MemberStatus.Approved:
-        <button class="btn btn-success" disabled="disabled">
-            Team Member
+        <button class="btn btn-simple" disabled="disabled">
+            <i class="material-icons">people</i> Team Member
         </button>
         break;
     default:
