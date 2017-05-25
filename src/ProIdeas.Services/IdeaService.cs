@@ -5,7 +5,6 @@ using ProIdeas.Logic.Contracts;
 using System.Threading.Tasks;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Commands.Ideas;
-using System;
 
 namespace ProIdeas.Services
 {

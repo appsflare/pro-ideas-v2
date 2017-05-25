@@ -1,5 +1,4 @@
-﻿using System;
-using ProIdeas.DTO;
+﻿using ProIdeas.DTO;
 
 namespace ProIdeas.UI.Models.TeamViewModels
 {

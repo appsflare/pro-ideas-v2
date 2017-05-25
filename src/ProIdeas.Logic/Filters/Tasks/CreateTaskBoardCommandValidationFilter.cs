@@ -1,7 +1,6 @@
 ﻿using ProIdeas.Authentication.Contracts;
 using ProIdeas.Domain.Core.Events;
 using ProIdeas.Domain.Entities;
-using ProIdeas.Domain.Entities.Tasks;
 using ProIdeas.Domain.Repositories;
 using ProIdeas.Exceptions;
 using ProIdeas.Infra.Commands.Tasks;

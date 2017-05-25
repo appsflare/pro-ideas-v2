@@ -13,7 +13,7 @@
 }
 
 <script id="pages-template" type="text/html">
-    <div class="row">
+    <div>
         <aside class="col-sm-3">
             <ul class="nav nav-pills nav-stacked nav-pills-horizontal nav-pills-success nav-pills-with-btn" data-bind="foreach: pages">
                 <li class="active" data-bind="css:{ active: $parent.isCurrentPage($data) },click: function(){$parent.editPage($data);}">
@@ -45,7 +45,7 @@
             </div>
         </content>
     </div>
-    <div class="row">
+    <div>
         <button class="btn btn-primary pull-right" data-bind="click: finish">Review</button>
         <a asp-controller="Idea" asp-action="Images" asp-route-id="@Model.Id" class="btn btn-secondary pull-right">Previous</a>
     </div>
@@ -57,7 +57,7 @@
     <h4 class="common-page-header">Post your new idea</h4>
 
     <div>
-        <section class="row">
+        <section>
             <ul class="nav nav-pills nav-pills-vertical" role="tablist">
                 <li class="complete"><a href="/ideas/@Model.Id/edit">Basic Information</a></li>
                 <li class="complete"><a href="/ideas/@Model.Id/images">Images</a></li>

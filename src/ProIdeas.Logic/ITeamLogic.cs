@@ -1,5 +1,4 @@
-﻿using ProIdeas.Domain.Entities;
-using ProIdeas.DTO;
+﻿using ProIdeas.DTO;
 using System.Threading.Tasks;
 
 namespace ProIdeas.Logic

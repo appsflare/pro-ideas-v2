@@ -8,7 +8,7 @@
 }
 <input id="IdeaId" type="hidden" value="@Model.Id" />
 <div class="container create-idea l-padding white-background">
-    <div class="row">
+    <div>
         <h4 class="common-page-header">Post your new idea</h4>
         <section>
             <ul class="nav nav-pills nav-pills-vertical" role="tablist">
@@ -21,18 +21,10 @@
             <div class="content" id="idea-image-upload-form">
                 <div data-bind="with: form">
                     <file-uploader params="icon: file.icon, value: file.value"></file-uploader>
+                    <p><b>*Note: Suggested image dimension 555 X 400 in pixels</b></p>
                     <div data-bind="if: file.selectedFile" class="card card-profile card-plain">
-                        <div class="card-image">
-                            <image data-bind="attr:{src: file.selectedFile}"></image>
-                        </div>
-                        <div class="content">
-                            <h4 class="card-title">
-                                Selected Banner Image
-                            </h4>
-                            <h6 class="category text-gray"></h6>
-                            <div class="footer">
-                            </div>
-                        </div>
+                        <img alt="Banner Image" height="400" width="555" data-bind="attr:{src: file.selectedFile}" title="Selected Banner Image"/>
+                        
                     </div>
 
                 </div>

@@ -11,8 +11,6 @@ using ProIdeas.UI.Models;
 using ProIdeas.UI.Models.AccountViewModels;
 using ProIdeas.UI.Services;
 using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Authentication;
 using ProIdeas.Services.Contracts;
 

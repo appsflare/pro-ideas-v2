@@ -1,8 +1,5 @@
 ﻿using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Commands.Team;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using ProIdeas.DTO;
 using ProIdeas.Logic;
