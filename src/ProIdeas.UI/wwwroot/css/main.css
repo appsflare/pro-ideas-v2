@@ -12028,8 +12028,10 @@ textarea {
 .width250px {
   width: 250px; }
 
+.width500px {
+  width: 500px; }
+
 .ellipses {
-  width: 250px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; }
