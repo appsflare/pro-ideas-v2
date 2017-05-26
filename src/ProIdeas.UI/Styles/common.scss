@@ -90,7 +90,7 @@ textarea {
     margin-left: 20px;
 }
 
-.l-padding{
+.l-padding {
     padding: 20px;
 }
 
@@ -114,7 +114,13 @@ textarea {
     margin-bottom: 30px;
 }
 
-.width250px{
-    width:250px;
+.width250px {
+    width: 250px;
 }
 
+.ellipses {
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

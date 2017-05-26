@@ -12028,6 +12028,12 @@ textarea {
 .width250px {
   width: 250px; }
 
+.ellipses {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
 .idea-card-wrap {
   padding: 23px; }
 

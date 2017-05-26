@@ -22,7 +22,7 @@
                                 <div class="idea-title">
                                     <h2><a asp-controller="Idea" asp-action="Details" asp-route-id="@idea.Id"> @idea.Name</a></h2>
                                     <span class="author-wrap">By <a asp-controller="User" asp-action="Details" asp-route-id="@idea.OwnerId" class="author">@idea.Owner.FullName</a></span>
-                                    <p>@idea.Description</p>
+                                    <div class="ellipses" title="@idea.Description">@idea.Description</div>
 
                                     <a class="btn btn-exclusive" asp-action="Details" asp-controller="Idea" asp-route-id="@idea.Id">View Idea</a>
                                 </div>

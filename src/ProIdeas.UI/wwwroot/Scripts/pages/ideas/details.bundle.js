@@ -8206,7 +8206,7 @@ knockout.components.register('comments-list', {
     template: template
 });
 
-var template$1 = "﻿<button class=\"btn btn-exclusive\" data-bind=\"click: actions.like\">\r\n    <i class=\"material-icons\">favorite</i>\r\n    <b>LIKE THIS IDEA</b>&nbsp;(<span data-bind=\"text: LikeCount\" class=\"s-left-margin\"></span>&nbsp;Likes&nbsp;)\r\n</button>\r\n\r\n";
+var template$1 = "﻿<button class=\"btn btn-exclusive\" data-bind=\"click: actions.like\">\r\n    <i class=\"material-icons\">favorite</i>\r\n    <b>LIKE THIS IDEA</b>&nbsp;(<span data-bind=\"text: LikeCount\" class=\"s-left-margin\"></span>&nbsp;\r\n    <span class=\"text-capitalize\">Likes</span>&nbsp;)\r\n</button>\r\n\r\n";
 
 var IdeaLikeViewModel = function IdeaLikeViewModel(_ref) {
     var like = _ref.like,
