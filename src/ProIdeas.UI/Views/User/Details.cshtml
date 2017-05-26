@@ -27,7 +27,7 @@
 
                         foreach (var item in activity.ActivityTimeLine)
                         {
-                            @await Html.PartialAsync(item.Activity.ActivityType, item);
+                            @await Html.PartialAsync(item.Activity.ActivityType, item)
                         }
                     }
                 </ul>
@@ -47,7 +47,7 @@
                         </li>
                         foreach (var item in activity.ActivityTimeLine)
                         {
-                            @await Html.PartialAsync(item.Activity.ActivityType, item);
+                            @await Html.PartialAsync(item.Activity.ActivityType, item)
                         }
                     }
                 </ul>
