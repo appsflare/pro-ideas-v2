@@ -3,10 +3,10 @@ import 'knockout.validation';
 
 export default class IdeaBasicInfoViewModel {
 
-    constructor({ idea = {}, actions: {save} }) {
+    constructor({ idea = {}, actions: { save } }) {
 
         ko.validation.init({
-            errorElementClass: 'has-error',
+            errorElementClass: 'has-error-field',
             errorMessageClass: 'help-block',
             decorateInputElement: true
         });
@@ -17,11 +17,11 @@ export default class IdeaBasicInfoViewModel {
 
     }
 
-    _initForm({id, title = '', description = '', isFundingRequired = false, fundingRequirement = ''}) {
+    _initForm({ id, title = '', description = '', isFundingRequired = false, fundingRequirement = '' }) {
         this.form = ko.validatedObservable({
             id,
-            title: ko.observable(title).extend({ required: true }),
-            description: ko.observable(description).extend({ required: true }),
+            title: ko.observable(title).extend({ required: true, maxLength: 100 }),
+            description: ko.observable(description).extend({ required: true, maxLength: 500 }),
             isFundingRequired: ko.observable(isFundingRequired).extend({ required: true }),
             fundingRequirement: ko.observable(fundingRequirement).extend({ required: false })
         });

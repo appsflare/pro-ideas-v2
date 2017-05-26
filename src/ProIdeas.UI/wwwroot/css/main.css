@@ -7512,6 +7512,13 @@ output {
   .form-group.has-error label.control-label,
   .form-group.has-error .help-block {
     color: #f44336; }
+  .form-group.has-error-field .form-control {
+    box-shadow: none; }
+  .form-group.has-error-field.is-focused .form-control {
+    background-image: linear-gradient(#f44336, #f44336), linear-gradient(#D2D2D2, #D2D2D2); }
+  .form-group.has-error-field label.control-label,
+  .form-group.has-error-field .help-block {
+    color: #f44336; }
   .form-group.has-success .form-control {
     box-shadow: none; }
   .form-group.has-success.is-focused .form-control {

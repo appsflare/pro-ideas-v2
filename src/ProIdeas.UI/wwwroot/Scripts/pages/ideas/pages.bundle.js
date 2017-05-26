@@ -14108,8 +14108,7 @@ ko.bindingHandlers['validationElement'] = {
 			var shouldShow = ((!config.decorateElementOnModified || isModified) ? !isValid : false);
 
 			// css: { validationElement: false }
-			css[config.errorElementClass] = shouldShow;
-
+			css[config.errorElementClass] = shouldShow;			
 			return css;
 		};
 
@@ -14542,7 +14541,7 @@ var PagesViewModel = function () {
 
 
         knockout.validation.init({
-            errorElementClass: 'has-error',
+            errorElementClass: 'has-error-field',
             errorMessageClass: 'help-block',
             decorateInputElement: true
         });

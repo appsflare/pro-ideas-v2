@@ -20,7 +20,7 @@ export default class PagesViewModel {
     constructor({ pages = [], actions: {savePages, finish} }) {
 
         ko.validation.init({
-            errorElementClass: 'has-error',
+            errorElementClass: 'has-error-field',
             errorMessageClass: 'help-block',
             decorateInputElement: true
         });
