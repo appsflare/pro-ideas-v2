@@ -228,15 +228,7 @@ namespace ProIdeas.UI.Controllers
             if (result.Succeeded)
             {
 
-                var token = info.Principal.FindFirst("id_token");
-                if (token != null)
-                {
-                    var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-                    var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
-                    ((ClaimsIdentity)claimsPrincipal.Identity).AddClaim(token);
-                    await HttpContext.Authentication.SignInAsync("Identity.Application", claimsPrincipal);
-                }
-
+                await SaveAuthenticationToken(info);
 
 
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
@@ -258,6 +250,18 @@ namespace ProIdeas.UI.Controllers
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
                 var name = info.Principal.FindFirstValue("name");
                 return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email, FullName = name });
+            }
+        }
+
+        private async Task SaveAuthenticationToken(ExternalLoginInfo info)
+        {
+            var token = info.Principal.FindFirst("id_token");
+            if (token != null)
+            {
+                var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
+                ((ClaimsIdentity) claimsPrincipal.Identity).AddClaim(token);
+                await HttpContext.Authentication.SignInAsync("Identity.Application", claimsPrincipal);
             }
         }
 
@@ -284,6 +288,8 @@ namespace ProIdeas.UI.Controllers
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        await SaveAuthenticationToken(info);
+
                         _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
                         return RedirectToLocal(returnUrl);
                     }
