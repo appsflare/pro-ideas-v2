@@ -27,7 +27,10 @@ node('swarm') {
 		sh 'ls'
 		docker.withRegistry('https://registry.hub.docker.com/v2/', 'docker-hub') {    
 			def app = docker.build 'appsflare/pro-ideas-v2:latest'
-			app.push()    
+			app.push()
+			sh '''
+			docker rmi appsflare/pro-ideas-v2:latest
+			'''
 		}
 	}
 
