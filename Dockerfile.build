@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:1.1-sdk
+FROM microsoft/dotnet:1.1.2-sdk
 RUN mkdir /build -p && \
 	mkdir /out -p
 ADD src /build/src

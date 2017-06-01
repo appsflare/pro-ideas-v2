@@ -1,5 +1,5 @@
 # Second Stage
-FROM microsoft/dotnet:1.1-runtime
+FROM microsoft/dotnet:1.1.2-runtime
 EXPOSE 5000
 
 ENV ASPNETCORE_URLS=http://+:5000
