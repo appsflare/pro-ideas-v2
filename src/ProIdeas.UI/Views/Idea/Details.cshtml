@@ -14,100 +14,102 @@
 <div class="idea-details-page-wrap">
     <div class="col-lg-8">
         <div class="idea-details-page white-background">
-                <div class="row">
-                    <div class="idea-header">
-                        <div class="col-sm-6">
-                            <img src="/api/ideas/@Model.Id/banner.png" alt="Circle Image" class="img-responsive">
-                        </div>
-                        <div class="name xl-top-margin col-sm-6">
-                            <h3 class="title">@Model.Title</h3>
+            <div class="row">
+                <div class="idea-header">
+                    <div class="col-sm-6">
+                        <img src="/api/ideas/@Model.Id/banner.png" alt="Circle Image" class="img-responsive">
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="name xl-top-margin">
+                            <h2>@Model.Title</h2>
                             <span class="author-wrap">By <a asp-controller="User" asp-action="Details" asp-route-id="@Model.OwnerId" class="author">@Model.Owner.FullName</a></span>
                         </div>
-
-                        @if (Model.IsOwner(UserManager.GetUserId(User)))
-                    {
-                            <div class="col-sm-6">
-                                <div class="display-inline">
-                                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-default">Edit</a>
-                                </div>
-
-                                @if (Model.IsPublished)
-                            {
+                        <div class="pull-left width250px">
+                            <div>
+                                <idea-like params="like: '@Model.Likes', ideaId: '@Model.Id', client: client"></idea-like>
+                            </div>
+                            @if (Model.IsOwner(UserManager.GetUserId(User)))
+                        {
+                                <div>
                                     <div class="display-inline">
-                                        <form class="form-inline" method="post" asp-action="Unpublish" asp-route-id="@Model.Id">
-                                            <button class="btn btn-sm btn-danger">Unpublish</button>
-                                        </form>
+                                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-default">Edit</a>
                                     </div>
+
+                                    @if (Model.IsPublished)
+                            {
+                                        <div class="display-inline">
+                                            <form class="form-inline" method="post" asp-action="Unpublish" asp-route-id="@Model.Id">
+                                                <button class="btn btn-primary">Unpublish</button>
+                                            </form>
+                                        </div>
                             }
                             else
                             {
-                                    <div class="display-inline">
-                                        <form class="form-inline" method="post" asp-action="Publish" asp-route-id="@Model.Id">
-                                            <button class="btn btn-sm btn-primary">Publish</button>
-                                        </form>
-                                    </div>
+                                        <div class="display-inline">
+                                            <form class="form-inline" method="post" asp-action="Publish" asp-route-id="@Model.Id">
+                                                <button class="btn btn-primary">Publish</button>
+                                            </form>
+                                        </div>
                             }
-                            </div>
-                    }
-                    else
-                    { <div class="col-sm-6">
-                        <div class="display-inline">
-                            @await Component.InvokeAsync("TeamMemberStatus", new { userId = UserManager.GetUserId(User), ideaId = Model.Id })
-                        </div>
-                    </div>
-                    }
-                        <div class="col-sm-6">
-                            <idea-like params="like: '@Model.Likes', ideaId: '@Model.Id', client: client"></idea-like>
+                                </div>
+                        }
+                        else
+                        {
+                                <div class="display-inline">
+                                    @await Component.InvokeAsync("TeamMemberStatus", new { userId = UserManager.GetUserId(User), ideaId = Model.Id })
+                                </div>
+                        }
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="profile-tabs">
-                        <div class="nav-align-left">
-                            <ul class="nav nav-pills nav-pills-grey" role="tablist">
-                                @foreach (var page in Model.Pages)
+            </div>
+            <div class="row">
+                <div class="profile-tabs">
+                    <div class="nav-align-left">
+                        <ul class="nav nav-pills nav-pills-grey" role="tablist">
+                            @foreach (var page in Model.Pages)
                             {
-                                    <li class="@(page.IsActive ? "active" : string.Empty)">
-                                        <a href="#@page.Id" role="tab" data-toggle="tab">
-                                            @page.Name
-                                        </a>
-                                    </li>
+                                <li class="@(page.IsActive ? "active" : string.Empty)">
+                                    <a href="#@page.Id" role="tab" data-toggle="tab">
+                                        @page.Name
+                                    </a>
+                                </li>
                             }
 
-                                @if (Model.IsFundingRequired)
+                            @if (Model.IsFundingRequired)
                             {
-                                    <li>
-                                        <a href="#fundingdetails" role="tab" data-toggle="tab">
-                                            Funding Requirement
-                                        </a>
-                                    </li>
+                                <li>
+                                    <a href="#fundingdetails" role="tab" data-toggle="tab">
+                                        Funding Requirement
+                                    </a>
+                                </li>
 
                             }
-                            </ul>
+                        </ul>
 
-                            <div class="tab-content gallery">
-                                @foreach (var page in Model.Pages)
+                        <div class="tab-content gallery">
+                            @foreach (var page in Model.Pages)
                             {
-                                    <div class="tab-pane l-margin @(page.IsActive ? "active" : string.Empty)" id="@page.Id">
-                                        <div class="col-sm-10">
-                                            @Html.Raw(page.Content)
-                                        </div>
+                                <div class="tab-pane l-margin @(page.IsActive ? "active" : string.Empty)" id="@page.Id">
+                                    <div class="col-sm-10">
+                                        @Html.Raw(page.Content)
                                     </div>
+                                </div>
                             }
-                                @if (Model.IsFundingRequired)
+                            @if (Model.IsFundingRequired)
                             {
-                                    <div class="tab-pane l-margin" id="fundingdetails">
-                                        <div class="col-sm-10">
-                                            @Html.Raw(Model.FundingRequirement)
-                                        </div>
+                                <div class="tab-pane l-margin" id="fundingdetails">
+                                    <div class="col-sm-10">
+                                        @Html.Raw(Model.FundingRequirement)
                                     </div>
+                                </div>
 
                             }
-                            </div>
                         </div>
                     </div>
-
                 </div>
+
+            </div>
         </div>
     </div>
     <div class="col-lg-4">

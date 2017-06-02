@@ -10,7 +10,6 @@ using ProIdeas.Infra.Commands.Users;
 using ProIdeas.Infra.Events;
 using ProIdeas.Logic.Contracts;
 using System.Threading.Tasks;
-using System;
 
 namespace ProIdeas.Logic
 {

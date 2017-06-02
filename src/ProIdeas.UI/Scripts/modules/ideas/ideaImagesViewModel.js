@@ -27,7 +27,7 @@ export default class IdeaImagesViewModel {
     constructor({ ideaId, actions: {next} }) {
 
         ko.validation.init({
-            errorElementClass: 'has-error',
+            errorElementClass: 'has-error-field',
             errorMessageClass: 'help-block',
             decorateInputElement: true
         });

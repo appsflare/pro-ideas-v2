@@ -7,7 +7,7 @@
     <h4 class="common-page-header">Team Details</h4>
 
     <div>
-        <section class="row">
+        <section>
             <ul class="nav nav-pills nav-pills-vertical" role="tablist">
                 <li class="complete"><a href="/ideas/@Model.IdeaId/edit">Basic Information</a></li>
                 <li class="complete"><a href="/ideas/@Model.IdeaId/images">Images</a></li>
@@ -66,7 +66,7 @@
             }
         </section>
     </div>
-    <div class="row">
+    <div>
         <a asp-controller="Idea" asp-action="Pages" asp-route-id="@Model.IdeaId" class="btn btn-primary pull-right">Next</a>
         <a asp-controller="Idea" asp-action="Images" asp-route-id="@Model.IdeaId" class="btn btn-secondary pull-right">Previous</a>
     </div>

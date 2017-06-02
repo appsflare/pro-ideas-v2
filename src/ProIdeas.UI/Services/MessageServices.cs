@@ -50,10 +50,15 @@ namespace ProIdeas.UI.Services
                     Sender = defaultEmail,
                     From = defaultEmail,
                     ReplyTo = defaultEmail,
-                    FromMimeHeader = defaultEmail
+                    FromMimeHeader = defaultEmail,
+                    TemplateName = "default"
                 };
 
-                var result = await _mailClient.SendTransactionalMailAsync(recipient, mailMessage);
+                var result = await _mailClient.SendTransactionalMailAsync(recipient, mailMessage, null, null, new Dictionary<string, string>
+                {
+                    { "subject",subject},
+                    { "body",message}
+                });
 
                 _logger.LogInformation("Sent mail to: {0}, subject: {1}, message id: {2}, transaction id: {3}", email, subject, result.MessageID, result.TransactionID);
             }

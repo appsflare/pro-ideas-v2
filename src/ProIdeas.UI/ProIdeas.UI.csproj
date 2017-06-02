@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot/fav-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Scripts\lib\bootstrap-datepicker.js" />
     <Content Include="Scripts\lib\material-kit.js" />
     <Content Include="Scripts\lib\material.min.js" />

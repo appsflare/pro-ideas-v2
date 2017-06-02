@@ -4,8 +4,6 @@ using ProIdeas.Services.Contracts;
 using ProIdeas.UI.Models.IdeaViewModels;
 using System.Threading.Tasks;
 using System.Linq;
-using ProIdeas.UI.Models.TeamViewModels;
-using ProIdeas.Services;
 
 namespace ProIdeas.UI.Controllers
 {

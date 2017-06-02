@@ -14108,8 +14108,7 @@ ko.bindingHandlers['validationElement'] = {
 			var shouldShow = ((!config.decorateElementOnModified || isModified) ? !isValid : false);
 
 			// css: { validationElement: false }
-			css[config.errorElementClass] = shouldShow;
-
+			css[config.errorElementClass] = shouldShow;			
 			return css;
 		};
 
@@ -14513,7 +14512,7 @@ var IdeaBasicInfoViewModel = function () {
 
 
         knockout.validation.init({
-            errorElementClass: 'has-error',
+            errorElementClass: 'has-error-field',
             errorMessageClass: 'help-block',
             decorateInputElement: true
         });
@@ -14538,8 +14537,8 @@ var IdeaBasicInfoViewModel = function () {
 
             this.form = knockout.validatedObservable({
                 id: id,
-                title: knockout.observable(title).extend({ required: true }),
-                description: knockout.observable(description).extend({ required: true }),
+                title: knockout.observable(title).extend({ required: true, maxLength: 100 }),
+                description: knockout.observable(description).extend({ required: true, maxLength: 500 }),
                 isFundingRequired: knockout.observable(isFundingRequired).extend({ required: true }),
                 fundingRequirement: knockout.observable(fundingRequirement).extend({ required: false })
             });

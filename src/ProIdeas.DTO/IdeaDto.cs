@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProIdeas.DTO
 {
@@ -13,9 +14,9 @@ namespace ProIdeas.DTO
         public string OwnerId { get; set; }
 
         public UserDto Owner { get; set; }
-
+        
         public string Title { get; set; }
-
+        
         public string Description { get; set; }
 
         public bool IsFundingRequired { get; set; }

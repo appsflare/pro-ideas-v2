@@ -11,8 +11,6 @@ using ProIdeas.UI.Models;
 using ProIdeas.UI.Models.AccountViewModels;
 using ProIdeas.UI.Services;
 using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Authentication;
 using ProIdeas.Services.Contracts;
 
@@ -224,20 +222,13 @@ namespace ProIdeas.UI.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
+
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (result.Succeeded)
             {
 
-                var token = info.Principal.FindFirst("id_token");
-                if (token != null)
-                {
-                    var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-                    var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
-                    ((ClaimsIdentity)claimsPrincipal.Identity).AddClaim(token);
-                    await HttpContext.Authentication.SignInAsync("Identity.Application", claimsPrincipal);
-                }
-
+                await SaveAuthenticationToken(info);
 
 
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
@@ -262,6 +253,18 @@ namespace ProIdeas.UI.Controllers
             }
         }
 
+        private async Task SaveAuthenticationToken(ExternalLoginInfo info)
+        {
+            var token = info.Principal.FindFirst("id_token");
+            if (token != null)
+            {
+                var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
+                ((ClaimsIdentity) claimsPrincipal.Identity).AddClaim(token);
+                await HttpContext.Authentication.SignInAsync("Identity.Application", claimsPrincipal);
+            }
+        }
+
         //
         // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
@@ -277,7 +280,7 @@ namespace ProIdeas.UI.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, EmailConfirmed = true };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -285,6 +288,8 @@ namespace ProIdeas.UI.Controllers
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        await SaveAuthenticationToken(info);
+
                         _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
                         return RedirectToLocal(returnUrl);
                     }

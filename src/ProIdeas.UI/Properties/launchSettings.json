@@ -20,10 +20,9 @@
       "launchBrowser": true,
       "environmentVariables": {
         "COCKPIT_AUTH_CLIENT_SECRET": "BAE2988C-D563-47C8-97CF-8FAF7A50AD2D",
-        "EMAIL_MAILJET_API_SECRET": "68100e354db2fb25f4b51c9de6ffd2ee",
         "COCKPIT_AUTH_IDENTITY_SERVER_URL": "http://localhost:19970/opic/",
+        "EMAIL_ELASTICEMAIL_API_KEY": "df831622-2111-4f4a-b4b7-75bb1db9bd89",
         "COCKPIT_AUTH_CLIENT_ID": "BAE2988C-D563-47C8-97CF-8FAF7A50AD2D",
-        "EMAIL_MAILJET_API_KEY": "0f5c9edd236a4a02c5ca45b21ebce6d5",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "COCKPIT_AUTH_ENABLED": "true"
       },

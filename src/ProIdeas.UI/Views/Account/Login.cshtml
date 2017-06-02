@@ -1,7 +1,4 @@
-﻿@using System.Collections.Generic
-@using Microsoft.AspNetCore.Http
-@using Microsoft.AspNetCore.Http.Authentication
-@model LoginViewModel
+﻿@model LoginViewModel
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
@@ -74,7 +71,7 @@
                         </span>
 
                         <div class="form-group is-empty">
-                            <input asp-for="Password" class="form-control" value="" type="password" placeholder="Password..." min="8" />
+                            <input asp-for="Password" class="form-control" value="" type="password" placeholder="Password..." />
                             <span class="material-icons form-control-feedback">clear</span>
                             <span class="material-input" />
                             <span asp-validation-for="Password" class="help-block validation-message"></span>

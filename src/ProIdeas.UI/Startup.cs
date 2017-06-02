@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,7 +16,6 @@ using ProIdeas.Domain.Entities;
 using ProIdeas.Domain.RehtinkDb.QueryTemplates;
 using ProIdeas.Domain.Repositories;
 using ProIdeas.Domain.Repositories.RethinkDb;
-using ProIdeas.DTO;
 using ProIdeas.Files.Contracts;
 using ProIdeas.Infra.Bus;
 using ProIdeas.Infra.Commands.Collaboration;
@@ -42,7 +40,6 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting.Internal;
 
 namespace ProIdeas.UI
 {

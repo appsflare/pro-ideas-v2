@@ -176,94 +176,88 @@
 //.variations(unquote(" label.control-label"), color, $mdb-input-placeholder-color);  // default label color variations
 
 .form-group {
-  position: relative;
-
-  // -----
-  // Labels with form-group signalled state
-  //
-  // Reference http://www.google.com/design/spec/components/text-fields.html
-  // MDL implementation: http://www.getmdl.io/components/index.html#textfields-section
-  &.label-static,
-  &.label-placeholder,
-  &.label-floating {
-    label.control-label {
-      position: absolute;
-      pointer-events: none;
-      transition: 0.3s ease all;
+    position: relative;
+    // -----
+    // Labels with form-group signalled state
+    //
+    // Reference http://www.google.com/design/spec/components/text-fields.html
+    // MDL implementation: http://www.getmdl.io/components/index.html#textfields-section
+    &.label-static,
+    &.label-placeholder,
+    &.label-floating {
+        label.control-label {
+            position: absolute;
+            pointer-events: none;
+            transition: 0.3s ease all;
+        }
     }
-  }
-
-  // hint to browser for optimization
-  //    TODO: evaluate effectiveness - looking for community feedback
-  &.label-floating label.control-label {
-    will-change: left, top, contents;
-  }
-
-  // hide label-placeholders when the field is not empty
-  &.label-placeholder:not(.is-empty){
-    label.control-label{
-      display: none;
+    // hint to browser for optimization
+    //    TODO: evaluate effectiveness - looking for community feedback
+    &.label-floating label.control-label {
+        will-change: left, top, contents;
     }
-  }
-
-  // Help blocks - position: absolute approach - uses no vertical space, text wrapping - not so good.
-  .help-block {
-    position: absolute; // do not use position: absolute because width/wrapping isn't automatic and overflows occur
-    display: none;
-  }
-
-  // form-group is-focused display
-  &.is-focused {
-    .form-control {
-      outline: none;
-      background-image: linear-gradient($brand-primary, $brand-primary), linear-gradient($mdb-input-underline-color, $mdb-input-underline-color);
-      background-size: 100% 2px, 100% 1px;
-      box-shadow: none;
-      transition-duration: 0.3s;
-
-      .material-input:after {
-        background-color: $brand-primary;
-      }
+    // hide label-placeholders when the field is not empty
+    &.label-placeholder:not(.is-empty) {
+        label.control-label {
+            display: none;
+        }
     }
-
-    //.variations(unquote(".is-focused label.control-label"), color, $brand-primary); // focused label color variations
-    label,
-    label.control-label {
-      color: $brand-primary;
-    }
-
-    //.variations(unquote(".is-focused.label-placeholder label.control-label"), color, $mdb-input-placeholder-color);  // default label color variations
-    &.label-placeholder {
-      label,
-      label.control-label {
-        color: $mdb-input-placeholder-color;
-      }
-    }
-
+    // Help blocks - position: absolute approach - uses no vertical space, text wrapping - not so good.
     .help-block {
-      display: block;
+        position: absolute; // do not use position: absolute because width/wrapping isn't automatic and overflows occur
+        display: none;
     }
-  }
+    // form-group is-focused display
+    &.is-focused {
+        .form-control {
+            outline: none;
+            background-image: linear-gradient($brand-primary, $brand-primary), linear-gradient($mdb-input-underline-color, $mdb-input-underline-color);
+            background-size: 100% 2px, 100% 1px;
+            box-shadow: none;
+            transition-duration: 0.3s;
 
-  @include form-group-validation-state(has-warning, $brand-warning);
-  @include form-group-validation-state(has-error, $brand-danger);
-  @include form-group-validation-state(has-success, $brand-success);
-  @include form-group-validation-state(has-info, $brand-info);
+            .material-input:after {
+                background-color: $brand-primary;
+            }
+        }
+        //.variations(unquote(".is-focused label.control-label"), color, $brand-primary); // focused label color variations
+        label,
+        label.control-label {
+            color: $brand-primary;
+        }
+        //.variations(unquote(".is-focused.label-placeholder label.control-label"), color, $mdb-input-placeholder-color);  // default label color variations
+        &.label-placeholder {
+            label,
+            label.control-label {
+                color: $mdb-input-placeholder-color;
+            }
+        }
 
-  textarea {
-    resize: none;
-    & ~ .form-control-highlight {
-      margin-top: -11px;
+        .help-block {
+            display: block;
+        }
     }
-  }
 
-  select {
-    appearance: none; // Fix for OS X
+    @include form-group-validation-state(has-warning, $brand-warning);
+    @include form-group-validation-state(has-error, $brand-danger);
+    @include form-group-validation-state(has-error-field, $brand-danger);
+    @include form-group-validation-state(has-success, $brand-success);
+    @include form-group-validation-state(has-info, $brand-info);
 
-    & ~ .material-input:after {
-      display: none;
+    textarea {
+        resize: none;
+
+        & ~ .form-control-highlight {
+            margin-top: -11px;
+        }
     }
-  }
+
+    select {
+        appearance: none; // Fix for OS X
+        & ~ .material-input:after {
+            display: none;
+        }
+    }
 }
 
 // default floating size/location without a form-group (will skip form-group styles, and just render default sizing variation)

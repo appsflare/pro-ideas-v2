@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProIdeas.Services.Contracts;
-using ProIdeas.UI.Models.IdeaViewModels;
 using System.Threading.Tasks;
-using System.Linq;
 using ProIdeas.Services;
 using ProIdeas.UI.Models.TeamViewModels;
 

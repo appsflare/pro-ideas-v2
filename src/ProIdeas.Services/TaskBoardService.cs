@@ -3,7 +3,6 @@ using ProIdeas.Logic.Contracts;
 using ProIdeas.Services.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
 using ProIdeas.Domain.Core.Bus;
 using ProIdeas.Infra.Commands.Tasks;
 

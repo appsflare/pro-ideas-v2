@@ -4,14 +4,14 @@
     <script src="~/Scripts/pages/generic.bundle.js"></script>
 }
 
-<div class="container m-margin white-background">
+<div class="row s-left-padding white-background">
     <div class="col-md-3">
         @await Component.InvokeAsync("Profile", new { userId = Model.OwnerId })
     </div>
     <div class="col-md-9">
         @await Html.PartialAsync("_NavigationBar", Model)
 
-        <div class="tab-content">
+        <section class="tab-content">
             @*User Actions*@
             <div class="s-margin tab-pane active" id="contributions">
                 @if (!Model.UserContributions.Any())
@@ -25,9 +25,9 @@
                             <span class="bg-red">@activity.ActivityDate</span>
                         </li>
 
-                        @foreach (var item in activity.ActivityTimeLine)
+                        foreach (var item in activity.ActivityTimeLine)
                         {
-                            @await Html.PartialAsync(item.Activity.ActivityType, item);
+                            @await Html.PartialAsync(item.Activity.ActivityType, item)
                         }
                     }
                 </ul>
@@ -45,14 +45,14 @@
                         <li class="time-label">
                             <span class="bg-red">@activity.ActivityDate</span>
                         </li>
-                        @foreach (var item in activity.ActivityTimeLine)
+                        foreach (var item in activity.ActivityTimeLine)
                         {
-                            @await Html.PartialAsync(item.Activity.ActivityType, item);
+                            @await Html.PartialAsync(item.Activity.ActivityType, item)
                         }
                     }
                 </ul>
             </div>
-        </div>
+        </section>
     </div>
 </div>
 
