@@ -2,6 +2,7 @@
 using ProIdeas.Domain.Queries;
 using RethinkDb.Driver;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,8 +13,6 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
         protected override async Task<IEnumerable<Idea>> ExecuteAsync(QueryTemplateContext<FilterIdeaQuery> context)
         {
             var queryParam = context.Parameter;
-
-
 
             var table = RethinkDB.R
              .Table(nameof(Idea));
@@ -41,17 +40,20 @@ namespace ProIdeas.Domain.RehtinkDb.QueryTemplates
                 query = query.Filter(x => x[nameof(Idea.OwnerId)].Eq(queryParam.OwnerId));
             }
 
+            var exlcudedProps = new Collection<string>(queryParam.PropertiesToExclude);
+            var optimizedQuery = query.Without(exlcudedProps);
+
             if (queryParam.Skip.HasValue)
             {
-                query.Skip(queryParam.Skip.Value);
+                optimizedQuery.Skip(queryParam.Skip);
             }
 
             if (queryParam.Take.HasValue)
             {
-                query.Limit(queryParam.Skip.Value);
+                optimizedQuery.Limit(queryParam.Take);
             }
 
-            var finalQuery = query.Merge(idea => RethinkDB.R.HashMap(nameof(Idea.Owner), RethinkDB.R
+            var finalQuery = optimizedQuery.Merge(idea => RethinkDB.R.HashMap(nameof(Idea.Owner), RethinkDB.R
             .Table("ApplicationUser")
             .Get(idea.GetField(nameof(Idea.OwnerId)))
             .Pluck(nameof(User.FullName))));
