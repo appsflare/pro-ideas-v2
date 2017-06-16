@@ -68,11 +68,11 @@ export default class SearchIdeasViewModel {
         });
     }
 
-    _fetchResults({keyword, page = 1, pageSize = 10, clearExisting = false}) {
+    _fetchResults({keyword, page = 1, pageSize = 100, clearExisting = false}) {
 
         const {search} = this.actions;
         this.loading(true);
-        return search({ keyword: this.keyword(), page: 1, pageSize: 10 })
+        return search({ keyword: this.keyword(), page: 1, pageSize })
             .then(results => {
                 this.loading(false);
                 clearExisting && this._clearResults();
